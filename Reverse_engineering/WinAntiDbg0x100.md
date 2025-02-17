@@ -49,11 +49,9 @@ We'll use **x32dbg** to step through the program, modify values, and trick the b
 ## Conclusion
 By using **x32dbg**, we easily bypassed the debugger check and retrieved the flag. This is a common trick used in reverse engineering, and now you know how to handle it!
 
-### Key Takeaways:
+### Key Takeaways i learnt :
 ✅ Use **Ctrl + F9** to search for important strings.  
 ✅ Step through execution using **F8** and find anti-debugging checks.  
 ✅ Modify **EAX = 0** to trick the program into thinking no debugger is present.  
 ✅ **F9** to continue and grab the flag.  
-
-This method can be applied to similar challenges, so keep practicing! 🚀
 
