@@ -30,15 +30,5 @@ eval("open('flag.txt', 'r').read()")
 
 This command successfully read the contents of `flag.txt` and displayed the flag.
 
-## Lessons Learned
-1. **Avoid Using `eval()` Unnecessarily**: If a function allows execution of arbitrary input, it becomes a major security risk.
-2. **Implement Strong Input Validation**: Instead of blocking specific keywords like `'win'`, proper input sanitization and whitelisting should be applied.
-3. **Use `ast.literal_eval()` Instead**: If evaluating expressions is necessary, `ast.literal_eval()` should be used as it only allows safe operations like numbers, strings, and lists.
 
-## Conclusion
-By leveraging Python's built-in functions and carefully analyzing the filtering mechanism, I was able to bypass the restrictions and retrieve the flag. This challenge highlights the importance of secure coding practices and reinforces why dangerous functions like `eval()` should be handled with caution or avoided altogether.
-
----
-
-_File: `writeup.md`_
 
