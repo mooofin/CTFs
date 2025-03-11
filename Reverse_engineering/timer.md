@@ -1,9 +1,6 @@
 # Reverse Engineering Timer APK
 
-## Challenge Information
-**Name:** Timer  
-**Author:** Loic Shema  
-**Description:** You will find the flag after analyzing this APK.
+
 
 ## Tools Used
 - **JADX-GUI** (Java Decompiler) – To analyze the APK’s code.
