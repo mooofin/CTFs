@@ -59,11 +59,5 @@ ak98-=90adfjhgj321sleuth9000
 picoCTF{p47ch1ng_l1f3_h4ck_21d62e33}
 ```
 
-## Conclusion
-This challenge involved:
-- Recognizing a hardcoded password in Python code.
-- Understanding an XOR-based decryption function.
-- Using the correct key to reveal the flag.
 
-By analyzing the script, we were able to bypass the authentication and successfully retrieve the flag!
 
