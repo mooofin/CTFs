@@ -53,6 +53,4 @@ The challenge specifies using the picoCTF flag format:
 picoCTF{pl3as3_l3t_m3_1nt0_th3_saf3}
 ```
 
-## Conclusion
-This challenge was based on recognizing the use of Base64 encoding and reversing it to retrieve the original password. By decoding the encoded string, we successfully retrieved the safe's password and obtained the flag!
 
