@@ -32,7 +32,7 @@ Non-debugging symbols:
 0x00000000000011b8  _fini
 ```
 
-### **3. Set Intel Assembly Syntax**
+### **3. Set Intel Assembly Syntax**(because  GDB uses AT&T by default, so we need to convert it to intel)
 ```bash
 (gdb) set disassembly-flavor intel
 ```
