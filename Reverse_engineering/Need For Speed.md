@@ -99,15 +99,8 @@ text
 clock_gettime(CLOCK_MONOTONIC, &end);
 if ((end.tv_sec - start.tv_sec) > TIMEOUT) explode();
 
-text
 
-2. **Code Obfuscation**
-- Hide critical function names
-- Encrypt string literals
 
-3. **Enhanced Cryptography**
-- Use AES instead of XOR
-- Implement PBKDF2 for key derivation
 
 ---
 
