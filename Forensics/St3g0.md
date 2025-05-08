@@ -1,4 +1,4 @@
-Here's a professional `writeup.md` for the challenge based on your findings:
+
 
 ---
 
