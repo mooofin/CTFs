@@ -1,4 +1,4 @@
-PicoCTF: Information Writeup
+
 
 Challenge Overview
 ------------------
