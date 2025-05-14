@@ -1,4 +1,3 @@
-Certainly! Here's the cleaned-up version of the `writeup.md` without any emojis:
 
 ---
 
