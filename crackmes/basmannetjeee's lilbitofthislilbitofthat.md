@@ -2,14 +2,7 @@
 
 
 
-## **2. Target Overview**
-- **Binary Type**: PE executable (Windows)
-- **Protections**: None (no packing, no anti-debug)
-- **Security Level**: Beginner
-- **Key Features**:
-  - Username input (max 256 chars)
-  - Serial key validation
-  - Deterministic key generation
+
 
 ## **3. Technical Analysis**
 
