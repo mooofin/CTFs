@@ -85,6 +85,4 @@ inc     rcx
 
 This clearly indicates `RCX` is being used to index through the input string.
 
-## Final Notes
 
-This analysis demonstrates how to interpret low-level instruction sequences as higher-level logic. The process also highlights the importance of skimming non-critical code, forming educated guesses, and validating those guesses through control flow and register usage.
