@@ -42,6 +42,5 @@ Finally, I changed the **percentage** value to **100**, effectively giving mysel
 ```
 
 I sent this final request and it went through successfully, solving the lab by applying the maximum discount and bypassing the insufficient credit check.
-
----
+![image](https://github.com/user-attachments/assets/d8d778a8-9317-49e4-af62-7bc67cf560d7)
 
