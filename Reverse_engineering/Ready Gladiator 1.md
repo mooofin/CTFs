@@ -37,5 +37,6 @@ nc saturn.picoctf.net 61202 < imp.red
 * **[Core War Guide](https://vyznev.net/corewar/guide.html#introduction)** – This was super helpful to understand the basics of Core War 
 
 ---
+![image](https://github.com/user-attachments/assets/b4cc1d7f-511e-47e0-9431-ce0187a618f9)
 
 
