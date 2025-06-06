@@ -30,3 +30,12 @@ When I saved this code into `imp.red` and sent it to the server with:
 ```
 nc saturn.picoctf.net 61202 < imp.red
 ```
+
+
+#### References
+
+* **[Core War Guide](https://vyznev.net/corewar/guide.html#introduction)** – This was super helpful to understand the basics of Core War 
+
+---
+
+
