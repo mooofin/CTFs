@@ -1,0 +1,6 @@
+
+
+The binary implements a rigorous validation process that first verifies the input length is exactly 27 bytes before performing bitwise verification. At the core of this check is a comparison between 184 specific bits (23 bytes × 8 bits) from the input and a hardcoded 23-byte hexadecimal pattern (e1 a7 1e f8 75 23 7b 61 b9 9d fc 5a 5b df 69 d2 fe 1b ed f4 ed 67 f4). The validation algorithm employs dynamic bitmask generation, creating separate masks for both the pattern bytes and input bytes, then systematically compares their bit states. A position tracking system meticulously monitors three key elements: the current pattern byte index (0-22), the bit position within each byte (0-7), and the corresponding location in the input buffer. This bit-level examination processes the input as a continuous stream without byte alignment constraints, rejecting any input where the 184 checked bits don't perfectly match the expected pattern. The remaining 32 bits in the 27-byte input are deliberately ignored by the verification routine, creating flexibility in the validation process. 
+![image](https://github.com/user-attachments/assets/8a9c6b12-cb47-4883-80ae-0698cad702b4)
+![image](https://github.com/user-attachments/assets/4db40fa7-4fa3-4c26-9683-841c8c97cb41)
+

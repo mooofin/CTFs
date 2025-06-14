@@ -1,0 +1,2 @@
+After extracting the files, I use ls to confirm that the drop-in directory contains a Python file named message.py. To investigate the file’s revision history, I recall that Git can display a detailed log of changes made to any file. Running git log message.py provides commit hashes, authors, timestamps, and commit messages, offering a complete picture of the file's evolution.
+![image](https://github.com/user-attachments/assets/4acfc808-6eb7-4668-9adf-01cdc67f9697)
