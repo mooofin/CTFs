@@ -1,0 +1,1 @@
+ I uploaded the provided audio file to the Morse Audio Decoder instead of using Audacity, which quickly translated the Morse signals into readable text. After formatting the decoded message with lowercase letters and underscores, I got the final flag: `picoCTF{wh47_h47h_90d_w20u9h7}`.
