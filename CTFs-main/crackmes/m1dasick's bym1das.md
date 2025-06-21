@@ -1,3 +1,12 @@
+When I started analyzing the crackme, I noticed it uses anti-debugging techniques that prevent it from running properly under a debugger. Right at the beginning of the `main()` function, it calls `is_debugger_present()` to check whether a debugger is attached. If it detects one, the program immediately deobfuscates and shows an error message, then forcefully exits using `ExitProcess(0x29a)`. This is a typical anti-analysis trick meant to slow down or block reverse engineering efforts.
+
+To bypass this, I had two options: patch the check so it always returns false—either by modifying the call to `is_debugger_present()` or changing its return value—or use a stealth debugger setup. I went with the latter and loaded the binary in x64dbg, using plugins like **ScyllaHide** and **TitanHide** to mask my debugging activity from the crackme.
+
+Another layer of complexity I encountered was the use of obfuscated strings. These strings are decrypted at runtime, which made static analysis difficult. To work around this, I had to either dump the strings dynamically while the program was running or reverse-engineer the `deobfuscate_string()` function to figure out how the encryption worked.
+
+
+
+
 ```c
 int __cdecl main(int _Argc,char **_Argv,char **_Env)
 
