@@ -1,0 +1,4 @@
+
+
+I was given a corrupted message where every block of three characters had been scrambled in a consistent way. The first clue was that the original message likely began with the word “The,” while the first block of the ciphertext was `"heT"`. From this, I figured out that the scrambling permutation moved the third character to the front, followed by the first and second characters—effectively a rotation. To reverse it, I wrote a Python script that split the message into 3-character blocks and reassembled each one using the expression `M[-1] + M[:-1]`. In Python, `M[-1]` accesses the last character of a string, while `M[:-1]` returns all characters except the last. So for a block like `"heT"`, this gives `'T' + 'he' = 'The'`, successfully reversing the corruption. Running this logic across the entire message restored the original text, and I was able to extract the correct flag: `picoCTF{7F4NPR051N5_16_35P3X51N3_V9AAB1F8}`.
+
