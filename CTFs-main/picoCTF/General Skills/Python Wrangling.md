@@ -16,4 +16,5 @@ The final output of the script was the following flag:
 picoCTF{4p0110_1n_7h3_h0us3_dbd1bea4}
 ```
 
+![image](https://github.com/user-attachments/assets/c1db7180-5a44-4ed0-924d-58ab9582eb24)
 
