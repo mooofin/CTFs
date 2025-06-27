@@ -1,5 +1,6 @@
 
 
-In this challenge, we were provided with a ZIP archive named `Addadshashanammu.zip`. Upon extraction, the archive revealed an unusually deep and complex nested directory structure. To efficiently navigate through these directories, tab completion in the terminal proved extremely useful. By progressively auto-completing directory names, we eventually located a file named `fang-of-haynekhtnamet` located at the deepest level of the hierarchy. After changing its permissions using `chmod +x`, we executed the file, which immediately output the flag: `picoCTF{l3v3l_up!_t4k3_4_r35t!_6f332f10}`
+In this challenge, I was given a ZIP archive called `Addadshashanammu.zip`. After unzipping it, I found an extremely deep and complex directory structure. Instead of manually typing out each folder, I used tab completion in the terminal to quickly navigate through the layers. Eventually, I came across a file named `fang-of-haynekhtnamet` at the very end of the path. I made it executable with `chmod +x`, ran it, and right away it printed the flag: `picoCTF{l3v3l_up!_t4k3_4_r35t!_6f332f10}`.
+
 
 
