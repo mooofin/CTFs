@@ -2,6 +2,7 @@ In this challenge, I performed a **Chosen Plaintext Attack (CPA)** on textbook R
 
 I connected to the server and submitted the modified ciphertext. In return, the server gave me a decrypted value, which I knew to be `2 × plaintext`. I entered this result back into RSHack, which then divided it by 2 to recover the original message. The final integer value decoded cleanly into a UTF-8 string, revealing the flag:
 **`picoCTF{m4yb3_Th0se_m3s54g3s_4r3_difurrent_4005534}`**.
+![screenshot-1751116437](https://github.com/user-attachments/assets/b8edb883-b2a8-4d12-be8f-dd1c69f0617e)
 
 
 
