@@ -1,0 +1,17 @@
+In this challenge, I was presented with an encryption service claiming to use a one-time pad (OTP). Upon connecting to the server, I was greeted with a message showing a ciphertext — the encrypted flag — and a prompt asking what data I’d like to encrypt. This immediately suggested the possibility of a chosen-plaintext attack, where I could send inputs of my choice and observe how they were encrypted.
+
+The first thing to note is that a one-time pad is only secure under strict conditions: the key must be truly random, as long as the message, and — most importantly — it must never be reused. If the same portion of the key is ever used twice, the OTP becomes trivially breakable. This challenge revolved around the failure of that last condition.
+
+Internally, the challenge had a bug in the way it managed key usage. Specifically, if you sent enough data to exhaust the key’s length, the system would wrap around and reuse the beginning of the key again. This is because of a modulo operation in the indexing logic — once the internal key pointer exceeded the key length, it reset to zero. That meant I could send a long filler string to roll the key pointer forward, and then send a message of the same length as the flag, which would now be encrypted using the same key segment as the flag was.
+
+To exploit this, I first connected to the server and retrieved the hex-encoded encrypted flag. I calculated the number of bytes in the flag by halving the length of the hex string. Then I sent a long filler input (`"a"` repeated `50000 - flag_len` times) to advance the internal key pointer to the end. My next input — a known plaintext of `"a"` repeated `flag_len` times — would be encrypted using the same key that was used on the flag.
+
+Now that I had a known plaintext and its ciphertext, I XORed them to recover the key segment. With this key segment in hand, I XORed it against the encrypted flag to recover the original plaintext flag. This worked because in OTP: `ciphertext = plaintext XOR key`, so reversing the operation is simply `plaintext = ciphertext XOR key`.
+
+The exploit revealed the final flag:
+
+```
+picoCTF{7f9da29f40499a98db220380a57746a4}
+```
+
+
