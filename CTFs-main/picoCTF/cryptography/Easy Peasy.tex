@@ -8,7 +8,6 @@ To exploit this, I first connected to the server and retrieved the hex-encoded e
 
 Now that I had a known plaintext and its ciphertext, I XORed them to recover the key segment. With this key segment in hand, I XORed it against the encrypted flag to recover the original plaintext flag. This worked because in OTP: `ciphertext = plaintext XOR key`, so reversing the operation is simply `plaintext = ciphertext XOR key`.
 
-The exploit revealed the final flag:
 
 ```
 picoCTF{7f9da29f40499a98db220380a57746a4}
