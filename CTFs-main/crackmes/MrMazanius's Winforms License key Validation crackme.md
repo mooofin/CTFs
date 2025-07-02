@@ -16,4 +16,4 @@ To verify our findings, we ran the application again and entered `YouFoundTheLic
 
 ![image](https://github.com/user-attachments/assets/7ce7eec9-ece0-4de2-892d-849e98d213a1)
 
-
+dnSpy is often preferred over Ghidra for analyzing .NET applications because it is specifically built for working with .NET assemblies. While Ghidra is a powerful general-purpose reverse engineering suite capable of analyzing both native and managed code, it lacks the deep .NET-specific features that dnSpy offers out of the box. dnSpy can decompile .NET assemblies directly into readable C# code, preserving high-level constructs like classes, methods, properties, and even Windows Forms UI components. It allows users to browse, edit, and debug .NET code in its original structure with minimal effort, something Ghidra would require additional plugins or manual IL analysis to achieve.
