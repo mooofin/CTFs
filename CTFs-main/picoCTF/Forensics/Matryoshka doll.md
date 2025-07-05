@@ -8,4 +8,5 @@ I continued this pattern, running `unzip 2_c.jpg`, which extracted `3_c.jpg`, th
 
 Reading `flag.txt` revealed the hidden flag:
 `picoCTF{bf6acf878dcbd752f4721e41b1b1b66b}`
+![image](https://github.com/user-attachments/assets/0748a9cd-29d6-41bd-84b2-0422ffb2ad42)
 
