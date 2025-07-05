@@ -9,5 +9,6 @@ Upon decoding this string from base64, it revealed the final flag:
 
 `picoCTF{dns_3xf1l_ftw_deadbeef}`
 
+![image](https://github.com/user-attachments/assets/f9e1f075-f349-4447-80c1-9db40e623018)
 
 
