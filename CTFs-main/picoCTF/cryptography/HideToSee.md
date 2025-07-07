@@ -6,5 +6,6 @@ To retrieve the hidden file, I used the command `steghide extract -sf atbash.jpg
 Recognizing the pattern and structure, I identified it as an Atbash cipher — a classic substitution cipher where letters are mapped in reverse (A ↔ Z, B ↔ Y, etc.). Applying Atbash decoding to the string revealed the actual flag: `picoCTF{atbash_crack_8a0feddc}`.
 
 
+![image](https://github.com/user-attachments/assets/64fdb543-63bd-4918-92ff-d1b6fa7da617)
 
 
