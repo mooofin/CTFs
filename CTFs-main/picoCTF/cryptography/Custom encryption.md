@@ -1,4 +1,4 @@
-![screenshot-1751962686](https://github.com/user-attachments/assets/069a8d85-dd38-4e67-b405-4576117302ac)
+
 When I first looked at the challenge, I saw that the flag was hidden in a list of large integers. At first glance, it was obvious that the encryption wasn't just a simple substitution or Caesar cipher — something more layered was going on. After reading through the variables, I noticed values labeled `a`, `b`, `g`, and `p`, which immediately made me think of Diffie-Hellman key exchange.
 ![screenshot-1751962514](https://github.com/user-attachments/assets/a6fd9b7f-c6b1-4534-906c-6833141d68c5)
 
