@@ -10,3 +10,4 @@ Once I had the key, I needed to figure out how the large integers were created. 
 The final step turned out to be a dynamic XOR cipher using the string `"trudeau"` as the key. I XORed each character of the intermediate string with a repeating character from `"trudeau"`, just like a Vigenère cipher but with XOR instead of addition. 
 
 
+![screenshot-1751962720](https://github.com/user-attachments/assets/07d72e0f-942c-4266-9a62-6a37a7392bde)
