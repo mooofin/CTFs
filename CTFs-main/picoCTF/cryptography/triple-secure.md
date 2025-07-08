@@ -6,5 +6,8 @@ RSA's security depends on the difficulty of factoring a large number into its pr
 Once the primes are known, it's straightforward to derive the private keys for each modulus. Using these, the encryption can be reversed. The ciphertext is decrypted in three stages, each corresponding to one RSA decryption step using the appropriate private key and modulus.
 ![screenshot-1751990364](https://github.com/user-attachments/assets/2af7bf4f-b774-4f3b-aba2-abeee4577f15)
 
+The execution code: 
+![screenshot-1751990542](https://github.com/user-attachments/assets/430e3392-dbe1-4f18-b6e2-aee24c82a170)
+
 
 
