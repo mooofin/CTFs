@@ -30,6 +30,9 @@ Then read the contents of `message.txt`:
 $ cat message.txt
 picoCTF{be3dd3da}
 ```
+<img width="962" height="872" alt="screenshot-1752177469" src="https://github.com/user-attachments/assets/e8a149a8-b048-48ca-9c90-c6c154fcdbbe" />
 
+
+ `git checkout <commit>` = “go to that point in project history.”
 
 
