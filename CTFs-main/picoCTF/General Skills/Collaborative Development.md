@@ -109,5 +109,6 @@ w0rk_7ae8dd33}
 picoCTF{t3@mw0rk_m@k3s_th3_dr3@m_w0rk_7ae8dd33}
 ```
 
+<img width="1911" height="981" alt="image" src="https://github.com/user-attachments/assets/08aaeaec-1304-4d6f-9e6e-f4115fa7c59e" />
 
 
