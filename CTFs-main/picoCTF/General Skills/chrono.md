@@ -20,5 +20,10 @@ This immediately revealed the flag as a comment inside the file:
 # picoCTF{Sch3DUL7NG_T45K3_L1NUX_d83baed1}
 ```
 
+The `crontab` (short for **cron table**) is a configuration file used by the `cron` daemon in Unix-like systems to schedule and automate repetitive tasks at specific intervals—ranging from every minute to monthly or in custom time patterns. These tasks, known as **cron jobs**, can include running scripts, backups, system maintenance, and more.
+
+
+<img width="919" height="321" alt="screenshot-1752317162" src="https://github.com/user-attachments/assets/d534e9a7-a1ef-4e13-a475-2f82d2a303e8" />
+
 
 
