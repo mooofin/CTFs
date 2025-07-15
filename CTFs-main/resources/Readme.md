@@ -18,6 +18,7 @@
 - [CTF 101 Handbook](https://ctf101.org/)  
   A beginner-friendly handbook covering CTF basics, including crypto, pwn, web, reversing, and tools.
 
+ - Reference: [Ultimate Windows Security Log Encyclopedia](https://www.ultimatewindowssecurity.com/securitylog/encyclopedia/default.aspx) — a comprehensive guide to Windows Security Event IDs.
 
 
 - [Position-Independent Code (PIC) in Shared Libraries – Eli Bendersky](https://eli.thegreenplace.net/2011/11/03/position-independent-code-pic-in-shared-libraries/)  
