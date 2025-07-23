@@ -109,14 +109,5 @@ The public key is $(n, e)$, and the private key is $d$.
 
 ---
 
-## Security Considerations
-
-* The primes $p$ and $q$ must be chosen randomly and kept secret.
-* Never reuse the same $p$ or $q$ in multiple key pairs.
-* Avoid using identical primes $p = q$; this makes $n = p^2$ and significantly weakens security.
-* Keys should be refreshed periodically to prevent long-term exposure risks.
-
----
-
 
 
