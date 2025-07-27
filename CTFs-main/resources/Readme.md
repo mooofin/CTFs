@@ -4,8 +4,7 @@
 
 
 
-- [Binary Exploitation / Reverse Engineering – guyinatuxedo](https://guyinatuxedo.github.io/index.html)  
-  A comprehensive collection of tutorials on binary exploitation, reverse engineering, and related CTF techniques.
+
 
 - [HACK: Using the Global Offset Table – nuc13us](https://nuc13us.wordpress.com/2015/12/25/hack-using-global-offset-table/)  
   A walkthrough of GOT-based exploitation techniques and PLT/GOT internals.
