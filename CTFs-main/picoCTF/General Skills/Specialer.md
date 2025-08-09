@@ -65,4 +65,7 @@ I ran the script, and the output was a collection of text snippets from various 
 return 0 picoCTF{y0u_d0n7_4ppr3c1473_wh47_w3r3_d01ng_h3r3_d5ef8b71}
 ```
 
+<img width="939" height="1016" alt="screenshot-1754752550" src="https://github.com/user-attachments/assets/8dce1511-f146-47a0-875d-5a4f91053e47" />
+
+
 
