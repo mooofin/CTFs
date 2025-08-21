@@ -46,3 +46,31 @@ To obtain the flag, we must invoke the `run` program by specifying its full, abs
 
 ## Flag
 `pwn.college{0uKsuZvvZQ07TJOj5bzZr1IPoQu.dVDN1QDL0ATO0czW}`
+
+
+----------
+# Pwn College Challenge Write-up: Position Thy Self
+
+## Objective
+The objective of this challenge is to change the current working directory to a specific location before successfully executing a program.
+
+## Challenge Analysis
+This challenge introduces a common scenario where a program's execution is conditional on the user's current working directory. Simply running the program `/challenge/run` via its absolute path is insufficient.
+
+Upon the first execution attempt, the program returns an error explicitly stating that the user must be in the `/proc/376` directory. This demonstrates that programs can inspect their environment, including the present working directory (`pwd`), and alter their behavior based on it. The solution requires using the `cd` (change directory) command to navigate to the required location before re-running the executable.
+
+## Solution
+The solution is a two-step process: first, navigate to the correct directory, and second, execute the program.
+
+1.  At the prompt, use the `cd` command to change to the required directory:
+    ```bash
+    cd /proc/376
+    ```
+2.  Once in the correct directory, execute the program using its absolute path:
+    ```bash
+    /challenge/run
+    ```
+
+## Flag
+`pwn.college{0w5bDwvu-xABKjunh6J9Lrm8TOs.dZDN1QDL0ATO0czW}`
+
