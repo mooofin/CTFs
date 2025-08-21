@@ -101,3 +101,31 @@ The solution involves changing to the specified directory and then running the e
 ## Flag
 `pwn.college{Y6cI8SY5XKarww1Vkv7xKv1c6ov.ddDN1QDL0ATO0czW}`
 
+----------
+
+
+# Pwn College Challenge Write-up: Position Yet Elsewhere
+
+## Objective
+The objective is to successfully execute the challenge program by first navigating to a specific, required directory.
+
+## Challenge Analysis
+This challenge continues the theme of environmental prerequisites for program execution. The executable, located at `/challenge/run`, will only run successfully if the user's current working directory is `/proc/132`.
+
+An initial attempt to run the program from the default directory fails, but the resulting error message provides the exact path required. The core task is to use the `cd` (change directory) command to position the shell within the correct directory before re-executing the program.
+
+## Solution
+The solution is a straightforward, two-step process: change the directory, then run the program.
+
+1.  Use the `cd` command to navigate to the directory specified by the error message:
+    ```bash
+    cd /proc/132
+    ```
+2.  With the prompt now reflecting the new location, execute the program using its absolute path:
+    ```bash
+    /challenge/run
+    ```
+
+## Flag
+`pwn.college{QmoOwK8qXhgFzg3INKMUgvRBR3z.dhDN1QDL0ATO0czW}`
+
