@@ -74,3 +74,30 @@ The solution is a two-step process: first, navigate to the correct directory, an
 ## Flag
 `pwn.college{0w5bDwvu-xABKjunh6J9Lrm8TOs.dZDN1QDL0ATO0czW}`
 
+
+-------------------------------
+# Pwn College Challenge Write-up: Position Elsewhere
+
+## Objective
+The objective of this challenge is to navigate to a different, specified directory and execute a program to retrieve the flag.
+
+## Challenge Analysis
+Similar to the previous challenge, this level requires the user to be in a specific directory before the target program will execute successfully. The program, `/challenge/run`, performs a check on the current working directory.
+
+The initial execution fails and provides an error message indicating that the user must navigate to `/usr/share/zoneinfo/posix/Asia`. This is another exercise in using the `cd` (change directory) command to meet a program's environmental prerequisites.
+
+## Solution
+The solution involves changing to the specified directory and then running the executable.
+
+1.  First, use the `cd` command to navigate to the target directory:
+    ```bash
+    cd /usr/share/zoneinfo/posix/Asia
+    ```
+2.  From within the correct directory, execute the program using its absolute path:
+    ```bash
+    /challenge/run
+    ```
+
+## Flag
+`pwn.college{Y6cI8SY5XKarww1Vkv7xKv1c6ov.ddDN1QDL0ATO0czW}`
+
