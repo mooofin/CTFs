@@ -129,3 +129,34 @@ The solution is a straightforward, two-step process: change the directory, then 
 ## Flag
 `pwn.college{QmoOwK8qXhgFzg3INKMUgvRBR3z.dhDN1QDL0ATO0czW}`
 
+------------
+
+
+
+# Pwn College Challenge Write-up: Implicit Relative Paths
+
+## Objective
+The objective of this challenge is to execute a program from the root directory (`/`) using a relative path instead of an absolute path.
+
+## Challenge Analysis
+This challenge introduces the concept of **relative paths**. Unlike an absolute path, which starts from the root (`/`) and provides a full, unambiguous location, a relative path is interpreted from the current working directory (cwd).
+
+- **Absolute Path:** `/challenge/run` (always refers to the same location)
+- **Relative Path:** `challenge/run` (path is resolved starting from the cwd)
+
+The challenge requires executing `/challenge/run`. However, the program is designed to fail if invoked with its absolute path. The key is to first change the current directory to `/` and then call the program using a path that is *relative* to `/`.
+
+When the cwd is `/`, the relative path to `/challenge/run` is simply `challenge/run`. The shell looks for a directory named `challenge` within the current directory (`/`) and then for the `run` executable inside it.
+
+## Solution
+The solution is to first position the shell at the root of the filesystem and then execute the program with a relative path.
+
+1.  Ensure the current working directory is the root directory. If not, use `cd /`.
+2.  Execute the program using its relative path from root:
+    ```bash
+    challenge/run
+    ```
+
+## Flag
+`pwn.college{8EVoszXXxkJGHXCVIvITYhp1if6.dlDN1QDL0ATO0czW}`
+
