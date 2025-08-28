@@ -149,3 +149,23 @@ This approach is simpler, but less flexible. It also needs filesystem support; I
  [https://www.redhat.com/en/blog/linux-access-control-lists](https://www.redhat.com/en/blog/linux-access-control-lists)
 
 
+# Q 5 
+
+
+<img width="740" height="600" alt="image" src="https://github.com/user-attachments/assets/f4761088-8c84-416b-b4d3-11a8f4853096" />
+
+### TLDR
+
+An attacker broke into the web server and ran a fake program called kworker that looked like a normal Linux process. They deleted the file after starting it so it wouldn’t be easy to find, but the process kept running in memory. This program used almost all the CPU power, which is a strong sign of cryptomining malware maybe or not :( . Finally, the malware connected out to a suspicious server on the internet, which is how it either received commands or sent the mining results. In short: the attacker hacked in, installed hidden malware, and used the server’s resources for their own purpose
+
+
+Also uname -a is important because it quickly reveals the system’s operating system, kernel version, and architecture , which they can craft payloads using Metasploit :( . 
+
+ps -aux also showed a process is running as the www-data user, indicating the web service account was the entry point of the compromise 
+
+
+
+
+
+
+
