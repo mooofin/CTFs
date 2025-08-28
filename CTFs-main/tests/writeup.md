@@ -164,8 +164,26 @@ Also uname -a is important because it quickly reveals the system’s operating s
 ps -aux also showed a process is running as the www-data user, indicating the web service account was the entry point of the compromise 
 
 
+# Q 6
 
 
+
+<img width="740" height="204" alt="image" src="https://github.com/user-attachments/assets/7466ebed-244d-4723-86ef-43a1ce118571" />
+
+
+This program has some defenses but also some gaps. Since there’s no stack canary, an attacker can overflow a buffer and overwrite the return address (stack smashing). NX is enabled, so they can’t run their own code on the stack, but because the program isn’t compiled with PIE, the code addresses are fixed and predictable—making a ROP attack (reusing existing instructions) possible. On the other hand, NX stops normal shellcode attacks, and Full RELRO locks the GOT, so attackers can’t overwrite function pointers there. In short: stack smashing and ROP are still possible, but shellcode injection and GOT overwrite are blocked.
+
+Also if a binary has Full RELRO, the GOT is completely read-only after initialization, so GOT overwrites are impossible.
+
+Stack smashing works because of how the stack is organized in memory. When a function is called, space is made on the stack for local variables, and right above them is the saved return address — the place the CPU should jump back to when the function finishes. If a program allocates a buffer on the stack but doesn’t check input length, an attacker can write more data than the buffer can hold. This “overflow” spills into nearby memory and overwrites the saved return address. Once the attacker controls that address, they control where the program will jump next. That ability to redirect execution is the core of a stack smashing attack.
+
+
+<img width="293" height="480" alt="image" src="https://github.com/user-attachments/assets/7d7930bc-f842-4239-ae52-1f6e729c630f" />
+
+Return-Oriented Programming (ROP) builds on this idea to bypass modern defenses like NX (non-executable stack). NX stops attackers from putting malicious shellcode directly into the stack and running it, but it doesn’t stop them from reusing code that already exists in the program or libraries. The attacker carefully overwrites the return address with the location of short instruction sequences, called gadgets, that end with a ret. Each gadget does a tiny useful operation. By chaining many of these gadgets together, the attacker can effectively perform arbitrary actions, such as calling system("/bin/sh"), without injecting any new code.
+
+
+<img width="551" height="326" alt="image" src="https://github.com/user-attachments/assets/d38dd050-86c4-495a-9b68-315c0dd857e7" />
 
 
 
