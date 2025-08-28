@@ -89,9 +89,63 @@ Hence this vulnerability is a CORS Policy Bypass caused by a misconfiguration wh
 [https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/11-Client-side_Testing/07-Testing_Cross_Origin_Resource_Sharing)
 
 
+# Q 4 
+
+<img width="740" height="641" alt="image" src="https://github.com/user-attachments/assets/0eb241c0-d6e3-41ea-84af-6526e837a9a4" />
+
+This question is about SSH authentication failures caused by incorrect file permissions !!
 
 
 
+Linux file permissions can be expressed as a three-digit number. Each of the digits represent: Owner, Group, Others.
 
+Digit |  Permissions
+------------------------------
+0     |  None
+1     |  Execute
+2     |  Write
+3     |  Write and Execute
+4     |  Read
+5     |  Read and Execute
+6     |  Read and Write
+7     |  Read, Write and Execute
+
+With 755, you'd give reading and execution permissions to everyone. With 644, you'd be giving reading permissions to everyone.
+
+SSH clients and servers will remind you to use strong permissions to ensure that you don't accidentally share your private key with every user on a server.
+
+Traditionallly Unix & Linux servers are designed to be multi-user systems. Due to the implications of using Public / Private Key Cryptography, it becomes important to keep the Private Key secret . 
+
+A little overkill imo , Ssh is actually pretty strict on permissions, if it thinks you've set them too liberally it will ignore those files and it won't work as you expect it to, so you don't really have to think about hardening in this way, if it's working it's likely hard enough. 
+
+Coming to the question 
+
+
+```
+chmod 700 ~/.ssh → makes the .ssh directory accessible only to the owner (rwx------). SSH will reject keys if this directory is world-readable.
+
+chmod 600 ~/.ssh/authorized_keys → restricts the key file so that only the owner can read/write (rw-------). This prevents other users from snooping or modifying your authorized keys.
+```
+### Aliter:
+Alternative: chattr
+
+Some Linux filesystems supports file attributes, notably an immutable flag. Files/directories with the immutable flag set cannot be deleted, modified, or have their permissions changed. Only root can set/clear this flag.
+
+This command would do the trick, even with the default ownership/permissions:
+
+```bash
+ chattr +i ~test/.ssh/{authorized_keys,}
+```
+Now .ssh and authorized_keys cannot be modified in any way, not even by root. If root needs to update these files, you'll need to chattr -i them first. Use lsattr to check for attributes.
+
+This approach is simpler, but less flexible. It also needs filesystem support; I believe it's supported on at least ext2/3/4, XFS, and btrfs
+
+### aliter: 2
+ Run a cron job to fix permissions each night
+
+ ## Futher reading 
+
+
+ [https://www.redhat.com/en/blog/linux-access-control-lists](https://www.redhat.com/en/blog/linux-access-control-lists)
 
 
