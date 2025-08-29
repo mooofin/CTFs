@@ -67,7 +67,7 @@ Other SQL injection types don’t apply here: Boolean-based blind SQLi only reve
 <img width="675" height="687" alt="screenshot-1756411977" src="https://github.com/user-attachments/assets/2672d18c-eaa3-4c54-8daf-03e337d0a7a1" />
 
 
-About this one , it showed a POST req to a domain called -(https://partner-offers.com)
+About this one , it showed a POST req to a domain .
 
 
 1)Cross-Site Request Forgery (CSRF)
