@@ -130,19 +130,13 @@ This will:
 2. **Run the unscramble function to recover the original flag**.
 3. **Print the flag as text**.
 
-### **Expected Output**
 ```
 picoCTF{python_is_weirde2a45ca5}
 ```
 
 ---
 
-## **Step 5: Understanding the Recovered Flag**
-The final output is:
-```
-picoCTF{python_is_weirde2a45ca5}
-```
-This confirms that we **successfully reversed** the scrambling process and retrieved the original flag.
+
 
 ---
 
@@ -162,6 +156,3 @@ This confirms that we **successfully reversed** the scrambling process and retri
 - The key insight was **realizing how the scramble function stored previous elements** and **reversing that process** step by step.
 - **Running `eval()` on the scrambled data** allowed us to work with it as a **Python object**.
 - We worked **backwards** through the scrambled list, recovering the original flag.
-
-This structured approach will **help you understand and recall the solution** when reviewing it later. 🚀
-
