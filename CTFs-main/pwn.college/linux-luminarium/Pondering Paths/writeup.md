@@ -168,3 +168,15 @@ pwn.college{I9VxSxDHSpwjMMzeld1ZovOsCE9.dBTN1QDL0ATO0czW}
 
 The idea was that Linux doesn’t look in the current directory for commands by default, so we use ./run to explicitly tell it to execute the program in the current directory
 
+----
+
+# Implicit Relative Paths
+
+<img width="796" height="304" alt="screenshot-1758448153" src="https://github.com/user-attachments/assets/de70a03f-aa5e-4e14-ac78-6a04794fc1a5" />
+
+
+We moved to the root `/` directory and then ran the program using `./run` from the `challenge` directory. Using `./` ensured that Linux executed the program located in the current directory, which successfully gave us the flag.
+
+Notes - By default, the shell searches only the directories listed in the $PATH environment variable for executables. The current directory . is usually not included in $PATH for security reasons, preventing accidental execution of local files with the same name as system commands
+
+
