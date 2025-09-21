@@ -1,5 +1,3 @@
-
-
 ## The Root 
 
 ### Objective
@@ -25,7 +23,7 @@ To get the flag, the program must be invoked by providing its absolute path on t
 
 ------------------------------
 
-# Pwn College Challenge Write-up: Programs and Absolute Paths
+# Programs and Absolute Paths
 
 ## Objective
 The objective of this challenge is to execute a specific program located outside the current working directory by using its absolute path.
@@ -49,7 +47,7 @@ To obtain the flag, we must invoke the `run` program by specifying its full, abs
 
 
 ----------
-# Pwn College Challenge Write-up: Position Thy Self
+#  Position Thy Self
 
 ## Objective
 The objective of this challenge is to change the current working directory to a specific location before successfully executing a program.
@@ -76,7 +74,7 @@ The solution is a two-step process: first, navigate to the correct directory, an
 
 
 -------------------------------
-# Pwn College Challenge Write-up: Position Elsewhere
+#  Position Elsewhere
 
 ## Objective
 The objective of this challenge is to navigate to a different, specified directory and execute a program to retrieve the flag.
@@ -104,7 +102,7 @@ The solution involves changing to the specified directory and then running the e
 ----------
 
 
-# Pwn College Challenge Write-up: Position Yet Elsewhere
+#  Position Yet Elsewhere
 
 ## Objective
 The objective is to successfully execute the challenge program by first navigating to a specific, required directory.
@@ -133,7 +131,7 @@ The solution is a straightforward, two-step process: change the directory, then 
 
 
 
-# Pwn College Challenge Write-up: Implicit Relative Paths
+#  Implicit Relative Paths
 
 ## Objective
 The objective of this challenge is to execute a program from the root directory (`/`) using a relative path instead of an absolute path.
@@ -155,8 +153,18 @@ The solution is to first position the shell at the root of the filesystem and th
 2.  Execute the program using its relative path from root:
     ```bash
     challenge/run
-    ```
-
 ## Flag
-`pwn.college{8EVoszXXxkJGHXCVIvITYhp1if6.dlDN1QDL0ATO0czW}`
+`pwn.college{8EVoszXXxkJGHXCVIvITYhp1if6.dlDN1QDL0ATO0czW}`    ```
+
+# Explicit Relative Paths, from /
+
+
+
+In this challenge, we learned that . refers to the current directory. To run a program there, we use ./program. From /, we ran the challenge with ./challenge/run and got the flag:
+
+pwn.college{I9VxSxDHSpwjMMzeld1ZovOsCE9.dBTN1QDL0ATO0czW}
+
+<img width="1381" height="254" alt="screenshot-1758447829" src="https://github.com/user-attachments/assets/433ef8d5-725a-4b55-b432-d7e6e6fcd4b6" />
+
+The idea was that Linux doesn’t look in the current directory for commands by default, so we use ./run to explicitly tell it to execute the program in the current directory
 
