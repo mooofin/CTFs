@@ -52,8 +52,139 @@ Running the file as an executable (`/challenge/10062-renamed-run-30646`) produce
 notes - ls = "list the content of a DIRECTORY" (not folder)
 
 ## Touching files 
-
 <img width="1008" height="287" alt="screenshot-1758549320" src="https://github.com/user-attachments/assets/e6c4cdc1-fc6c-49df-b24c-6c7df26ff727" />
 
 
+
+## Removing files 
+
+<img width="985" height="335" alt="screenshot-1758549819" src="https://github.com/user-attachments/assets/a6f37c20-4eb1-48f0-863a-be2bc839ec5c" />
+
+## moving files 
+
+<img width="984" height="264" alt="screenshot-1758549923" src="https://github.com/user-attachments/assets/41599ec7-7b93-4966-9e28-0829dbb92e6a" />
+
+
+## Hidden files 
+
+<img width="986" height="525" alt="screenshot-1758550104" src="https://github.com/user-attachments/assets/919eab77-cec8-418f-be5b-e2266f5ae379" />
+
+Notes- 
+
+Traditionally, in UNIX and UNIX-like operating systems, the . prefix means a hidden file, similar to the "Hidden" flag in Windows. It works anywhere, but its primary use is to hide configuration files in your home directory (e.g. ~/.cache/ or ~/.plan – they're frequently called "dotfiles").
+
+To force ls to display hidden files, you need the -a option.
+
+Almost all graphical file managers also honor this prefix; CtrlH toggles "hidden" files in GNOME.
+
+
+## Epic Filesystem Quest
+
+
+
+
+### Chronological commands & key outputs
+
+1. Start: read the initial memo
+
+```bash
+cat MEMO
+# → points to /usr/share/javascript/.../Size3/Regular and warns the next clue is trapped
+```
+
+2. List the target directory and safely read the trapped file (do **not** cd)
+
+```bash
+ls -a /usr/share/javascript/mathjax/jax/output/SVG/fonts/TeX/Size3/Regular
+# → .  ..  GIST-TRAPPED  Main.js
+
+cat /usr/share/javascript/mathjax/jax/output/SVG/fonts/TeX/Size3/Regular/GIST-TRAPPED
+# → "The next clue is in: /usr/local/lib/python3.8/dist-packages/IPython/lib/tests"
+```
+
+3. List and read the next clue:
+
+```bash
+ls /usr/local/lib/python3.8/dist-packages/IPython/lib/tests
+# → shows files including ALERT
+
+cat /usr/local/lib/python3.8/dist-packages/IPython/lib/tests/ALERT
+# → "The next clue is in: /opt/linux/linux-5.4/Documentation/devicetree/bindings/phy"
+```
+
+4. Inspect the phy directory and read the trapped teaser:
+
+```bash
+ls /opt/linux/linux-5.4/Documentation/devicetree/bindings/phy
+# → many filenames, including TEASER-TRAPPED
+
+cat /opt/linux/linux-5.4/Documentation/devicetree/bindings/phy/TEASER-TRAPPED
+# → "The next clue is in: /opt/linux/linux-5.4/Documentation/devicetree/bindings/iio/dac"
+```
+
+5. Reveal hidden entries and read the hidden clue:
+
+```bash
+ls -a /opt/linux/linux-5.4/Documentation/devicetree/bindings/iio/dac
+# → contains .TRACE
+
+cat /opt/linux/linux-5.4/Documentation/devicetree/bindings/iio/dac/.TRACE
+# → "The next clue is in: /usr/local/lib/python3.8/dist-packages/jupyterlab_server/test_data/workspaces"
+# The clue indicates the next file is delayed (requires cd).
+```
+
+6. Enter the delayed directory to unlock the clue:
+
+```bash
+cd /usr/local/lib/python3.8/dist-packages/jupyterlab_server/test_data/workspaces
+ls
+# → INSIGHT (and workspace files)
+
+cat INSIGHT
+# → "The next clue is in: /opt/linux/linux-5.4/arch/x86/platform/olpc"
+```
+
+7. `cd` into the OLPC dir (delayed), list and read:
+
+```bash
+cd /opt/linux/linux-5.4/arch/x86/platform/olpc
+ls
+# → NUGGET, Makefile, etc.
+
+cat NUGGET
+# → "The next clue is in: /usr/share/racket/pkgs/r6rs-lib/r6rs/compiled"
+# NUGGET was delayed, so `cd` was required.
+```
+
+8. Enter the Racket directory (delayed) and read DOSSIER:
+
+```bash
+cd /usr/share/racket/pkgs/r6rs-lib/r6rs/compiled
+ls
+# → DOSSIER, info_rkt*.dep/zo
+
+cat DOSSIER
+# → "The next clue is in: /usr/local/lib/python3.8/dist-packages/_argon2_cffi_bindings/__pycache__"
+# The clue says the next file is hidden (filename starts with '.')
+```
+
+9. Show hidden files in the absolute target and read the hidden file:
+
+```bash
+ls -a /usr/local/lib/python3.8/dist-packages/_argon2_cffi_bindings/__pycache__
+# → .  ..  .TIP  __init__.cpython-38.pyc  _ffi_build.cpython-38.pyc
+
+cat /usr/local/lib/python3.8/dist-packages/_argon2_cffi_bindings/__pycache__/.TIP
+# → "CONGRATULATIONS! ... It is: pwn.college{0zt40yEsdJJy929fQLzPQE9qAj0.dljM4QDL0ATO0czW}"
+```
+
+---
+
+### Flag
+
+```
+pwn.college{0zt40yEsdJJy929fQLzPQE9qAj0.dljM4QDL0ATO0czW}
+```
+
+---
 
