@@ -34,11 +34,20 @@ Also a very cool video with kojia level production by laurie wired
 [grep isn't what you think it means... - YouTube](https://youtu.be/iQZ81MbjKpU?si=4sK_5cj19zUKs1DP)
 
 
-## comparing files 
+## Comparing files 
 
 
 By running `diff /challenge/decoys_and_real.txt /challenge/decoys_only.txt`, we compared the file containing both decoys and the real flag against the one with only decoys. The output showed one extra line, marked with `<`, which revealed the flag: `pwn.college{I6IaeqAhkPIzYBjCadL0ATT3I6q.QXzAzM4EDL0ATO0czW}`.
 
 <img width="888" height="278" alt="screenshot-1758524858" src="https://github.com/user-attachments/assets/13ede348-16b9-4bb8-8233-683ee1853006" />
 
+## Listing Files
+
+
+<img width="918" height="239" alt="screenshot-1758549089" src="https://github.com/user-attachments/assets/49a982b3-1f80-4ba0-a40d-c184cfe01e33" />
+
+
+Running the file as an executable (`/challenge/10062-renamed-run-30646`) produced the hidden message and revealed the flag: `pwn.college{IzQ8c0OGgydpF4q9CDs0zRjLrRG.dhjM4QDL0ATO0czW}`.
+
+notes - ls = "list the content of a DIRECTORY" (not folder)
 
