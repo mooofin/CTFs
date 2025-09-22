@@ -196,10 +196,24 @@ pwn.college{0zt40yEsdJJy929fQLzPQE9qAj0.dljM4QDL0ATO0czW}
 It just makes a `/tmp/pwn` folder, drops an empty file called `college` inside it, and then runs the challenge program to check your setup and give you the flag. & stands for SHELL and .
 
 
+## Finding Files 
 
+<img width="1221" height="465" alt="screenshot-1758552497" src="https://github.com/user-attachments/assets/54f27293-cb50-4bf1-afc9-5a83f8c4519f" />
 
+This command recursively searches the entire filesystem for files named `flag` and prints any line inside them containing `pwn.college`, while ignoring permission errors.
 
+Note - 2>/dev/null → ignore permission errors (p useful ) 
 
+## Linking files 
+
+<img width="1009" height="443" alt="screenshot-1758552875" src="https://github.com/user-attachments/assets/dd01fed8-ea23-464f-a805-ffa0c0734d17" />
+
+I tried doing this in a one liner , 
+```ln -s /flag /home/hacker/not-the-flag```
+Creates a symlink at /home/hacker/not-the-flag that points to /flag.
+
+When /challenge/catflag tries to read /home/hacker/not-the-flag, it will follow the symlink and read the real flag instead
+ 
 
 
 
