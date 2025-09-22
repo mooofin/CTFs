@@ -51,3 +51,9 @@ Running the file as an executable (`/challenge/10062-renamed-run-30646`) produce
 
 notes - ls = "list the content of a DIRECTORY" (not folder)
 
+## Touching files 
+
+<img width="1008" height="287" alt="screenshot-1758549320" src="https://github.com/user-attachments/assets/e6c4cdc1-fc6c-49df-b24c-6c7df26ff727" />
+
+
+
