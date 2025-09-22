@@ -27,3 +27,13 @@ Notes- this one was very annoying and they disabled the perms to search it
 
 `man -k` is a command used to search through the short descriptions of all manual pages for a given keyword, making it useful when you don’t know the exact name of a man page. It lists all matching pages along with their section numbers and brief descriptions : ) 
 
+## Helpful Programs 
+
+<img width="1212" height="691" alt="screenshot-1758554750" src="https://github.com/user-attachments/assets/d00d5ac4-32a7-41a5-ab2b-4edc735138bc" />
+
+## Help for built-ins
+
+<img width="1215" height="554" alt="screenshot-1758554852" src="https://github.com/user-attachments/assets/4b14aef4-f3e5-4cb0-adcb-2f1a7067c96b" />
+
+
+Note - in a shell, builtins are commands that are implemented directly inside the shell itself, rather than being separate programs on disk
