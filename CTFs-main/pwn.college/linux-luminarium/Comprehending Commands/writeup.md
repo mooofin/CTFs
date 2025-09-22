@@ -187,4 +187,35 @@ pwn.college{0zt40yEsdJJy929fQLzPQE9qAj0.dljM4QDL0ATO0czW}
 ```
 
 ---
+ ## Making directories 
+
+ 
+<img width="998" height="331" alt="screenshot-1758551074" src="https://github.com/user-attachments/assets/f47ba2d3-28da-4b0f-ac63-0efc001e7678" />
+
+
+It just makes a `/tmp/pwn` folder, drops an empty file called `college` inside it, and then runs the challenge program to check your setup and give you the flag. & stands for SHELL and .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
