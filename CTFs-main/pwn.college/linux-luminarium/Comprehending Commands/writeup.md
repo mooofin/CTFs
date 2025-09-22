@@ -26,3 +26,19 @@ Notes- This reinforces that cat can take absolute paths as arguments, not just f
 
 <img width="726" height="155" alt="screenshot-1758449864" src="https://github.com/user-attachments/assets/55a63fae-704d-4874-9071-d7e3788d1d18" />
 
+Note - Ripgrep (rg) is a good replacement for grep. Colored output, faster, shorter to type.
+
+Also a very cool video with kojia level production by laurie wired
+
+
+[grep isn't what you think it means... - YouTube](https://youtu.be/iQZ81MbjKpU?si=4sK_5cj19zUKs1DP)
+
+
+## comparing files 
+
+
+By running `diff /challenge/decoys_and_real.txt /challenge/decoys_only.txt`, we compared the file containing both decoys and the real flag against the one with only decoys. The output showed one extra line, marked with `<`, which revealed the flag: `pwn.college{I6IaeqAhkPIzYBjCadL0ATT3I6q.QXzAzM4EDL0ATO0czW}`.
+
+<img width="888" height="278" alt="screenshot-1758524858" src="https://github.com/user-attachments/assets/13ede348-16b9-4bb8-8233-683ee1853006" />
+
+
