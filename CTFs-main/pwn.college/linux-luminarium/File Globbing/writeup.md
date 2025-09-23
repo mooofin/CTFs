@@ -36,12 +36,18 @@ Note - The bracket glob [...] works a lot like the ? wildcard in that it matches
 <img width="1453" height="322" alt="screenshot-1758631991" src="https://github.com/user-attachments/assets/46ec39cd-bd3d-46e4-8cc9-cb95a231e851" />
 
 
+## Mixing globs 
 
 
+<img width="1472" height="459" alt="screenshot-1758633715" src="https://github.com/user-attachments/assets/227ba360-fbb1-4cc2-9359-b4f0244579aa" />
+
+## Exclutionary globbing 
 
 
+<img width="923" height="406" alt="screenshot-1758633826" src="https://github.com/user-attachments/assets/589523f6-2a1e-4162-8c71-0d44a1ceca31" />
 
 
+Note - Inside a bracket glob, ! at the first position negates the set 
 
 
 
