@@ -1,5 +1,19 @@
 # FILE GLOBBING 
 
+## Summary 
+
+
+
+| Glob Type      | Example        | Matches                                        |
+| -------------- | -------------- | ---------------------------------------------- |
+| `*`            | `*p*`          | Any filename containing `p`                    |
+| `?`            | `/?ha?lenge`   | Matches `/challenge` by replacing single chars |
+| `[...]`        | `file_[abc]`   | `file_a`, `file_b`, `file_c`                   |
+| `[!...]`       | `[!pwn]*`      | Files **not starting** with `p`, `w`, or `n`   |
+| Multiple globs | `*[cep]*`      | Files containing `c`, `e`, or `p`              |
+| Tab-completion | `cat pwn<TAB>` | Expands tricky filenames automatically         |
+
+
 
 ## Matching with * 
 
@@ -64,6 +78,9 @@ Note - tab-completion resolves tricky filenames with hidden characters or unusua
 Got some wierd nix error for some time so i had to restart it  
 Note - the trick is that  tab-completion resolves filenames you can’t manually type
 
+## Tab completion on commands
+
+<img width="900" height="305" alt="screenshot-1758634439" src="https://github.com/user-attachments/assets/07253b06-a843-414b-80be-dcbd0b391522" />
 
 
 
