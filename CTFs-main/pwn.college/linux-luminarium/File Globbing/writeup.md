@@ -50,13 +50,19 @@ Note - The bracket glob [...] works a lot like the ? wildcard in that it matches
 Note - Inside a bracket glob, ! at the first position negates the set 
 
 
+## Tab completion 
+
+<img width="888" height="378" alt="screenshot-1758634011" src="https://github.com/user-attachments/assets/af5dfa00-5e62-4186-b317-5954cc96f154" />
+
+Note - tab-completion resolves tricky filenames with hidden characters or unusual symbols that you can’t type manually 
+
+## Multiple option for tab completion
 
 
+<img width="870" height="727" alt="screenshot-1758634296" src="https://github.com/user-attachments/assets/941c3d54-625b-481c-8c24-dcb4c32669be" />
 
-
-
-
-
+Got some wierd nix error for some time so i had to restart it  
+Note - the trick is that  tab-completion resolves filenames you can’t manually type
 
 
 
