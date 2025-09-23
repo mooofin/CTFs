@@ -59,13 +59,26 @@ Note - grep  -v inverts the match, meaning it filters out any line containing th
 
 Note - /challenge/pwn generates a secret code, and /challenge/college expects that code as input. Piping pwn directly into college works but leaves you unable to see the secret. Using tee splits the stream: one copy goes to a file (or terminal) so you can inspect the secret, while the other continues to college. By running /challenge/pwn | tee /tmp/intercepted | /challenge/college, you both forward the output and capture it for inspection
 
+## Process subsitituion for input 
+
+Process substitution <(...) is a bash feature that treats the output of a command as if it were a file:
+```
+<(<command>)
+```
+
+ <command> runs the command.
+
+ Bash gives diff a temporary “file” that contains the command’s output.
+
+This allows diff (or any file-based program) to compare command outputs without creating actual files on disk.
 
 
+``` diff <(/challenge/print_decoys) <(/challenge/print_decoys_and_flag) ```
+
+<img width="1190" height="277" alt="screenshot-1758639156" src="https://github.com/user-attachments/assets/adfda209-8244-4266-8ce1-fe71249d6840" />
 
 
-
-
-
+Note  - How it works under the hood Bash creates a named pipe (FIFO) in /dev/fd/ or /proc/self/fd/.The command runs, writing its output into the pipe
 
 
 
