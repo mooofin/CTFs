@@ -82,7 +82,11 @@ Note  - How it works under the hood Bash creates a named pipe (FIFO) in /dev/fd/
 
 
 
+## Writing to multiple programs 
 
+Normally, a pipe (|) sends output to a single command, but by combining tee with >(command), you can treat a command’s stdin as a “file” and write to it. For example, /challenge/hack | tee >( /challenge/the ) >( /challenge/planet ) runs /challenge/hack once, and tee duplicates its output to both commands simultaneously. Bash sets up named pipes for each process substitution, so when tee writes to them, the connected commands receive the same input
+
+<img width="1191" height="376" alt="screenshot-1758639683" src="https://github.com/user-attachments/assets/f89ac63d-1bd6-43f7-bf8e-27b4385f2548" />
 
 
 
