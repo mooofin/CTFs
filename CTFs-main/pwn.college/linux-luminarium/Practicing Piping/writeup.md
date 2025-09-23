@@ -88,7 +88,11 @@ Normally, a pipe (|) sends output to a single command, but by combining tee with
 
 <img width="1191" height="376" alt="screenshot-1758639683" src="https://github.com/user-attachments/assets/f89ac63d-1bd6-43f7-bf8e-27b4385f2548" />
 
+## Split piping stderr and  stdout 
 
+`/challenge/hack` produces two streams: **stdout** (normal output, fd 1) and **stderr** (error messages, fd 2). Using `> >( /challenge/planet )` redirects stdout into a process substitution running `/challenge/planet`, while `2> >( /challenge/the )` redirects stderr into a process substitution running `/challenge/the`. This way, both streams are handled **separately and simultaneously**, so `/challenge/planet` receives only stdout and `/challenge/the` receives only stderr.
+
+<img width="1160" height="472" alt="screenshot-1758639937" src="https://github.com/user-attachments/assets/125c8ae5-9845-46f6-969c-7cd64cb47c02" />
 
 
 
