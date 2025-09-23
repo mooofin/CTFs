@@ -95,7 +95,7 @@ Normally, a pipe (|) sends output to a single command, but by combining tee with
 <img width="1160" height="472" alt="screenshot-1758639937" src="https://github.com/user-attachments/assets/125c8ae5-9845-46f6-969c-7cd64cb47c02" />
 
 
-
+## 
 
 
 
