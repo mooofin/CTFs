@@ -39,4 +39,13 @@ Note-The key idea is that the child process sees the exported PWN=COLLEGE in its
 
 Note - variables set inside a child process do not automatically appear in the parent shell , I didn’t get the flag because i tried to read a variable as a file
 
+## reading input 
+
+<img width="1003" height="190" alt="screenshot-1758821294" src="https://github.com/user-attachments/assets/6aca93f8-8a81-4728-863a-22224c6d2445" />
+
+Note - read PWN tells the shell to wait for input and store it in the variable 
+
+## Reading files 
+
+
 
