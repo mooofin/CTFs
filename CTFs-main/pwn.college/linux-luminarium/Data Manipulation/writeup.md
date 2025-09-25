@@ -18,3 +18,7 @@ Note - The man page for tr
 <img width="1300" height="272" alt="screenshot-1758821961" src="https://github.com/user-attachments/assets/d79834a7-e4cb-4459-b7be-7d587393c4d7" />
 
 Note - tr -d is basically like a filter that cleans unwanted characters from text streams
+
+
+## Deleting new lines 
+
