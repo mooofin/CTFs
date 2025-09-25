@@ -47,5 +47,7 @@ Note - read PWN tells the shell to wait for input and store it in the variable
 
 ## Reading files 
 
+<img width="1194" height="271" alt="screenshot-1758821415" src="https://github.com/user-attachments/assets/1c7ae866-4cd1-42aa-8ea1-0075da433d09" />
 
+Note - read PWN < /challenge/read_me feeds the file as stdin to read in the current shell 
 
