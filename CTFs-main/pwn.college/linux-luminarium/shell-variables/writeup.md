@@ -18,6 +18,17 @@ Note - PWN=COLLEGE is a shell variable assignment. It sets the variable named PW
 
 <img width="622" height="395" alt="screenshot-1758802530" src="https://github.com/user-attachments/assets/ae1a9eb6-cbbd-4728-8622-60375b9db71f" />
 
+
+
 Note - Set the shell variable PWN to the multi-word string COLLEGE YEAH using quotes (PWN="COLLEGE YEAH")
+
+## Exporting Variables 
+
+<img width="641" height="526" alt="screenshot-1758802761" src="https://github.com/user-attachments/assets/9d0052d3-f7cf-4276-8bf1-92315e0224dd" />
+
+Note-The key idea is that the child process sees the exported PWN=COLLEGE in its environment, while the parent shell still holds COLLEGE=PWN without exporting it
+
+
+## Printing exported variables 
 
 
