@@ -16,4 +16,8 @@ Note - PWN=COLLEGE is a shell variable assignment. It sets the variable named PW
 
 ## Multi-word Variables
 
+<img width="622" height="395" alt="screenshot-1758802530" src="https://github.com/user-attachments/assets/ae1a9eb6-cbbd-4728-8622-60375b9db71f" />
+
+Note - Set the shell variable PWN to the multi-word string COLLEGE YEAH using quotes (PWN="COLLEGE YEAH")
+
 
