@@ -31,4 +31,10 @@ Note-The key idea is that the child process sees the exported PWN=COLLEGE in its
 
 ## Printing exported variables 
 
+<img width="614" height="732" alt="screenshot-1758802845" src="https://github.com/user-attachments/assets/91771fa7-16fa-42b0-a470-d815268a1a22" />
 
+## Storing command output
+
+<img width="742" height="631" alt="screenshot-1758803244" src="https://github.com/user-attachments/assets/d8fb0e91-9b57-4f1f-bc70-6899dfe50481" />
+
+Note - variables set inside a child process do not automatically appear in the parent shell , I didn’t get the flag because i tried to read a variable as a file
