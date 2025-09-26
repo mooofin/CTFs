@@ -1,4 +1,4 @@
-# Processes and Jobs 
+<img width="1082" height="721" alt="screenshot-1758894247" src="https://github.com/user-attachments/assets/87872c20-9aaa-4a3c-bf2b-74c8c3b19df6" /># Processes and Jobs 
 
 ## Listing processes 
 
@@ -25,3 +25,36 @@ Note - Ctrl + C while running   sends an interrupt signal (SIGINT) to the proces
 <img width="1099" height="760" alt="screenshot-1758894093" src="https://github.com/user-attachments/assets/e0ccba49-3faa-4fce-85dd-f6ea564ffdba" />
 
 Note - In this challenge, a decoy process was blocking access to a named pipe (`/tmp/flag_fifo`), preventing `/challenge/run` from writing the real flag. To solve it, I listed all running processes using `ps aux`, found the decoy process (`/challenge/decoy`), and noted its PID. I then terminated it with `kill <PID>`. After removing the decoy, running `/challenge/run` successfully wrote the flag to `/tmp/flag_fifo`, which I retrieved by reading it with `cat /tmp/flag_fifo`.
+
+
+
+## Suspending processes 
+
+
+<img width="1082" height="721" alt="screenshot-1758894247" src="https://github.com/user-attachments/assets/3f28ffa8-c014-4db1-b880-f6769500814c" />
+
+
+
+Note - I ran `/challenge/run`, suspended it with **Ctrl+Z** so it stayed paused in the background, then started a second `/challenge/run` in the same terminal. Because one copy was suspended and another was active, the challenge detected the two instances and printed the flag.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
