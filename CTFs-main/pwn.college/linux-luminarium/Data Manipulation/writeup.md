@@ -38,3 +38,16 @@ Note - keeps only its first 7 lines with head -n 7, and passes those lines to /c
 
 Note - The -d argument specifies the column delimiter (how columns are separated). In this case, it's a space character , The -f argument specifies the field number (which column to extract)
  
+## Sorting data 
+
+<img width="1077" height="260" alt="screenshot-1758873299" src="https://github.com/user-attachments/assets/9ed14187-f21a-42ee-8642-fc6928c9bd54" />
+
+Note - By default, sort orders lines alphabetically. Arguments can change this:
+
+    -r: reverse order (Z to A)
+    -n: numeric sort (for numbers)
+    -u: unique lines only (remove duplicates)
+    -R: random order!
+
+
+
