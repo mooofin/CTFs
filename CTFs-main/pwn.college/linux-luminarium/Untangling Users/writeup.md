@@ -1,32 +1,40 @@
+<div align="center">
+
 # Untangling Users
 
+## Becoming root with SU
 
-## Becoming root with SU 
+<figure>
+  <img src="https://github.com/user-attachments/assets/e98ac864-7359-4663-99c8-0df354f53876" alt="screenshot-1758910828" style="max-width:900px; width:100%; height:auto;">
+</figure>
 
-<img width="1117" height="269" alt="screenshot-1758910828" src="https://github.com/user-attachments/assets/e98ac864-7359-4663-99c8-0df354f53876" />
+## Other users with su
 
-## Other users with su 
+<figure>
+  <img src="https://github.com/user-attachments/assets/2e2f3299-2407-4bca-8dbd-b5570635ea20" alt="screenshot-1758914550" style="max-width:900px; width:100%; height:auto;">
+</figure>
 
-<img width="1106" height="272" alt="screenshot-1758914550" src="https://github.com/user-attachments/assets/2e2f3299-2407-4bca-8dbd-b5570635ea20" />
+**Note** - almost similar
 
-Note - almost similar 
+## Cracking passwords
 
-## Cracking passwords 
+<figure>
+  <img src="https://github.com/user-attachments/assets/cebd6596-9401-415f-aa87-f3da3287ce93" alt="screenshot-1758915013" style="max-width:900px; width:100%; height:auto;">
+</figure>
 
+**Note** - When you log in or use `su` to switch users, the system checks your password by hashing it and comparing it to the stored hash. Historically, these hashes were stored in `/etc/passwd`, but since that file must be world readable for system functions, storing password hashes there was insecure.
 
-<img width="1189" height="806" alt="screenshot-1758915013" src="https://github.com/user-attachments/assets/cebd6596-9401-415f-aa87-f3da3287ce93" />
+To fix this, password hashes were moved to `/etc/shadow`, which is only readable by root. However, if `/etc/shadow` ever leaks for example, through a misconfigured backup or accidental disclosure attackers can try to crack the hashes offline.
 
+ALSO  the use of a salt with a hash is important. The salt is a random piece of information that is used to deter the use of rainbow tables (i.e., pre-computed hashes to attack password hashes).
 
-Note - When you log in or use su to switch users, the system checks your password by hashing it and comparing it to the stored hash. Historically, these hashes were stored in /etc/passwd, but since that file must be world readable for system functions, storing password hashes there was insecure.
+## using sudo
 
-To fix this, password hashes were moved to /etc/shadow, which is only readable by root. However, if /etc/shadow ever leaks  for example, through a misconfigured backup or accidental disclosure attackers can try to crack the hashes offline
+<figure>
+  <img src="https://github.com/user-attachments/assets/a1f6d32a-4411-4528-bfaf-2644a01fa5fd" alt="screenshot-1758915472" style="max-width:900px; width:100%; height:auto;">
+</figure>
 
-ALSO- the use of a salt with a hash is important. The salt is a random piece of information that is used to deter the use of rainbow tables (ie. pre-computed hashes to attack password hashes)
-
-
-## using sudo 
-
-<img width="1185" height="818" alt="screenshot-1758915472" src="https://github.com/user-attachments/assets/a1f6d32a-4411-4528-bfaf-2644a01fa5fd" />
+</div>
 
 
 
