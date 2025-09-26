@@ -37,7 +37,29 @@ Note - In this challenge, a decoy process was blocking access to a named pipe (`
 
 Note - I ran `/challenge/run`, suspended it with **Ctrl+Z** so it stayed paused in the background, then started a second `/challenge/run` in the same terminal. Because one copy was suspended and another was active, the challenge detected the two instances and printed the flag.
 
+## Resuming proccess 
 
+<img width="1090" height="479" alt="screenshot-1758894389" src="https://github.com/user-attachments/assets/c83d86b3-fe3c-44a7-a23c-957061486cab" />
+
+
+note  -  I started `/challenge/run`, suspended it with **Ctrl+Z** to pause it in the background, then used `fg` to bring it back to the foreground—when it resumed it printed the flag and I pressed Enter to exit.
+
+
+You shell keeps a table of currently executing jobs and can be displayed with jobs command. You need to use bg command to restart a stopped background process. The fg command moves a background job in the current shell environment into the foreground
+
+ALSO -  You cannot use fg and bg with a pid. They are shell builtin-s which require a jobspec, not a pid
+
+ALSO x2 - 
+
+The job control section of Greg's Bash Guide describes this as follows:
+
+    A job specification or "jobspec" is a way of referring to the processes that make up a job. A jobspec may be:
+
+        %n to refer to job number n.
+        %str to refer to a job which was started by a command beginning with str. It is an error if there is more than one such job.
+        %?str to refer to a job which was started by a command containing str. It is an error if there is more than one such job.
+        %% or %+ to refer to the current job: the one most recently started in the background, or suspended from the foreground. fg and bg will operate on this job if no jobspec is given.
+        %- for the previous job (the job that was %% before the current one).
 
 
 
