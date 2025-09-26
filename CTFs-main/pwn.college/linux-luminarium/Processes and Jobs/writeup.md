@@ -62,13 +62,17 @@ The job control section of Greg's Bash Guide describes this as follows:
         %- for the previous job (the job that was %% before the current one).
 
 
+## Backgrounding proccess 
 
 
+<img width="809" height="717" alt="screenshot-1758894910" src="https://github.com/user-attachments/assets/c020b852-9667-47f9-a47a-96a7f342128e" />
 
 
+## foregrounding proccess 
 
+<img width="1080" height="610" alt="screenshot-1758896435" src="https://github.com/user-attachments/assets/0eb9ce9c-7a53-4047-9023-b9c30fe32f28" />
 
-
+Note - Suspend with Ctrl-Z, background it with `bg`, then bring it to the foreground with `fg`.
 
 
 
