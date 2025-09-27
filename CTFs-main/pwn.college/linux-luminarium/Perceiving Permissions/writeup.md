@@ -1,5 +1,49 @@
 # Perceiving Permissions 
 
+## CHEAT SHEET 
+
+
+| **Item**                                               |                                **Meaning / Use** |  **Symbolic example**  | **Octal example** | **What it does**                        |
+| ------------------------------------------------------ | -----------------------------------------------: | :--------------------: | :---------------: | :-------------------------------------- |
+| Who — user (owner)                                     |                                   The file owner |           `u`          |         —         | Refers to the owning **user**           |
+| Who — group                                            |                        Users in the owning group |           `g`          |         —         | Refers to the file’s **group**          |
+| Who — others                                           |                                    Everyone else |           `o`          |         —         | Refers to **other** users               |
+| Who — all                                              |                           user, group and others |  `a` (same as `ug o`)  |         —         | Applies to **all** categories           |
+| Read                                                   |               Permission to read file / list dir |           `r`          |         4         | Read bit (4)                            |
+| Write                                                  | Permission to modify file / create/delete in dir |           `w`          |         2         | Write bit (2)                           |
+| Execute                                                |                Run file / enter directory (`cd`) |           `x`          |         1         | Execute bit (1)                         |
+| Add permission                                         |                        Add bits to existing mode |           `+`          |         —         | e.g. `g+w` gives group write            |
+| Remove permission                                      |                   Remove bits from existing mode |           `-`          |         —         | e.g. `o-r` strips others’ read          |
+| Set exactly                                            |            Replace permissions for WHO with WHAT |           `=`          |         —         | e.g. `u=rw` makes owner read+write only |
+| Read for owner only (make file readable only by owner) |                                                — | `u+r,g-r,o-r` or `u=r` |       `400`       | Owner read, nobody else                 |
+| Make readable by group                                 |                                                — |          `g+r`         |         —         | Group gains read                        |
+| Make readable by others                                |                                                — |          `o+r`         |         —         | Everyone can read                       |
+| Common full read-only for all                          |                                                — |          `a=r`         |       `444`       | Read by everyone, no write/exec         |
+| Common rwx for owner, rx for group/others              |                                                — |    `u=rwx,g=rx,o=rx`   |       `755`       | Typical executable dir/program          |
+| Common rw for owner, r for group, others none          |                                                — |      `u=rw,g=r,o=`     |       `640`       | Owner read/write, group read            |
+| Shortcut: remove all group/other perms                 |                                                — |        `go-rwx`        |         —         | Tighten access to owner only            |
+| Verify permissions                                     |                   See current mode and ownership |      `ls -l /path`     |         —         | Shows e.g. `-rw-r--r--`                 |
+
+### How to read `-rwxr-xr--`
+
+Break into three groups after the first character:
+
+* `rwx` → owner (user) = read, write, execute
+* `r-x` → group = read, execute
+* `r--` → others = read only
+
+### Quick examples
+
+* `chmod g+w /flag` → give the group write on `/flag`
+* `chmod o+r /flag` → make `/flag` readable by everyone
+* `chmod u+x script.sh` → make `script.sh` executable by its owner
+* `chmod 644 file` → equivalent to `u=rw,g=r,o=r`
+* `chmod 700 dir` → owner full access, nobody else (good for private dirs)
+
+---
+
+
+
 
 ## Changing file ownership 
 
@@ -25,3 +69,5 @@ Note  - I see I’m in group grp9600 (from id). I'll change the flag’s group a
 <img width="1312" height="256" alt="screenshot-1758982279" src="https://github.com/user-attachments/assets/484e14a9-c7fe-4076-9276-e615142e994a" />
 
 Note - Giving others read (o+r) is the smallest change needed alsoess  you can use chmod 444 /flag to make it read-only for everyone mhmmm
+
+
