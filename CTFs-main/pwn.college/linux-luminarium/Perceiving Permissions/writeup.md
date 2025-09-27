@@ -18,3 +18,6 @@ Note - The chgrp command in Linux is used to change the group ownership of a fil
 <img width="1091" height="325" alt="screenshot-1758981071" src="https://github.com/user-attachments/assets/a8c5c4bb-0002-4277-addf-3e0869db9165" />
 
 Note  - I see I’m in group grp9600 (from id). I'll change the flag’s group and read it : ) 
+
+## Changing permissions
+
