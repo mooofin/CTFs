@@ -89,3 +89,11 @@ WHAT — r (read), w (write), x (execute)
 ACTION — + (add), - (remove), = (set exactly)
 
 
+## Permission setting practise 
+
+<img width="1081" height="368" alt="screenshot-1758986872" src="https://github.com/user-attachments/assets/1618ff69-a03a-4c6d-9f0b-bce75a09c1e9" />
+
+In `chmod`, **`a`** is a shorthand for `u,g,o` combined, meaning it applies to the owner, the group, and others simultaneously. For example, `chmod a=rx file` sets the permissions for all three categories owner, group, and others to read and execute (`r-x`) at once. This is equivalent to writing `chmod u=rx,g=rx,o=rx file`, which explicitly sets the same permissions separately for the user, group, and others.
+
+
+
