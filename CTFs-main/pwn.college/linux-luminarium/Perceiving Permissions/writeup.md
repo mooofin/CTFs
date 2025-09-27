@@ -95,5 +95,9 @@ ACTION — + (add), - (remove), = (set exactly)
 
 In `chmod`, **`a`** is a shorthand for `u,g,o` combined, meaning it applies to the owner, the group, and others simultaneously. For example, `chmod a=rx file` sets the permissions for all three categories owner, group, and others to read and execute (`r-x`) at once. This is equivalent to writing `chmod u=rx,g=rx,o=rx file`, which explicitly sets the same permissions separately for the user, group, and others.
 
+## The suid bit 
 
+<img width="1069" height="394" alt="screenshot-1758987081" src="https://github.com/user-attachments/assets/662cade8-d5a5-4cf9-adc7-c24b929297f5" />
+
+Note - chmod u+s sets the SUID bit so that when anyone with execute permission runs /challenge/getroot, it runs with the file owner’s privileges
 
