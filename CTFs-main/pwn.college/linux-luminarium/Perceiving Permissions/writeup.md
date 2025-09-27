@@ -70,4 +70,13 @@ Note  - I see I’m in group grp9600 (from id). I'll change the flag’s group a
 
 Note - Giving others read (o+r) is the smallest change needed alsoess  you can use chmod 444 /flag to make it read-only for everyone mhmmm
 
+## Executable Files
+
+<img width="1306" height="231" alt="screenshot-1758983240" src="https://github.com/user-attachments/assets/1b782cb4-e1af-4d2c-91ee-1aecaf725efb" />
+
+## Permission tweaking practises 
+
+
+
+
 
