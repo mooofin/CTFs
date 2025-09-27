@@ -77,6 +77,15 @@ Note - Giving others read (o+r) is the smallest change needed alsoess  you can u
 ## Permission tweaking practises 
 
 
+<img width="876" height="76" alt="screenshot-1758984242" src="https://github.com/user-attachments/assets/5840bafb-002f-4307-9e6c-a59e3135262a" />
 
+
+Note - this was a very long game , went wrong multiple times skill isuue xd 
+
+WHO — u (owner), g (group), o (others), a (all)
+
+WHAT — r (read), w (write), x (execute)
+
+ACTION — + (add), - (remove), = (set exactly)
 
 
