@@ -21,3 +21,7 @@ Note  - I see I’m in group grp9600 (from id). I'll change the flag’s group a
 
 ## Changing permissions
 
+
+<img width="1312" height="256" alt="screenshot-1758982279" src="https://github.com/user-attachments/assets/484e14a9-c7fe-4076-9276-e615142e994a" />
+
+Note - Giving others read (o+r) is the smallest change needed alsoess  you can use chmod 444 /flag to make it read-only for everyone mhmmm
