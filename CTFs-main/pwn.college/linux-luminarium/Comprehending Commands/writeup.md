@@ -195,6 +195,7 @@ pwn.college{0zt40yEsdJJy929fQLzPQE9qAj0.dljM4QDL0ATO0czW}
 
 It just makes a `/tmp/pwn` folder, drops an empty file called `college` inside it, and then runs the challenge program to check your setup and give you the flag. & stands for SHELL and .
 
+The command mkdir -p in Linux is used to create directories along with any necessary parent directories that don’t already exist. The mkdir part stands for “make directory,” and the -p option ensures that no error is shown if the directory already exists and that all intermediate directories in the specified path are created automatically. For example, running mkdir -p /home/user/projects/code will create the full path, even if /home/user or /home/user/projects don’t exist yet. Without -p, the command would fail if any parent directory in the path is missing
 
 ## Finding Files 
 
