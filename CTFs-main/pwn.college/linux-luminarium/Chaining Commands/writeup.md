@@ -26,3 +26,19 @@
 
 ## Understanding shebangs 
 
+<img width="1301" height="531" alt="screenshot-1759216977" src="https://github.com/user-attachments/assets/c54e7c08-f3b5-4744-a0d1-3dc1c918f299" />
+
+Note -  In Linux, when you run a file, the system doesn’t use the file extension to decide how to execute it. Instead, it checks the first line of the file. If the file begins with `#!`, called a **shebang**, Linux uses the path that follows (like `/bin/bash`) as the interpreter to run the script.
+
+The shebang must be the **first line** with no spaces or blank lines before it. For example:
+
+```bash
+#!/bin/bash
+echo "Hello Hackers!"
+```
+
+When you make this script executable (`chmod +x script.sh`) and run it (`./script.sh`), Linux reads the shebang and effectively runs `/bin/bash ./script.sh`.
+
+This allows scripts to run directly  even when called by other programs — without needing to explicitly type `bash script.sh`. Common shebangs include `#!/bin/bash` for Bash, `#!/usr/bin/python3` for Python, and `#!/bin/sh` for POSIX shell.
+
+
