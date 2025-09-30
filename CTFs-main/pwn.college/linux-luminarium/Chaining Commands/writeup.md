@@ -16,4 +16,13 @@
 
 <img width="1295" height="332" alt="screenshot-1759054302" src="https://github.com/user-attachments/assets/2969f2da-c2a0-43b9-b792-a3791838e058" />
 
-## 
+## Redirecting script output 
+<img width="1306" height="318" alt="screenshot-1759216726" src="https://github.com/user-attachments/assets/1d37a4cb-48ea-4acd-a9ab-d4f5b1825920" />
+
+
+## Executable shell scripts 
+
+<img width="1299" height="321" alt="screenshot-1759216873" src="https://github.com/user-attachments/assets/1b57f3f9-d4b3-4e4a-b3f1-f98bd8a5e651" />
+
+## Understanding shebangs 
+
