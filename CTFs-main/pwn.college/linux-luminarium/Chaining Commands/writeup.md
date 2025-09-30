@@ -49,4 +49,27 @@ This allows scripts to run directly  even when called by other programs — with
 ## Scripting with conditionals 
 
 
+<img width="1319" height="717" alt="screenshot-1759217415" src="https://github.com/user-attachments/assets/f05d044d-b89f-44ea-8ce7-1db349bdbd93" />
+
+
+note - 
+| Command / Syntax   |                                         What it does | Example                            |                                                     |       |   |       |
+| ------------------ | ---------------------------------------------------: | ---------------------------------- | --------------------------------------------------- | ----- | - | ----- |
+| `if`               |                           Starts a conditional block | `if [ "$1" = "pwn" ]`              |                                                     |       |   |       |
+| `then`             |             Begins commands to run when `if` is true | `then echo "yes"`                  |                                                     |       |   |       |
+| `else`             |           (Optional) Commands when the test is false | `else echo "no"`                   |                                                     |       |   |       |
+| `elif`             |    "else if" — another test if the first `if` failed | `elif [ "$1" = "test" ]`           |                                                     |       |   |       |
+| `fi`               |                 Ends the `if` block (`if` backwards) | `fi`                               |                                                     |       |   |       |
+| `[ ... ]` / `test` |      Evaluates a condition (strings, numbers, files) | `[ -f file.txt ]`                  |                                                     |       |   |       |
+| `"$1"`, `"$2"`     |         Positional parameters (1st, 2nd script args) | `echo "$2 $1"`                     |                                                     |       |   |       |
+| `&&`               | Run next command only if previous succeeded (exit 0) | `cmd1 && cmd2`                     |                                                     |       |   |       |
+| `                  |                                                      | `                                  | Run next command only if previous failed (non‑zero) | `cmd1 |   | cmd2` |
+| `chmod +x file`    |                               Make `file` executable | `chmod +x solve.sh`                |                                                     |       |   |       |
+| `#!/bin/bash`      |      Shebang — tells kernel which interpreter to use | `#!/bin/bash` at top of script     |                                                     |       |   |       |
+| `./script`         |        Run an executable script in current directory | `./solve.sh arg`                   |                                                     |       |   |       |
+| `echo` / `printf`  |                                 Print text to stdout | `echo "hi"` / `printf "%s\n" "$1"` |                                                     |       |   |       |
+
+
+
+
 
