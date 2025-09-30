@@ -1,4 +1,24 @@
-# Chaining Commands 
+# Chaining Commands
+
+## SUMMARY 
+
+| Cmd / Syntax                              |                               What it does (tiny) | Example                                      |                                              |                |
+| ----------------------------------------- | ------------------------------------------------: | -------------------------------------------- | -------------------------------------------- | -------------- |
+| `#!/bin/bash`                             | Shebang — choose interpreter (must be first line) | `#!/bin/bash`                                |                                              |                |
+| `chmod +x file`                           |                            Make a file executable | `chmod +x solve.sh`                          |                                              |                |
+| `./script arg1`                           |           Run an executable script in current dir | `./solve.sh pwn`                             |                                              |                |
+| `$1`, `$2`                                |         Positional parameters (first, second arg) | `echo "$2 $1"`                               |                                              |                |
+| `if ...; then ... elif ...; else ...; fi` |                                 Conditional block | `if [ "$1" = "pwn" ]; then echo college; fi` |                                              |                |
+| `[ ... ]` / `test`                        |     Evaluate conditions (strings, numbers, files) | `[ -f file.txt ]`                            |                                              |                |
+| `read VAR`                                |                 Read a line from stdin into `VAR` | `read GUESS`                                 |                                              |                |
+| `echo` / `printf`                         |         Print to stdout (`printf` for formatting) | `echo hi` / `printf "%s\n" "$1"`             |                                              |                |
+| `>` / `>>`                                |              Redirect output (overwrite / append) | `echo hi > out.txt`                          |                                              |                |
+| `                                         |                                          ` (pipe) | Send stdout of left to stdin of right        | `cmd1                                        | cmd2`          |
+| `&&` / `                                  |                                                   | `                                            | Run next only if previous succeeded / failed | `cmd1 && cmd2` |
+| `cat` / `grep`                            |             View files / search text (quick peek) | `cat file; grep -n foo file`                 |                                              |                |
+| `<<<` / `<<EOF`                           |        Here‑string / here‑doc (feed stdin inline) | `/challenge/run <<< 'pwd'`                   |                                              |                |
+| `exit N`                                  |         Exit script with status `N` (0 = success) | `exit 0`                                     |                                              |                |
+
 
 ## Chaining with semicolons
 
@@ -79,6 +99,10 @@ note -
 
 <img width="1288" height="343" alt="screenshot-1759217781" src="https://github.com/user-attachments/assets/c600887a-8ffb-4ca4-abdb-e19f5502a399" />
 
+
+## Reading shell scripts 
+
+<img width="1303" height="356" alt="screenshot-1759217919" src="https://github.com/user-attachments/assets/66ae08b8-a6f7-49ad-8ffb-4d6f8a678898" />
 
 
 
