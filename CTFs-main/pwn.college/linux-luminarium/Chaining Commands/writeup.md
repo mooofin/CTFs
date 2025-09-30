@@ -70,6 +70,16 @@ note -
 | `echo` / `printf`  |                                 Print text to stdout | `echo "hi"` / `printf "%s\n" "$1"` |                                                     |       |   |       |
 
 
+## Scripting with default cases 
+
+<img width="1303" height="252" alt="screenshot-1759217697" src="https://github.com/user-attachments/assets/fe300fef-a50e-4d9e-992b-5cc7566da8bc" />
+
+## Scripting with multiple conditions 
+
+
+<img width="1288" height="343" alt="screenshot-1759217781" src="https://github.com/user-attachments/assets/c600887a-8ffb-4ca4-abdb-e19f5502a399" />
+
+
 
 
 
