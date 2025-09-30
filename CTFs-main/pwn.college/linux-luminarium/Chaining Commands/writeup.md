@@ -41,4 +41,12 @@ When you make this script executable (`chmod +x script.sh`) and run it (`./scrip
 
 This allows scripts to run directly  even when called by other programs — without needing to explicitly type `bash script.sh`. Common shebangs include `#!/bin/bash` for Bash, `#!/usr/bin/python3` for Python, and `#!/bin/sh` for POSIX shell.
 
+## Scripting with arguments 
+
+
+<img width="1292" height="563" alt="screenshot-1759217299" src="https://github.com/user-attachments/assets/835e269f-48ae-47b0-8fd1-2020eb67af2c" />
+
+## Scripting with conditionals 
+
+
 
