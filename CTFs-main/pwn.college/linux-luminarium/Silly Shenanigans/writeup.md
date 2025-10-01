@@ -99,3 +99,13 @@ This worked because the `/tmp/collab` directory was world-writable **without the
 I solved this level by sniffing process arguments with `ps aux` and using the leaked credential to escalate. While inspecting running processes I noticed a root invocation of the automation script that included `--pass pw_24430` in its command line, which revealed Zardus's password in plain text. I used that password to switch to Zardus with `su zardus`, then ran `sudo cat /flag` to read the flag. The exercise demonstrates a real risk: passing secrets on the command line exposes them to any local user via `/proc` or `ps`, so sensitive data should be passed via stdin, protected files, or other secure channels and not as arguments.
 
 PSS(screenshot has a different pss because i did it again og terminal was messy and apparently pwn college uses nix to deploy ? ) 
+
+
+
+## Snooping on configs 
+
+<img width="1320" height="310" alt="screenshot-1759345097" src="https://github.com/user-attachments/assets/d16124ad-2731-4be8-8c6e-d16308b25b51" />
+
+fun fact - API Key Prefixes: The prefix sk_ on the API key is a common convention that stands for "secret key" or "server key". You'll often see a corresponding pk_ for "publishable key", which is safe to expose in client-side code . ALso stripe started using these terms  .
+
+
