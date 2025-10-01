@@ -47,5 +47,13 @@ To prevent getting fork bombed  lower that amount by using
 <img width="499" height="595" alt="image" src="https://github.com/user-attachments/assets/2c60b85b-3ee2-477f-82e0-eb98fd7cf411" />
 
 
+ -----
+
+## Disk-space DOOMSDAY
+
+<img width="1312" height="604" alt="screenshot-1759348504" src="https://github.com/user-attachments/assets/4533bd1d-b72f-437a-99ae-f45e1a473968" />
+
+In this challenge, the goal was to intentionally fill up the available disk space in the `/home/hacker` directory until even a small 1 MB file could no longer be created. Although the filesystem itself had plenty of capacity, the system imposed a per-user quota of 1 GB. To reach this limit, we used the `yes` command, which continuously outputs the letter `y`. By redirecting this output into a file using `yes > junkfile.txt`, the file grew rapidly until the message `Disk quota exceeded` appeared, indicating that our quota was fully used. Without deleting the file, we then ran `/challenge/check`, which attempted to create a temporary file and failed, confirming that the quota was exhausted. This completed the first stage of the challenge. Next, we removed the large file with `rm junkfile.txt` to free up the used space and ran `/challenge/check` again.
+
 
 
