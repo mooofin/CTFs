@@ -73,3 +73,22 @@ Instead of waiting for `flag_checker` to appear, I create my *own* `flag_checker
 I exploit command lookup (PATH) to intercept the secret. I create a directory I control (for example /tmp/fakebin) and place a script named flag_checker there. In the .bashrc I install for zardus I prepend /tmp/fakebin to PATH. When zardus later runs flag_checker and types the flag, the shell will execute my script (because execvp("flag_checker",...) searches PATH left‑to‑right) instead of the legitimate program.
 
 My fake flag_checker must mimic the real one’s behavior enough to avoid suspicion: it prints the expected prompt Type the flag, reads one line from stdin (the flag), writes that value to a file I can read (e.g. /tmp/zardus_flag), and sets its permissions so I can access it. Because the script runs as zardus, it can see whatever zardus types; capturing that input and writing it world‑readable lets me retrieve the secret after the simulated login completes.
+
+
+## Tricky linking 
+
+<img width="1263" height="247" alt="screenshot-1759324829" src="https://github.com/user-attachments/assets/4242b813-af23-4a89-b77b-ab85e30fcb63" />
+
+
+In this challenge, I had to exploit a symbolic link vulnerability caused by an insecure shared directory. Zardus created a world-writable directory at `/tmp/collab` and stored a file called `evil-commands.txt` there. Whenever I ran `/challenge/victim`, it logged in as Zardus and appended the command `cat /flag` to that file. Because the directory didn’t have the sticky bit set, I also had permission to remove and replace files inside it. That gave me the opportunity to replace `evil-commands.txt` with a **symbolic link** to a file that Zardus would automatically execute when he logged in, like `/home/zardus/.bashrc`.
+
+I first removed the original file and created a symlink to Zardus’s `.bashrc`. Then, when I ran `/challenge/victim` the first time, it appended `cat /flag` into `.bashrc` instead of the original file. On the second run, Zardus logged in again, sourced his `.bashrc`, and the newly added `cat /flag` command executed automatically, printing the flag to my terminal.
+
+The entire exploit worked with this one-liner:
+
+```bash
+rm -f /tmp/collab/evil-commands.txt && ln -s /home/zardus/.bashrc /tmp/collab/evil-commands.txt && /challenge/victim && /challenge/victim
+```
+
+This worked because the `/tmp/collab` directory was world-writable **without the sticky bit**, which allowed me to delete and replace files owned by another user. If the sticky bit had been set (with `chmod +t /tmp/collab`), I wouldn’t have been able to replace the file, and the vulnerability would have been prevented. This challenge taught me how dangerous shared directories can be if not configured properly.
+
