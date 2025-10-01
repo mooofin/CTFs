@@ -92,3 +92,9 @@ rm -f /tmp/collab/evil-commands.txt && ln -s /home/zardus/.bashrc /tmp/collab/ev
 
 This worked because the `/tmp/collab` directory was world-writable **without the sticky bit**, which allowed me to delete and replace files owned by another user. If the sticky bit had been set (with `chmod +t /tmp/collab`), I wouldn’t have been able to replace the file, and the vulnerability would have been prevented. This challenge taught me how dangerous shared directories can be if not configured properly.
 
+## Sniffing arguments 
+
+<img width="1092" height="484" alt="screenshot-1759325426" src="https://github.com/user-attachments/assets/b265f4cc-504e-4fee-bffc-7bd40c13469d" />
+
+I solved this level by sniffing process arguments with `ps aux` and using the leaked credential to escalate. While inspecting running processes I noticed a root invocation of the automation script that included `--pass pw_24430` in its command line, which revealed Zardus's password in plain text. I used that password to switch to Zardus with `su zardus`, then ran `sudo cat /flag` to read the flag. The exercise demonstrates a real risk: passing secrets on the command line exposes them to any local user via `/proc` or `ps`, so sensitive data should be passed via stdin, protected files, or other secure channels and not as arguments.
+
