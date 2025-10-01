@@ -63,3 +63,13 @@ Instead of waiting for `flag_checker` to appear, I create my *own* `flag_checker
 * Not making the captured file world-readable means I (hacker) still can’t read it.
 
 
+## overshared dictionaries 
+
+<img width="1065" height="377" alt="screenshot-1759312240" src="https://github.com/user-attachments/assets/9d452b6b-a7b8-4729-b62b-58c404264b2d" />
+
+
+ Because /home/zardus is world‑writable, I (the hacker) can move, delete, or replace files inside it even if I don’t own them. That means I don’t need direct write permission on /home/zardus/.bashrc  I can rename or remove it and drop in my own startup file that will be executed when zardus logs in.
+
+I exploit command lookup (PATH) to intercept the secret. I create a directory I control (for example /tmp/fakebin) and place a script named flag_checker there. In the .bashrc I install for zardus I prepend /tmp/fakebin to PATH. When zardus later runs flag_checker and types the flag, the shell will execute my script (because execvp("flag_checker",...) searches PATH left‑to‑right) instead of the legitimate program.
+
+My fake flag_checker must mimic the real one’s behavior enough to avoid suspicion: it prints the expected prompt Type the flag, reads one line from stdin (the flag), writes that value to a file I can read (e.g. /tmp/zardus_flag), and sets its permissions so I can access it. Because the script runs as zardus, it can see whatever zardus types; capturing that input and writing it world‑readable lets me retrieve the secret after the simulated login completes.
