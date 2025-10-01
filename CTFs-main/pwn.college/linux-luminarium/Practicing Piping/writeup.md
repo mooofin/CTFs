@@ -95,8 +95,13 @@ Normally, a pipe (|) sends output to a single command, but by combining tee with
 <img width="1160" height="472" alt="screenshot-1758639937" src="https://github.com/user-attachments/assets/125c8ae5-9845-46f6-969c-7cd64cb47c02" />
 
 
-## 
+##  Named pipes 
 
+<img width="1336" height="443" alt="screenshot-1759310766" src="https://github.com/user-attachments/assets/490a0635-3a2e-438a-af39-9a1e10ef4d91" />
+
+ Note - A FIFO (named pipe) is a special file that provides a direct, in‑memory channel between processes: one process writes bytes into it and another reads those bytes out. Unlike a regular file, data in a FIFO does not persist on disk  once read it’s gone  and operations on the FIFO block until both ends are open: a writer will wait until a reader opens the FIFO, and a reader will wait until a writer opens it. This automatic blocking provides simple synchronization between processes.
+
+In this challenge you create a FIFO (e.g. mkfifo /tmp/flag_fifo), run a reader on it (cat /tmp/flag_fifo or background cat /tmp/flag_fifo &), and then redirect the program’s stdout into the FIFO (/challenge/run > /tmp/flag_fifo). Because the reader is attached, the program’s output (the flag) flows through the FIFO and is printed by the reader. Clean up the FIFO afterward with rm /tmp/flag_fifo
 
 
 
