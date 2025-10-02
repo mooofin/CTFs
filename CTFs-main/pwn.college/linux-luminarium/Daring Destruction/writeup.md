@@ -55,5 +55,14 @@ To prevent getting fork bombed  lower that amount by using
 
 In this challenge, the goal was to intentionally fill up the available disk space in the `/home/hacker` directory until even a small 1 MB file could no longer be created. Although the filesystem itself had plenty of capacity, the system imposed a per-user quota of 1 GB. To reach this limit, we used the `yes` command, which continuously outputs the letter `y`. By redirecting this output into a file using `yes > junkfile.txt`, the file grew rapidly until the message `Disk quota exceeded` appeared, indicating that our quota was fully used. Without deleting the file, we then ran `/challenge/check`, which attempted to create a temporary file and failed, confirming that the quota was exhausted. This completed the first stage of the challenge. Next, we removed the large file with `rm junkfile.txt` to free up the used space and ran `/challenge/check` again.
 
+## rm -rf / 
+
+<img width="774" height="288" alt="screenshot-1759385325" src="https://github.com/user-attachments/assets/8e1f21e9-3417-4e71-b5b3-c604d7dab201" />
+
+<img width="1112" height="424" alt="screenshot-1759387088" src="https://github.com/user-attachments/assets/fa361341-42bd-47e5-80b2-0205515d26f3" />
+The rm utility is invoked with the -r (recursive) flag to traverse the entire directory tree starting from the root (/) and the -f (force) flag to suppress most prompts and error messages, allowing the process to proceed with minimal interruption. On modern GNU/Linux systems, rm includes a default safeguard (--preserve-root) to prevent this exact operation
+
+## Life after -rm rf 
+
 
 
