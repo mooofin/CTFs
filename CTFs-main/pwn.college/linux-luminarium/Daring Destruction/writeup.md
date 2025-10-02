@@ -64,5 +64,8 @@ The rm utility is invoked with the -r (recursive) flag to traverse the entire di
 
 ## Life after -rm rf 
 
+<img width="779" height="320" alt="screenshot-1759387728" src="https://github.com/user-attachments/assets/ee5151eb-09c9-4e7c-b2a0-2a80dbe082c8" />
 
+
+<img width="846" height="557" alt="screenshot-1759387724" src="https://github.com/user-attachments/assets/dacfcce6-39a2-4958-9003-ae4e65c8293a" />
 
