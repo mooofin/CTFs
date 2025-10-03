@@ -1,25 +1,25 @@
-# Pwntools Tutorial Level 2.0 Writeup
+# Pwntools Tutorial Level 2.0 Technical Writeup
 
 ## Objective
 
-The goal of this challenge is to provide an assembly code snippet that sets the `rax` register to the specific value `0x12345678`. We will use the `asm` function from the `pwntools` library to compile our assembly instruction into machine code (bytes) and send it to the challenge binary to bypass its check.
+The objective of this challenge is to construct an assembly code snippet that sets the `rax` register to the hexadecimal value `0x12345678`. The `asm` function from the `pwntools` library is to be used for compiling the assembly instruction into machine code. This payload is then sent to the target binary to bypass a programmatic check.
 
 ## Solution
 
-To accomplish this, we need to use an assembly instruction that moves the desired value into the `rax` register. In x86-64 assembly, the `mov` instruction is used for this purpose.
+The solution requires an assembly instruction to load an immediate value into the `rax` register. On the x86-64 architecture, the `mov` instruction is utilized for this operation.
 
 The specific instruction is:
 ```assembly
 mov rax, 0x12345678
 ```
 
-This instruction tells the processor to move the immediate 64-bit value `0x12345678` into the `rax` register.
+This instruction directs the CPU to load the 64-bit immediate value `0x12345678` into the `rax` register.
 
-We will integrate this into the provided Python script. The `asm()` function from `pwntools` will take our assembly instruction as a string and return the corresponding compiled bytes, which we can then send to the process.
+This assembly instruction is then passed as a string to the `pwntools` `asm()` function. The function compiles it into the corresponding machine code byte sequence. The resulting bytes are transmitted to the running process to be executed
 
 ## Final Script
 
-Here is the complete Python script to solve the challenge. The `NOP` instruction has been replaced with our `mov` instruction.
+
 
 ```python
 from pwn import *
@@ -48,14 +48,17 @@ challenge_path = "/challenge/pwntools-tutorials-level2.0"
 p = process(challenge_path)
 
 # This is the core of the solution.
-# The `asm()` function takes our assembly instruction as an argument
+# The `asm()` function takes the  assembly instruction as an argument
 # and compiles it into the raw bytes that the CPU can execute.
 shellcode = asm("mov rax, 0x12345678")
 
 # The script waits until it receives the specified string from the process,
-# and then it sends our compiled shellcode as the payload.
+# and then it sends the  compiled shellcode as the payload.
 p.sendafter("Please give me your assembly in bytes", shellcode)
 
 # Print any output from the process to see the flag or result.
 print_lines(p)
 ```
+
+<img width="1295" height="350" alt="screenshot-1759511946" src="https://github.com/user-attachments/assets/9229f5fd-e6ec-4969-bca4-f6760c2ec0b4" />
+
