@@ -69,3 +69,11 @@ The rm utility is invoked with the -r (recursive) flag to traverse the entire di
 
 <img width="846" height="557" alt="screenshot-1759387724" src="https://github.com/user-attachments/assets/dacfcce6-39a2-4958-9003-ae4e65c8293a" />
 
+## Finding meaning after rm -rf 
+
+Was pretty similar to the previous one 
+
+
+
+
+
