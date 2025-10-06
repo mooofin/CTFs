@@ -1,5 +1,51 @@
 # MemLabs Lab 0 - Never Too Late Mister
 
+
+## Plugins i used 
+
+### consoles
+Similar to cmdscan the consoles plugin finds commands that attackers typed into cmd.exe or executed via backdoors. However, instead of scanning for COMMAND_HISTORY, this plugin scans for CONSOLE_INFORMATION. The major advantage to this plugin is it not only prints the commands attackers typed, but it collects the entire screen buffer (input and output). For instance, instead of just seeing "dir", you'll see exactly what the attacker saw, including all files and directories listed by the "dir" command.
+
+### pslist
+
+To list the processes of a system, use the pslist command. This walks the doubly-linked list pointed to by PsActiveProcessHead and shows the offset, process name, process ID, the parent process ID, number of threads, number of handles, and date/time when the process started and exited. As of 2.1 it also shows the Session ID and if the process is a Wow64 process (it uses a 32 bit address space on a 64 bit kernel).
+
+This plugin does not detect hidden or unlinked processes (but psscan can do that).
+
+
+### pstree
+To view the process listing in tree form, use the pstree command. This enumerates processes using the same technique as pslist, so it will also not show hidden or unlinked processes. Child process are indicated using indention and periods.
+
+### envars
+To display a process's environment variables, use the envars plugin. Typically this will show the number of CPUs installed and the hardware architecture (though the kdbgscan output is a much more reliable source), the process's current directory, temporary directory, session name, computer name, user name, and various other interesting artifacts.
+
+
+## Notes - 
+
+
+In Windows, each process is represented in memory by an **_EPROCESS structure**, which contains all the information the kernel needs to manage that process  things like its PID, parent PID, handle table, and more. One important part of this structure is the **ActiveProcessLinks** field, which is used to link all active processes together in a **doubly linked list**.
+
+A **doubly linked list** means each node (process) has two pointers: **Flink** points to the next process in the list, and **Blink** points to the previous one. This allows the kernel to quickly traverse the list in either direction.
+
+The global symbol `nt!PsActiveProcessHead` points to the **head of this list**, which is essentially the starting point for enumerating all active processes. When you do something like:
+
+```
+dt nt!_list_entry poi(nt!PsActiveProcessHead)
+```
+
+you’re inspecting the first `_LIST_ENTRY` structure at the head of the list. The Flink and Blink pointers show the next and previous entries in memory, which themselves are offsets inside other `_EPROCESS.ActiveProcessLinks` fields.
+
+To find the **start of the full _EPROCESS structure** for a given list entry, you subtract the offset of `ActiveProcessLinks` (in your case, 0x2e8 or 744 decimal) from the Flink address. This gives you the base address of the `_EPROCESS` structure that contains that list entry. Once you have the base, you can access any field, for example, `ImageFileName`:
+
+```
+dt nt!_eprocess 0xffffc582`ca5c3328-0x2e8 ImageFileName
+```
+
+This shows the name of the process, e.g., “Registry” or “csrss.exe”.
+
+When you iterate through the Flinks of the doubly linked list starting from `nt!PsActiveProcessHead`, you’re effectively **walking the entire list of active processes** in the system. Each Flink points to the `ActiveProcessLinks` of the next `_EPROCESS` in memory, and subtracting the offset gives you that process’s structure. This is exactly what your `!list` command does: it traverses all entries and prints the `ImageFileName` for each.
+
+
 ## Challenge Description
 
 My friend John is an "environmental" activist and a humanitarian. He hated the ideology of Thanos from the Avengers: Infinity War. He sucks at programming. 
@@ -111,8 +157,6 @@ for i in range(0, 255):
 Solving the hash and concatenating the xor output gave the flag : ) 
 
 ```flag{you_are_good_but1_4m_b3tt3r}```
-
-
 
 
 
