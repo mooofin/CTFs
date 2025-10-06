@@ -27,3 +27,9 @@ Also The cool plugin pslist helps us see what proccesses were running
 <img width="1400" height="884" alt="screenshot-1759772947" src="https://github.com/user-attachments/assets/2ca05fb1-904d-4a47-852e-7efbb9fb7dc0" />
 
 
+
+The investigation shows that the user logged in under Session ID 1, with explorer.exe (PID 324) serving as their main shell. From there, they opened a command prompt (cmd.exe, PID 2096) at 08:30:18 UTC.
+
+
+
+SO since Cmd.exe was executed , we'll try to find what commands were used in the PS shell , using the plugin  cmdscan
