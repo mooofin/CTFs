@@ -128,6 +128,9 @@ After running it setting a break point here and opening the debug menu :
 <img width="1328" height="879" alt="image" src="https://github.com/user-attachments/assets/a28532c0-53b4-4f18-b131-c69931b07603" />
 
 
-num2 and num have the values of (28,7) in hexadecimal 
+num2 and num have the values of (28,7) in hexadecimal , 
 
+What we need to do now is to process three times, once for each safe square. Click anywhere, modify the coordinates to match a safe square, resume. Click anywhere again, modify to match the second safe square, resume. Click one final time, modify to match the third safe square, and resume. The point isto match  variables to match one of the safe square coordinates like 28 , 7  then let the game continue running. The game has no idea you modified anything
+
+<img width="1919" height="999" alt="image" src="https://github.com/user-attachments/assets/d889739c-e003-40eb-b49c-5e5fa64adb3a" />
 
