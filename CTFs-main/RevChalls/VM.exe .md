@@ -88,4 +88,123 @@ The VM has registers, a stack, and memory space. It's actually pretty sophistica
                                                                                           14000f0f0 (*)   
 ```
 
+The function has some hardcoded values : 
 
+```c 
+
+longlong FUN_1400038e0(short *param_1,char *param_2)
+
+{
+  uint uVar1;
+  int iVar2;
+  uint uVar3;
+  longlong lVar4;
+  ulonglong uVar5;
+  ulonglong uVar6;
+  longlong lVar7;
+  char cVar8;
+  ulonglong uVar9;
+  bool bVar10;
+  char cVar11;
+  ulonglong uVar12;
+  char cVar13;
+  bool bVar14;
+  char *pcVar15;
+  
+  if (((param_1 != (short *)0x0) && (*param_1 == 0x5a4d)) &&
+     (lVar4 = (longlong)*(int *)(param_1 + 0x1e), *(int *)((longlong)param_1 + lVar4) == 0x4550)) {
+    uVar1 = *(uint *)((longlong)param_1 + lVar4 + 0x88);
+    uVar12 = (ulonglong)uVar1;
+    if (uVar12 == 0) {
+      return 0;
+    }
+    iVar2 = *(int *)((longlong)param_1 + lVar4 + 0x8c);
+    if (iVar2 == 0) {
+      return 0;
+    }
+    uVar5 = (ulonglong)*(uint *)((longlong)param_1 + uVar12 + 0x18);
+    if (uVar5 != 0) {
+      uVar6 = 0;
+      while( true ) {
+        uVar9 = (ulonglong)
+                *(uint *)((longlong)param_1 +
+                         uVar6 * 4 + (ulonglong)*(uint *)((longlong)param_1 + uVar12 + 0x20));
+        cVar11 = *(char *)((longlong)param_1 + uVar9);
+        if (cVar11 == '\0' && *param_2 == '\0') break;
+        lVar4 = uVar9 + (longlong)param_1;
+        pcVar15 = param_2;
+        cVar8 = *param_2;
+        while( true ) {
+          bVar14 = cVar8 != '\0';
+          bVar10 = cVar11 != '\0';
+          cVar13 = cVar11 + -0x20;
+          if (0x19 < (byte)(cVar11 + 0x9fU)) {
+            cVar13 = cVar11;
+          }
+          cVar11 = cVar8 + -0x20;
+          if (0x19 < (byte)(cVar8 + 0x9fU)) {
+            cVar11 = cVar8;
+          }
+          if (cVar13 != cVar11) break;
+          cVar11 = *(char *)(lVar4 + (ulonglong)bVar10);
+          cVar8 = pcVar15[bVar14];
+          lVar4 = lVar4 + (ulonglong)bVar10;
+          pcVar15 = pcVar15 + bVar14;
+          if (cVar11 == '\0' && cVar8 == '\0') goto LAB_140003a81;
+        }
+        uVar6 = uVar6 + 1;
+        if (uVar6 == uVar5) {
+          return 0;
+        }
+      }
+LAB_140003a81:
+      uVar3 = *(uint *)((longlong)param_1 +
+                       (ulonglong)
+                       *(ushort *)
+                        ((longlong)param_1 +
+                        uVar6 * 2 + (ulonglong)*(uint *)((longlong)param_1 + uVar12 + 0x24)) * 4 +
+                       (ulonglong)*(uint *)((longlong)param_1 + uVar12 + 0x1c));
+      lVar4 = (longlong)param_1 + (ulonglong)uVar3;
+      if (uVar3 < uVar1) {
+        return lVar4;
+      }
+      if (iVar2 + uVar1 <= uVar3) {
+        return lVar4;
+      }
+      lVar7 = (*(code *)(DAT_14000d288 + 0x4ed8019cd8172a47))(lVar4);
+      if (DAT_14000dde0 < 10) {
+        return lVar7;
+      }
+      do {
+        if ((~DAT_14000dde4 * DAT_14000dde4 & 1) == 0) {
+          return lVar7;
+        }
+        (*(code *)(DAT_14000d288 + 0x4ed8019cd8172a47))(lVar4);
+        lVar7 = (*(code *)(DAT_14000d288 + 0x4ed8019cd8172a47))(lVar4);
+      } while (9 < DAT_14000dde0);
+      return lVar7;
+    }
+  }
+  return 0;
+}
+
+```
+
+The array : 
+
+
+Username section (indices 0-8):
+0x32, 100, 0x69, 0x67, 0x62, 0x6f, 0x6f, 0x62, 0x00
+
+Password section (indices 9-18):
+0x70, 0x61, 0x6e, 0x68, 0x61, 0x75, 0x7a, 0x65, 0x72, 0x00
+
+Convert these hex values to ASCII and we get the password and username 
+
+
+
+<img width="664" height="264" alt="image" src="https://github.com/user-attachments/assets/716923dd-fbac-4ac8-be79-f33755b5de75" />
+
+
+
+There's also this security cookie value 0x2b992ddfa233 that shows up. It's part of Microsoft's stack protection mechanism, but the program uses it as part of the obfuscation too. Just another layer to make static analysis harder ig . 
