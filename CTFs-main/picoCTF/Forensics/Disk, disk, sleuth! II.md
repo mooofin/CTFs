@@ -1,8 +1,10 @@
+Sleuth Kit is a suite of command line forensic tools for examining disk images and filesystems without mounting them. It provides utilities to inspect partition tables, list directory entries, extract file contents by inode, recover deleted files, and perform many common forensic tasks. The tools operate on raw images or device files and interpret filesystem structures like superblocks, inodes, and directory entries so you can examine evidence without altering it.
 
+mmls is the Sleuth Kit tool that reads and prints the partition table inside a disk image. It shows each partition entry with start and end sectors and a type code. The main reason to run mmls is to learn the sector offset where a filesystem begins. That offset is needed by other Sleuth Kit tools so they read the correct bytes inside the image. mmls output uses 512-byte sectors by default, so to get the byte offset you multiply the start sector by 512. For example, if mmls shows a partition starting at sector 2048, the filesystem byte offset is 2048 × 512 = 1,048,576.
 
-The goal of this analysis was to examine a compressed disk image and extract any hidden or relevant files that might contain a flag. The image, `dds2-alpine.flag.img.gz`, appeared to be a forensic challenge image that required exploration using **The Sleuth Kit (TSK)** tools.
+fls lists files and directories inside a filesystem contained in an image. You give it the partition offset (option -o) and it prints the directory tree with inode numbers and type tags. Typical tags are d/d for a directory entry, r/r for a regular file, and V/V $OrphanFiles for orphaned or deleted files. fls is how you find filenames and their corresponding inode numbers without mounting the filesystem. You can also pass a specific inode to fls to list the contents of that directory inode, which is useful for drilling down into a particular folder like /root.
 
-
+icat is the companion tool you will often use after fls. icat extracts the raw bytes of a single inode and prints them to stdout or a file. You must specify the input type and filesystem type (for example -i raw -f ext4) and the same offset used with fls. Because icat reads the inode directly, it returns the exact file contents as stored on disk, including deleted but unallocated data blocks in some cases
 
 
 
