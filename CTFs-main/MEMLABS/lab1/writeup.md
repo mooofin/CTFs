@@ -13,4 +13,8 @@ After running pslist to see what all ran in the time the PC crashed i used PSlis
 I could see System and smss.exe at the top, followed by critical processes like csrss.exe, winlogon.exe, and services.exe. Each entry showed the PID, parent PID, number of threads, handles, session IDs, and creation times. It was satisfying to watch the familiar Windows processes appear alongside some user-level programs like explorer.exe, mspaint.exe, and even DumpIt.exe, which hinted at how the memory dump was created
 
 Also  Vol3 automatically reads the KDBG structure from the memory dump and maps the kernel symbols for me.
+
+
+<img width="1223" height="887" alt="screenshot-1760529515" src="https://github.com/user-attachments/assets/0013d4fd-6e8b-4a62-984f-5ab47804107d" />
+
  
