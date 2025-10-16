@@ -1,0 +1,1 @@
+The search blog feature contains a DOM-based cross-site scripting vulnerability. Client-side code reads data from location.search and assigns it directly to a div using innerHTML, allowing attacker-controlled input to be parsed as HTML and execute JavaScript in victims’ browsers
