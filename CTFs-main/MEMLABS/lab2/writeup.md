@@ -23,4 +23,35 @@ Sus processes that we would need to dump and investigate would be chrome.exe, ke
 Also whats wmpnetwk.exe ?
 
 
-Moving on 
+Moving on next i like to do what was passed onto the consoles ...
+
+<img width="1874" height="197" alt="image" src="https://github.com/user-attachments/assets/922b41c6-3f2b-4a3a-8587-b1fc1035e6ef" />
+
+WOW , hidden kbdx !!!!!
+
+
+Grepping it , (findstr)
+
+
+<img width="1889" height="260" alt="image" src="https://github.com/user-attachments/assets/33dc6060-4960-410c-b396-20fb225dd13f" />
+
+
+so we need a keypass sofware to unlock this and we'll need a password as well . Hopefull and luckily greping for pass gave a good info 
+
+A file called PASSWORD.PNG !!!!
+
+lets dump and open it quickly , hopefully no gimp or offset changing rgb values .
+
+Phew and we got the password :
+
+<img width="1919" height="1025" alt="image" src="https://github.com/user-attachments/assets/118dd16d-7e75-43eb-9e3d-aa4cd0d8351d" />
+
+The the right lower block , 
+
+Now we have the password we can open the keypass software and get out first flag .
+
+
+<img width="1831" height="889" alt="image" src="https://github.com/user-attachments/assets/4bfd85aa-fbcd-417f-9a74-9cb6d2dc218c" />
+
+The workflow is to open this and see put the .kbdx and use the password we recovered and see if there's a flag 
+
