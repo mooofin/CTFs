@@ -38,6 +38,9 @@ moving on to see if that had commmunicated with any console to run any commands 
 
 This was very abnormal and i think one of them is a b64 flag and i see dumpit.exe which was used to make the .raw dump .
 
+Decoding the b64 gives us 
 
+```
+flag{th1s_1s_th3_1st_st4g3!!}
 
- 
+```
