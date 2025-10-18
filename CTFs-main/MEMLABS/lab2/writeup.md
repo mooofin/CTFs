@@ -65,5 +65,10 @@ But the flag contents said this is the 2nd flag ?
 
 Reading the description again , i forgot to check the lead on enviorment variables 
 
+After checking for env using envars plugin i found a b64 on a TEMP_var 
 
+<img width="1884" height="916" alt="image" src="https://github.com/user-attachments/assets/45dfc59a-7c5e-4b27-9cae-d00c6c1be90e" />
 
+```
+flag{w3lc0m3_T0_$T4g3_!_Of_L4B_2}
+```
