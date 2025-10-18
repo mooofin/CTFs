@@ -91,3 +91,9 @@ openin that
 
 <img width="1825" height="843" alt="image" src="https://github.com/user-attachments/assets/8567eb73-fd44-4c01-a991-d2a589a1c990" />
 
+And this zip file needs a password which is the uh  SHA1 of Lab 1  stage-3 : )
+
+after doing that we get an image of the flag :) and we're dong with lab3 
+
+```flag{oK_So_Now_St4g3_3_is_DoNE!!}```
+
