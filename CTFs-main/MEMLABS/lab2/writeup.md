@@ -72,3 +72,22 @@ After checking for env using envars plugin i found a b64 on a TEMP_var
 ```
 flag{w3lc0m3_T0_$T4g3_!_Of_L4B_2}
 ```
+Now onto finding the 3rd flag the hint was chrome ? After googling how to get history and stuff related like downloads  , there'a s plugin to extrcat chrome history : p 
+
+Also forgot to add , Win7SP1x64 !!, is how a Volatility profile identifier works . That means windoes 7 (why vol 3 dosent work smh) , Service pack 1 and X64 operation system .
+
+Service Pack (SP) is a collection of updates, fixes etc stuff ..
+
+
+
+After trying to get the chrome history i got into an error , apparently the plugin is broken for vol2 , so i'll just have to grep (findstr) chrome history 
+
+<img width="1899" height="429" alt="image" src="https://github.com/user-attachments/assets/d65e1b68-cb96-4913-bee9-123d0b66f95c" />
+
+After going through the strings from the history dump i found a mega link 
+
+<img width="1876" height="568" alt="image" src="https://github.com/user-attachments/assets/0202e6a6-fd0e-46ad-9ddf-d1a3b60e2fc8" />
+openin that 
+
+<img width="1825" height="843" alt="image" src="https://github.com/user-attachments/assets/8567eb73-fd44-4c01-a991-d2a589a1c990" />
+
