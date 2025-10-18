@@ -44,3 +44,17 @@ Decoding the b64 gives us
 flag{th1s_1s_th3_1st_st4g3!!}
 
 ```
+
+Ok now onto investigating mspaint and other sus process
+
+After googling , i found out that u need to give the PID of the process to memdump plugin to dump the data and mspaint has 2424 
+
+
+<img width="1888" height="140" alt="image" src="https://github.com/user-attachments/assets/ca95096d-3b47-4276-8919-a8cdb1fe0445" />
+
+Onto more investigation 
+
+Since it was a ms paint , i thought of opening it in ms paint itself to see if there's anything but nothing really came out , then i tried using gimp and changed all the extensions to png jpg and data . I also tried looking at the metadata and hex in hex editor but nothing quite was in them so it must be the image itself . After not getting anything after running steghide , binwalk , i refred the writeup and you just had to open it as a .data in gimp ... which i overcomplicated .
+
+
+
