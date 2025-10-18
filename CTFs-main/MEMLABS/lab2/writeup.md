@@ -55,3 +55,15 @@ Now we have the password we can open the keypass software and get out first flag
 
 The workflow is to open this and see put the .kbdx and use the password we recovered and see if there's a flag 
 
+<img width="906" height="662" alt="image" src="https://github.com/user-attachments/assets/9b98f709-0274-46b6-bea6-089886671db7" />
+
+And we got the first flag : 3 
+
+<img width="631" height="629" alt="image" src="https://github.com/user-attachments/assets/b980112a-f946-4e1d-81f6-b91339942bcd" />
+
+But the flag contents said this is the 2nd flag ? 
+
+Reading the description again , i forgot to check the lead on enviorment variables 
+
+
+
