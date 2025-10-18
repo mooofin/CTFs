@@ -78,3 +78,43 @@ flag{G00d_BoY_good_girL}
 
 ```
 
+
+For the third one , the process mentioned was wintrar 
+
+
+So lemme find that info and dump it using PID 
+
+<img width="1888" height="112" alt="image" src="https://github.com/user-attachments/assets/11f8f13c-07c1-46d8-a8eb-8b325b7535b2" />
+
+
+And it unzipped to Important.rar , so findstr(ripgrep better) , i got this : 
+
+
+<img width="1916" height="153" alt="image" src="https://github.com/user-attachments/assets/6227e502-76fc-47da-823a-fa053a5a820f" />
+
+
+I assume the first coloumn values are offsets so id need to use them to extract later 
+
+<img width="1584" height="518" alt="image" src="https://github.com/user-attachments/assets/94d18de8-2d59-488a-9140-e8801d5f25cf" />
+
+Then i tried extracting and saw this :
+```
+C:\Users\SIDDHARTH U\Downloads\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone>tar -xf Important_extracted.rar
+flag3.png: Reading encrypted data is not currently supported: Illegal byte sequence
+tar: Error exit delayed from previous errors.
+```
+
+Looks like im on the right track ?
+
+
+Also it asks for a password tho , so we can check the hashes stored and see using the hashdump plugin : )
+
+
+<img width="1900" height="204" alt="image" src="https://github.com/user-attachments/assets/95259866-3dd9-4e7b-8521-107e89b24fac" />
+
+And then we can get the flag : p
+
+
+<img width="1919" height="780" alt="image" src="https://github.com/user-attachments/assets/929b4cba-1615-42da-b384-d86c7cbc1268" />
+
+
