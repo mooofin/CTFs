@@ -15,6 +15,10 @@ I could see System and smss.exe at the top, followed by critical processes like 
 Also  Vol3 automatically reads the KDBG structure from the memory dump and maps the kernel symbols for me.
 
 
-<img width="1223" height="887" alt="screenshot-1760529515" src="https://github.com/user-attachments/assets/0013d4fd-6e8b-4a62-984f-5ab47804107d" />
+These processes seem to be very out of place WinRAR.exe, mspaint.exe, wmpnetwk.exe 
+
+So lemme dump these and look more inside .
+
+
 
  
