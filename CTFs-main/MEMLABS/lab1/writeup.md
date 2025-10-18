@@ -56,5 +56,25 @@ Onto more investigation
 
 Since it was a ms paint , i thought of opening it in ms paint itself to see if there's anything but nothing really came out , then i tried using gimp and changed all the extensions to png jpg and data . I also tried looking at the metadata and hex in hex editor but nothing quite was in them so it must be the image itself . After not getting anything after running steghide , binwalk , i refred the writeup and you just had to open it as a .data in gimp ... which i overcomplicated .
 
+After opening it in gimp 
 
+<img width="1912" height="1014" alt="image" src="https://github.com/user-attachments/assets/3f32c01b-d503-47fc-871e-d1b4fb30acb4" />
+
+After adjusting the values , i noticed a kinda text apperaing 
+
+
+<img width="705" height="767" alt="image" src="https://github.com/user-attachments/assets/18facfd5-7a7f-4001-9d2c-d47e345be231" />
+
+
+
+Adjusting and playing around more gave me an image of the flag , alyssa was drawing but upside down tho 
+
+
+<img width="356" height="421" alt="image" src="https://github.com/user-attachments/assets/a29bc024-c9dc-4437-9a29-0c522a8e6763" />
+
+
+```
+flag{G00d_BoY_good_girL}
+
+```
 
