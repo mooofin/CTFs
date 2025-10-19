@@ -15,3 +15,40 @@ Also we see dump it .exe running , and its used to make the memory dump . A intu
 
 
 Now the workflow for any DFIR challenge is to dump the info that you see might be worth looking into , so lets do that 
+
+<img width="1899" height="282" alt="image" src="https://github.com/user-attachments/assets/8b293c14-a499-4437-95c2-b0ba4bd1b08d" />
+
+After running comndscan i got this 
+
+<img width="1916" height="943" alt="image" src="https://github.com/user-attachments/assets/5ab8b2de-a9a1-47ef-94f1-71c00c69dd54" />
+
+
+seems like no lead .
+
+tehn i looked at the clues , which was about steghide ?? So i started searching for png , jpeg and jpg in the dump ..
+
+And there was one actually :) jpeg 
+
+
+<img width="1899" height="146" alt="image" src="https://github.com/user-attachments/assets/722aecbd-cbbc-4dec-acca-04144cd0b8ee" />
+
+
+After dumping it and opening it i saw 
+
+<img width="1407" height="686" alt="image" src="https://github.com/user-attachments/assets/6844b03e-94af-4ea0-9f32-15d5a0536452" />
+
+
+So this image might have been steghided with a password and we'll need a password to uncover ig .
+
+The way i thought was since steghide is a cmd line tool , the person who made the dump should run it on the commands line to steghide it . So the location or any insight could be that of getting the cmdline stdin .
+
+<img width="1919" height="874" alt="image" src="https://github.com/user-attachments/assets/3a4f670d-dcd9-4334-a348-7914d5fd33ec" />
+
+So yea , earlier we say two things running on notepad.exe that might have been this python encryption texts , 
+```bash
+notepad.exe pid:   3736
+Command line : "C:\Windows\system32\NOTEPAD.EXE" C:\Users\hello\Desktop\evilscript.py
+************************************************************************
+notepad.exe pid:   3432
+Command line : "C:\Windows\system32\NOTEPAD.EXE" C:\Users\hello\Desktop\vip.txt
+```
