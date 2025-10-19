@@ -52,3 +52,41 @@ Command line : "C:\Windows\system32\NOTEPAD.EXE" C:\Users\hello\Desktop\evilscri
 notepad.exe pid:   3432
 Command line : "C:\Windows\system32\NOTEPAD.EXE" C:\Users\hello\Desktop\vip.txt
 ```
+<img width="1906" height="228" alt="image" src="https://github.com/user-attachments/assets/9fda83be-07d8-46a5-8266-d03c0830d789" />
+
+Dumping them 
+
+we get 
+
+
+```
+C:\Users\SIDDHARTH U\Downloads\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone>type vip.txt
+am1gd2V4M20wXGs3b2U=
+
+C:\Users\SIDDHARTH U\Downloads\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone>type evilscript.py
+import sys
+import string
+
+def xor(s):
+
+        a = ''.join(chr(ord(i)^3) for i in s)
+        return a
+
+
+def encoder(x):
+
+        return x.encode("base64")
+
+
+if __name__ == "__main__":
+
+        f = open("C:\\Users\\hello\\Desktop\\vip.txt", "w")
+
+        arr = sys.argv[1]
+
+        arr = encoder(xor(arr))
+
+        f.write(arr)
+
+        f.close()
+```
