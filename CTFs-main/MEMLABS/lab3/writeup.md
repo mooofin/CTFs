@@ -90,3 +90,19 @@ if __name__ == "__main__":
 
         f.close()
 ```
+vip.txt  contained the base64 string `am1gd2V4M20wXGs3b2U=` and `evilscript.py` revealed the encoding routine: it XORs each character with the value 3 and then encodes the result with base64. Knowing this, I reversed the process by base64-decoding the `vip.txt` payload and XORing each byte with 3, which yielded the recovered secret: `inctf{0n3_h4lf}` :)
+
+
+
+Since the description said , you need to use the first part to get the 2nd part i used the flag part 1 was a password to extract the info .
+
+<img width="1895" height="366" alt="image" src="https://github.com/user-attachments/assets/a5d5939c-dc81-4cf1-9de7-0d6c6f44375a" />
+
+and we got the 2nd half 
+
+<img width="1236" height="72" alt="image" src="https://github.com/user-attachments/assets/a0296bea-0e0a-4b2f-9e89-b07fe4b64c7d" />
+
+
+```bash
+inctf{0n3_h4lf_1s_n0t_3n0ugh}
+```
