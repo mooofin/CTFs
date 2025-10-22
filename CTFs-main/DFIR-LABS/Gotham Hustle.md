@@ -120,3 +120,37 @@ PS D:\DFIR> Set-Alias vol "C:\Users\SIDDHARTH U\Downloads\volatility_2.6_win64_s
 Volatility Foundation Volatility Framework 2.6
 DataSectionObject 0x11fdaff20   None   \Device\HarddiskVolume2\Users\bruce\Desktop\flag5.rarp\VirtualBox Dropped Files\2024-08-06T18_36_43.522668500Z\flag5.rar
 ```
+
+
+
+it's password protected tho mhmm
+
+
+<img width="624" height="354" alt="image" src="https://github.com/user-attachments/assets/1123e858-4c29-4ac8-9668-fb8f34b2cb99" />
+
+hashdump helps us here 
+```
+
+
+PS D:\DFIR> Set-Alias vol "C:\Users\SIDDHARTH U\Downloads\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone.exe"; vol -f "D:\DFIR\gotham.raw" --profile=Win7SP1x64 hashdump
+Volatility Foundation Volatility Framework 2.6
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:10eca58175d4228ece151e287086e824:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+bruce:1001:aad3b435b51404eeaad3b435b51404ee:b7265f8cc4f00b58f413076ead262720:::
+HomeGroupUser$:1002:aad3b435b51404eeaad3b435b51404ee:bda4ed0acc67d6d60540d1a20cf444c6:::
+
+````
+
+<img width="1342" height="490" alt="image" src="https://github.com/user-attachments/assets/b5cce846-70ed-4ad0-9399-35a0d45601df" />
+
+The password is bat man omg 
+
+and we get another b64 flag 
+
+<img width="906" height="161" alt="image" src="https://github.com/user-attachments/assets/d80b3467-1dbc-442d-aa92-394d3e8a5276" />
+
+which is - m0r3_13337431} 
+
+
+
+
