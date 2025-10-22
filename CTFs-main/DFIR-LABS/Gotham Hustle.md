@@ -102,4 +102,6 @@ Cmd #7: did you find flag1?
  Oh thats b64 which translates to - bi0sctf{w3lc0m3_ 
 
 
- 
+ Next i tried using notepad to see but the version mismatch of vol breaks it . 
+
+ So i tried dumping the memory and tried to strings from it for clues 
