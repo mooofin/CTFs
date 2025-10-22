@@ -105,3 +105,18 @@ Cmd #7: did you find flag1?
  Next i tried using notepad to see but the version mismatch of vol breaks it . 
 
  So i tried dumping the memory and tried to strings from it for clues 
+
+
+there were nothing helpful but loads of data like , dll info but something randoly was a link 
+i followed the link and got here 
+<img width="1156" height="319" alt="image" src="https://github.com/user-attachments/assets/f7ac2ee8-d44d-427e-a062-aa8edf9715a2" />
+this was again a b64 which translates to h0p3_th15_ 
+
+I also noticed in the filescan output there's a flag5.rar file on the Desktop! Let's extract it: : p
+
+
+```
+PS D:\DFIR> Set-Alias vol "C:\Users\SIDDHARTH U\Downloads\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone\volatility_2.6_win64_standalone.exe"; vol -f "D:\DFIR\gotham.raw" --profile=Win7SP1x64 dumpfiles -Q 0x000000011fdaff20 --dump-dir="D:\DFIR"       
+Volatility Foundation Volatility Framework 2.6
+DataSectionObject 0x11fdaff20   None   \Device\HarddiskVolume2\Users\bruce\Desktop\flag5.rarp\VirtualBox Dropped Files\2024-08-06T18_36_43.522668500Z\flag5.rar
+```
