@@ -1,5 +1,5 @@
 
-When I first looked at the challenge, I saw that the flag was hidden in a list of large integers. At first glance, it was obvious that the encryption wasn't just a simple substitution or Caesar cipher — something more layered was going on. After reading through the variables, I noticed values labeled `a`, `b`, `g`, and `p`, which immediately made me think of Diffie-Hellman key exchange.
+When I first looked at the challenge, I saw that the flag was hidden in a list of large integers.  After reading through the variables, I noticed values labeled `a`, `b`, `g`, and `p`, which immediately made me think of Diffie-Hellman key exchange.
 ![screenshot-1751962514](https://github.com/user-attachments/assets/a6fd9b7f-c6b1-4534-906c-6833141d68c5)
 
 The values given were `a = 89`, `b = 27`, with a small prime modulus `p = 97` and generator `g = 31`. This suggested that both parties had exchanged keys using modular exponentiation. To reconstruct the shared secret, I first computed $g^b \mod p$, then raised that result to the power of `a`, again modulo `p`. That gave me the shared key used in the next encryption layer.
