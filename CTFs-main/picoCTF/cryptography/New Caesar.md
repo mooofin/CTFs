@@ -93,8 +93,7 @@ for k in ALPHABET:
 Running the script produces:
 
 ```console
-┌──(user@kali)-[/media/sf_CTFs/pico/New_Caesar]
-└─$ python3 solve.py
+
 Key: e, Plaintext: et_tu?_1ac5f3d7920a85610afeb2572831daa8
 Key: f, Plaintext: TcNcd.N PR$U"S&(!/P'$% /PUTQ!$&!'" SPP'
 ```
