@@ -98,6 +98,9 @@ Moving onto to finding interesting stuff , a focus should be on identifying what
 
 There are a lot of files now , but the user of the PC is called slim shady , so i'll search what files is under him or related to slimshady .
 ```
+2019-06-27 13:14:13 UTC+0000 2019-06-27 13:14:13 UTC+0000   2019-06-27 13:14:13 UTC+0000   2019-06-27 13:14:13 UTC+0000   Users\SlimShady\Desktop\Important.txt
+```
+```
 Volatility Foundation Volatility Framework 2.6
 0x000000003e839710      2      2 RW-rwd \Device\HarddiskVolume2\Users\eminem\AppData\Local\Microsoft\Windows\Explorer\thumbcache_256.db
 0x000000003e83b2d0      2      0 R--rwd \Device\HarddiskVolume2\Users\eminem\Videos\desktop.ini
@@ -305,3 +308,19 @@ Volatility Foundation Volatility Framework 2.6
 0x000000003fd40910     17      1 RW-r-- \Device\HarddiskVolume2\Users\SlimShady\AppData\Roaming\Microsoft\Sticky Notes\StickyNotes.snt
 0x000000003ff3dca0      1      0 R--r-- \Device\HarddiskVolume2\Users\SlimShady\AppData\Roaming\Microsoft\Windows\Recent\CustomDestinations\5afe4de1b92fc382.customDestinations-ms
 ```
+
+
+From memlabs 2 , we should also see if there are any potential images , as they prolly hide a clue .
+
+<img width="1891" height="183" alt="image" src="https://github.com/user-attachments/assets/873341b2-aac3-47da-9a0e-34c995506785" />
+
+
+Ok so it's a joker image ! 
+
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/31163a06-9bd3-41d8-a868-9618f8b3c541" />
+
+
+
+
+
