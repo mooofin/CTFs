@@ -31,3 +31,12 @@ AFter exploring more and reading a writeup for this , i came across a plugin whi
 iehistory
 This plugin recovers fragments of IE history index.dat cache files. It can find basic accessed links (via FTP or HTTP), redirected links ( — REDR), and deleted entries ( — LEAK). It applies to any process which loads and uses the wininet.dll library, not just Internet Explorer. Typically that includes Windows Explorer and even malware samples.
 ```
+
+<img width="1919" height="312" alt="image" src="https://github.com/user-attachments/assets/99b406e2-a784-4622-9702-ee061a4fa26f" />
+
+
+Decoding that gives the first flag :))
+
+flag{!!_w3LL_d0n3_St4g3–1_0f_L4B_5_D0n3_!!} and entering that to the zipped wintrar file gives us the 2nd flag in an image 
+
+<img width="1049" height="826" alt="image" src="https://github.com/user-attachments/assets/3d2e376c-4c56-4891-a1b8-56de3215d0d2" />
