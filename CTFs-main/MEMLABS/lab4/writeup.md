@@ -321,6 +321,66 @@ Ok so it's a joker image !
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/31163a06-9bd3-41d8-a868-9618f8b3c541" />
 
 
+Also when i tried to dump the important.txt , it showed an exmpty file ? Even tho the offset was correct and all .
 
+This lead me to exploring and goggling , and after some time i stumbled upon how to recvover deleated files . 
+
+
+<img width="1891" height="149" alt="image" src="https://github.com/user-attachments/assets/0bec7613-8519-4774-bda9-81c25b329412" />
+
+
+After seaching it in the delated dump files we get the flag :) 
+
+
+<img width="1919" height="986" alt="image" src="https://github.com/user-attachments/assets/c5141de5-6a5e-4aee-a6c4-061f579420c3" />
+
+
+
+Explaining the MFT table : p
+
+```
+Master File Table
+01/07/2021
+[This document applies only to version 3 of NTFS volumes.]
+
+The master file table (MFT) stores the information required to retrieve files from an NTFS partition.
+
+A file may have one or more MFT records, and can contain one or more attributes. In NTFS, a file reference is the MFT segment reference of the base file record. For more information, see MFT_SEGMENT_REFERENCE.
+
+The MFT contains file record segments; the first 16 of these are reserved for special files, such as the following:
+
+0: MFT ($Mft)
+5: root directory (\)
+6: volume cluster allocation file ($Bitmap)
+8: bad-cluster file ($BadClus)
+Each file record segment starts with a file record segment header. For more information, see FILE_RECORD_SEGMENT_HEADER. Each file record segment is followed by one or more attributes. Each attribute starts with an attribute record header. For more information, see ATTRIBUTE_RECORD_HEADER. The attribute record includes the attribute type (such as $DATA or $BITMAP), an optional name, and the attribute value. The user data stream is an attribute, as are all streams. The attribute list is terminated with 0xFFFFFFFF ($END).
+
+The following are some example attributes.
+
+The $Mft file contains an unnamed $DATA attribute that is the sequence of MFT record segments, in order.
+The $Mft file contains an unnamed $BITMAP attribute that indicates which MFT records are in use.
+The $Bitmap file contains an unnamed $DATA attribute that indicates which clusters are in use.
+The $BadClus file contains a $DATA attribute named $BAD that contains an entry that corresponds to each bad cluster.
+When there is no more space for storing attributes in the file record segment, additional file record segments are allocated and inserted in the first (or base) file record segment in an attribute called the attribute list. The attribute list indicates where each attribute associated with the file can be found. This includes all attributes in the base file record, except for the attribute list itself. For more information, see ATTRIBUTE_LIST_ENTRY.
+
+Structures related to the MFT include the following:
+
+ATTRIBUTE_LIST_ENTRY
+ATTRIBUTE_RECORD_HEADER
+FILE_NAME
+FILE_RECORD_SEGMENT_HEADER
+MFT_SEGMENT_REFERENCE
+MULTI_SECTOR_HEADER
+STANDARD_INFORMATION
+```
+
+The plugin that interests us for retrieving entries from the MFT table is "MFTParser".
+
+Use mftparser output, filescan, pslist or vads to find processes that might have opened the file, and check pagefile or memory-mapped files for content. Timestamps can tell you which process was active when the file was created or deleted and guide you to memory region .
+
+ach MFT entry is typically 1 KB in size and contains metadata about a file rather than the file data itself, though very small files may be stored directly within the entry.
+
+
+Even after a file is deleted, the MFT entry is often left intact with a “deleted” flag. The space for its clusters may eventually be overwritten, but the metadata remains until reused
 
 
