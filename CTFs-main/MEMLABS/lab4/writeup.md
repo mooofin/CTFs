@@ -334,7 +334,9 @@ After seaching it in the delated dump files we get the flag :)
 
 <img width="1919" height="986" alt="image" src="https://github.com/user-attachments/assets/c5141de5-6a5e-4aee-a6c4-061f579420c3" />
 
-
+```bash
+flag inctf{1_is_n0t_EQu4l_7o_2_bUt_th1s_d0s3nt_m4ke_s3ns3}
+```
 
 Explaining the MFT table : p
 
