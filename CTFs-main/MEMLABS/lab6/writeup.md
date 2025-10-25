@@ -343,8 +343,13 @@ oh we actually got the rar password and it wasnt the flag of the 2nd one ..
 
 Now let's extrcat it 
 
+
 and we get a 2nd'part of the flag? 
 
 <img width="564" height="576" alt="image" src="https://github.com/user-attachments/assets/d18ac950-40c7-4b96-b17d-c188a99e3866" />
+
+Since the  clues mentioned , a link to and we saw some chrome and firefox running mhmm lets try to see history . 
+
+I found a amazing volatilyt plugin repo which helped [![Volatility Plugins](https://img.shields.io/badge/Volatility-Plugins-blue?logo=github)](https://github.com/superponible/volatility-plugins)
 
 
