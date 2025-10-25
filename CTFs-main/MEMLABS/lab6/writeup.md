@@ -367,4 +367,6 @@ And it had a mega link which needed a mhmm ,
 <img width="1847" height="868" alt="image" src="https://github.com/user-attachments/assets/a4e9568a-4d4c-43ee-a08a-b469f5fb2428" />
 
 
+This needs a password and i spend a lot of time looking for what to do next as there wasnt anything explicit mentioned ..
+
 
