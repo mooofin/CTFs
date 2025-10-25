@@ -352,4 +352,19 @@ Since the  clues mentioned , a link to and we saw some chrome and firefox runnin
 
 I found a amazing volatilyt plugin repo which helped [![Volatility Plugins](https://img.shields.io/badge/Volatility-Plugins-blue?logo=github)](https://github.com/superponible/volatility-plugins)
 
+AFter spending a lot of time and clicking a lot of dead ends , i spotted a pastebin link which lead to
+
+<img width="1229" height="449" alt="image" src="https://github.com/user-attachments/assets/520ec6e4-c310-4311-8f6f-7fea7c48d94f" />
+
+mhm 
+
+<img width="1861" height="867" alt="image" src="https://github.com/user-attachments/assets/fb4e084c-5637-418a-9928-c9851f35abbd" />
+
+<img width="1862" height="886" alt="image" src="https://github.com/user-attachments/assets/736a9a85-326d-4045-9b60-f2dd11c16478" />
+
+And it had a mega link which needed a mhmm , 
+
+<img width="1847" height="868" alt="image" src="https://github.com/user-attachments/assets/a4e9568a-4d4c-43ee-a08a-b469f5fb2428" />
+
+
 
