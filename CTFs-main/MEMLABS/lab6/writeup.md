@@ -337,3 +337,14 @@ Pid      Process              Block              Variable                       
     3716 WinRAR.exe           0x00000000002a1320 windows_tracing_flags          3
     3716 WinRAR.exe           0x00000000002a1320 windows_tracing_logfile        C:\BVTBin\Tests\installpackage\csilogfile.log
 ```
+
+
+oh we actually got the rar password and it wasnt the flag of the 2nd one ..
+
+Now let's extrcat it 
+
+and we get a 2nd'part of the flag? 
+
+<img width="564" height="576" alt="image" src="https://github.com/user-attachments/assets/d18ac950-40c7-4b96-b17d-c188a99e3866" />
+
+
