@@ -219,3 +219,26 @@ modify  a 4-byte value in .bss at 0x60f0 from 00 00 00 00 to 01 00 00 00. That m
 
 Option 4: NOP the explosion call
 At 0x182c ,  replaced the call instruction e8 cb fb ff ff with 90 90 90 90 90, preventing the failure/explode routine from being invoked.
+
+
+
+Since we have the original offsets locally and everything locally , Hex edit the adresses and patch it :)
+
+```
+Offset    Original         Patched          Description
+------    --------         -------          -----------
+0x1367    0F 94 C0         31 C0 90         Phase 2: xor eax,eax
+0x15DE    75 34            90 90            Phase 4: NOP jne
+0x182A    75 07            74 07            Phase 5: jne→je
+```
+
+
+And boom we got the flag :)
+
+
+<img width="994" height="662" alt="image" src="https://github.com/user-attachments/assets/607b2d78-0bfa-42cf-aed4-faba89bb0e6f" />
+
+<img width="1259" height="106" alt="image" src="https://github.com/user-attachments/assets/aa1b6616-d0be-4f4d-a6fd-460dfeb1e020" />
+
+
+
