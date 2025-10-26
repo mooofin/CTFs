@@ -173,5 +173,49 @@ I could just skip the whole check altogether. At address `0x15d8`, I NOP’d out
 
 
 Next and the last one is a Network related check  (Address: 0x1796)
+it does
+- Uses libcurl to make HTTP request
+- Checks if curl connection succeeds
+- Explodes if network fails
+- If successful, XOR-decrypts string with key 0xAD ?
 
 
+
+ ```assembly
+17cb:   call   10c0 <curl_easy_init@plt>    ; Initialize curl
+17d0:   mov    QWORD PTR [rbp-0x8],rax
+17d4:   cmp    QWORD PTR [rbp-0x8],0x0      ; Check if init succeeded
+17d9:   je     1865                          ; Skip if failed
+17df:   lea    rdx,[rip+0xb5e]              ; URL string at 0x2344
+17f7:   call   1090 <curl_easy_setopt@plt>  ; Set URL
+1812:   call   1090 <curl_easy_setopt@plt>  ; Set options
+181e:   call   10d0 <curl_easy_perform@plt> ; Perform request
+1823:   mov    DWORD PTR [rbp-0xc],eax      ; Store result
+1826:   cmp    DWORD PTR [rbp-0xc],0x0      ; Check if succeeded (0 = success)
+182a:   jne    1833                          ; Jump if failed
+182c:   call   13fc                          ; EXPLODE ( lol this is inverted )
+1831:   jmp    1866                          
+1833:   ; Failure handling
+1847:   lea    rax,[rip+0x4882]             ; String at 0x60d0
+184e:   mov    esi,0xffffffad               ; XOR key = 0xAD
+1853:   call   14f2                          ; XOR decrypt
+185b:   mov    DWORD PTR [rip+0x488b],0x1   ; Set flag at 0x60f0 = 1
+```
+
+A funny thing is the logic is INVERTED! It explodes on success (0), not failure!
+
+
+
+I’ve got four ways to bypass the network check
+
+Option 1: Invert the comparison
+At 0x182a change  75 07 (jne 0x1833) to 74 07 (je 0x1833). That flips the branch logic so success becomes failure and failure becomes success.
+
+Option 2: Skip the network check entirely
+ NOP’d out the call at 0x17cb (e8 f0 f8 ff ff -> 90 90 90 90 90) so the network routine never runs, and I also NOP’d the following compare/jump at 0x17d4 (48 83 7d f8 00 0f 84 -> seven 90s) so the code never performs the check.
+
+Option 3: Manually set the success flag
+modify  a 4-byte value in .bss at 0x60f0 from 00 00 00 00 to 01 00 00 00. That makes the program think the network check already passed. (this crashed , no idea) 
+
+Option 4: NOP the explosion call
+At 0x182c ,  replaced the call instruction e8 cb fb ff ff with 90 90 90 90 90, preventing the failure/explode routine from being invoked.
