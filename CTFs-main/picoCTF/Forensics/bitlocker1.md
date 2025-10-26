@@ -67,3 +67,4 @@ sudo cat /mnt/bitlocker/flag.txt
 
 **Flag:** `picoCTF{us3_b3tt3r_p4ssw0rd5_pl5!_3242adb1}`
 
+This challenge involves cracking a BitLocker encrypted disk image. BitLocker is Windows' built-in disk encryption that scrambles data so only someone with the password can access it. The attack works by first extracting the password hash (a scrambled representation of the password) from the encrypted disk using `bitlocker2john`. Then we use `hashcat` to perform a dictionary attack .  Once we crack the password ("jacqueline" in this case), we use `dislocker` to decrypt the volume and mount it like a normal drive to read the flag. 
