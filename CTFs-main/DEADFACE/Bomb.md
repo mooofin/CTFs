@@ -52,13 +52,14 @@ which is hex for Deadcode .
 So lets look for what green wire and blue wire is 
 
 
-After more investigating , the objdump , we see that there are 4 things we need to patch to ge through 
+After more investigating , the objdump , we see that there are sm more  things we need to patch to ge through 
 
 
-1.  Password Check (requires input)
-2.  Anti-Debugging Check (ptrace detection)
-3.  Success Display (no check, just messages)
-4.  Time Validation (year must be 1995)
+ Password Check (requires input)
+ Anti-Debugging Check (ptrace detection)
+ Time Validation (year must be 1995)
+ Network check ? 
+ 
 
 Hmm so lets start with the 2nd since we alr know the password  .
 
@@ -131,4 +132,46 @@ Original: 85 c0             (test eax,eax)
 Patched:  90 90             (nop nop)
 ```
 
-Now thats done , lets move onto the next one's . 
+Now thats done , lets move onto the next one's which is the time validation 
+
+
+Investigating time in the objdump we get , 
+
+```assembly
+15bf:   call   1040 <localtime@plt>    ; Get current time
+15cf:   call   1070 <time@plt>
+15d4:   mov    rax,QWORD PTR [rbp-0x10]
+15d8:   mov    eax,DWORD PTR [rax+0x14]  ; Get tm_year field (offset 0x14)
+15db:   cmp    eax,0x5f                  ; Compare with  (year 1995)
+15de:   jne    1614                       ; Jump to FAILURE if not 1995
+15e0:   ; Success path - XOR decrypt string
+15f4:   lea    rax,[rip+0x4ab5]          ; Load string at 0x60b0
+1600:   mov    esi,0xffffffde            ; XOR key = 0xDE
+1603:   call   14f2                       ; Call XOR function
+1608:   mov    DWORD PTR [rip+0x4ada],0x1  ; Set flag at 0x60ec = 1
+1614:   ; Failure path
+1614:   call   13fc                       ; KABBOMMMMMM
+```
+
+We have a plethora of options here , one way would be to check Manually set the success flag
+
+```
+Address: 0x60ec (in .bss section)
+Original: 00 00 00 00
+Patched:  01 00 00 00
+
+Effect: Pretend time check already passed
+```
+Some other ways would be : 3 
+
+ I could just force the program to always take the success path. At address `0x15de`, I replaced `75 34` (`jne 1614`) with `90 90` (`nop nop`), which removes the jump entirely so it never goes to the failure branch and always runs the success code.
+
+Another approach was to change the comparison itself so it matches the current year. The original instruction `cmp eax,0x5f` checked for 1995, but I patched it to `cmp eax,0x7d`, making it accept 2025 instead.
+
+I could just skip the whole check altogether. At address `0x15d8`, I NOP’d out seven bytes (`90 90 90 90 90 90 90`), removing the `mov`, `cmp`, and `jne` instructions entirely so the validation never even happens.
+
+
+
+Next and the last one is a Network related check  (Address: 0x1796)
+
+
