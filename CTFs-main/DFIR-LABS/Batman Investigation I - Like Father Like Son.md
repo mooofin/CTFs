@@ -73,4 +73,18 @@ Ok so notepad running is always an indication to be checked as ive realised from
 
 So lets dump notepad and see any .dat or what started notepad , we'll use pstree to see the parent child process spawn data .
 
+```
+PS D:\DFIR-LABS\bi0sctfchall1> vol2 -f .\Damian.mem --profile=Win7SP1x64 pslist | Select-String "2320"
+Volatility Foundation Volatility Framework 2.6
+
+0xfffffa800398f660 notepad.exe            2320   1924      2       57      1      0 2023-05-06 16:44:54 UTC+0000
+
+
+PS D:\DFIR-LABS\bi0sctfchall1> vol2 -f .\Damian.mem --profile=Win7SP1x64 pslist | Select-String "1924"
+Volatility Foundation Volatility Framework 2.6
+
+0xfffffa8003967b30 scvhost.exe            1924   1532      5       55      1      0 2023-05-06 16:44:54 UTC+0000
+0xfffffa800398f660 notepad.exe            2320   1924      2       57      1      0 2023-05-06 16:44:54 UTC+0000
+
+```
 
