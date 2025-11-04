@@ -512,6 +512,15 @@ Before that lemme check what dll's were being used -
 ADVAPI32.dll provides access to the Windows registry, security functions, and service management - this allows the malware to establish persistence by creating registry keys or installing itself as a service. The sechost.dll library enables security-related operations and privilege manipulation. RPCRT4.dll provides Remote Procedure Call functionality, allowing the malware to communicate with other processes on the system.
 
 
+USER32.dll manages windows and user input, while GDI32.dll handles graphics rendering. SHELL32.dll is particularly significant as it provides shell and file operation functions, including the ability to execute other programs. This explains how scvhost.exe was able to spawn the notepad.exe process. SHLWAPI.dll provides additional shell utility functions for path and file operations.
+
+
+Running strings on the binary revealed a lot , Privilege escalation capabilities are evident through the AdjustTokenPrivileges, OpenProcessToken, and LookupPrivilegeValueA imports. These functions allow the malware to manipulate security tokens and potentially elevate its privileges . The malware imports RegOpenKeyExA, RegDeleteKeyA, RegDeleteKeyW, RegDeleteTreeA, RegDeleteTreeW, RegDeleteValueA, and RegDeleteValueW. While these functions can delete registry entries, they are typically paired with registry writing functions to establish autorun keys that would cause the malware to execute on system startup.
+
+Enough bs lets run it on ghidra . 
+
+
+
 
 
 
