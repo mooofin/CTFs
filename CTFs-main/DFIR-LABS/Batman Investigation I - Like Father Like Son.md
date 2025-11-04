@@ -517,11 +517,16 @@ USER32.dll manages windows and user input, while GDI32.dll handles graphics rend
 
 Running strings on the binary revealed a lot , Privilege escalation capabilities are evident through the AdjustTokenPrivileges, OpenProcessToken, and LookupPrivilegeValueA imports. These functions allow the malware to manipulate security tokens and potentially elevate its privileges . The malware imports RegOpenKeyExA, RegDeleteKeyA, RegDeleteKeyW, RegDeleteTreeA, RegDeleteTreeW, RegDeleteValueA, and RegDeleteValueW. While these functions can delete registry entries, they are typically paired with registry writing functions to establish autorun keys that would cause the malware to execute on system startup.
 
+
+
+
 Enough bs lets run it on ghidra . 
 
 
+<img width="1919" height="1015" alt="image" src="https://github.com/user-attachments/assets/20af38e4-1500-4eb6-aa2a-cbfea81289d9" />
 
 
+The dissasembly seems to be a mess , then on the program trees , it showed that the exe has been packed with UPX , so lets unpack and load it again 
 
 
 
