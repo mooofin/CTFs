@@ -1,3 +1,6 @@
+We were given two files , a memdump and a packet capture 
+
+
 ```powershell
 vol -f .\Evidence.vmem imageinfo
 ```
