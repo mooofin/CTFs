@@ -1,9 +1,4 @@
-# **picoCTF - VaultDoor7 Writeup**
 
-## **Challenge Description**
-The challenge provides a Java program (`VaultDoor7.java`) that verifies a password. The program converts the password into an array of integers using bitwise operations and then compares it with predefined integer values. Our goal is to reverse-engineer the program to retrieve the correct password.
-
----
 
 ## **Analyzing the Java Code**
 The main function prompts the user for a password, strips the `picoCTF{}` prefix and `}` suffix, and passes the extracted string to `checkPassword()`. The `checkPassword()` function converts the input into an array of 8 integers and checks if it matches a predefined set of values.
@@ -83,12 +78,4 @@ picoCTF{jU5t_a_s1mpl3_an4gr4m_4_u}
 ```
 
 ---
-
-## **Summary**
-- The Java program converts a 32-character password into 8 integers using bitwise shifts.
-- We reversed this transformation by extracting the original bytes from the integers.
-- Using a simple Python script, we reconstructed the correct password.
-- The final flag is **picoCTF{jU5t_a_s1mpl3_an4gr4m_4_u}**.
-
-Would you like a deeper explanation of the bitwise operations? 🚀
 
