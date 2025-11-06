@@ -977,5 +977,15 @@ Since the malware deleated some stuff , i looked at MFT-table which on memlabs e
 <img width="930" height="61" alt="image" src="https://github.com/user-attachments/assets/986b1632-8212-478c-ab6f-1e1791f31152" />
 
 
+Onto the next part , i need some explanations - 
 
+The Virtual Address Descriptor (VAD) node is a data structure used by the Windows operating system to manage virtual memory. Each VAD node contains information about a specific virtual memory region, including the starting and ending addresses, the memory protection constants, and other attributes.
+
+To determine the memory protection constants for a specific VAD node, use the “vadinfo” plugin in the Volatility framework.
+
+VAD is a tree structure and like any tree structure it has a root (which is called Vadroot) and nodes/leafs (Vadnodes) that contains all the information related to memory ranges reserved for a specific process by the memory manager. For each chunk of a continuous virtual memory address allocations, memory manager creates a corresponding VAD node that contains the information about this continuous allocations 
+
+<img width="922" height="669" alt="image" src="https://github.com/user-attachments/assets/20a53e98-2a66-450d-91ec-a9660cf00a30" />
+
+<img width="586" height="594" alt="image" src="https://github.com/user-attachments/assets/16cc0c50-ec2c-4acf-a70d-b759d950e860" />
 
