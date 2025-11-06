@@ -968,3 +968,14 @@ Azrael was very sus , lets try running envars plugin to see the stuff which the 
 Im guessting that this is the key ? 
 
 Now xoring it with 0x33 the value which we found earlier 
+
+
+
+Since the malware deleated some stuff , i looked at MFT-table which on memlabs expereicne  has some flag parts or clues related to it ? 
+
+
+<img width="930" height="61" alt="image" src="https://github.com/user-attachments/assets/986b1632-8212-478c-ab6f-1e1791f31152" />
+
+
+
+
