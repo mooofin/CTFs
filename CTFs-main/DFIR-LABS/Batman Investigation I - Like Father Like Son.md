@@ -989,3 +989,89 @@ VAD is a tree structure and like any tree structure it has a root (which is call
 
 <img width="586" height="594" alt="image" src="https://github.com/user-attachments/assets/16cc0c50-ec2c-4acf-a70d-b759d950e860" />
 
+```
+PS D:\DFIR-LABS\bi0sctfchall1> vol2 -f Damian.mem --profile Win7SP1x64 vaddump -p 1924 -D vads/
+Volatility Foundation Volatility Framework 2.6
+Pid        Process              Start              End                Result
+---------- -------------------- ------------------ ------------------ ------
+      1924 scvhost.exe          0x000000007ffe0000 0x000000007ffeffff vads/scvhost.exe.11ff67b30.0x000000007ffe0000-0x000000007ffeffff.dmp
+      1924 scvhost.exe          0x0000000000110000 0x000000000030ffff vads/scvhost.exe.11ff67b30.0x0000000000110000-0x000000000030ffff.dmp
+      1924 scvhost.exe          0x0000000000040000 0x0000000000040fff vads/scvhost.exe.11ff67b30.0x0000000000040000-0x0000000000040fff.dmp
+      1924 scvhost.exe          0x0000000000020000 0x000000000002ffff vads/scvhost.exe.11ff67b30.0x0000000000020000-0x000000000002ffff.dmp
+      1924 scvhost.exe          0x0000000000010000 0x000000000001ffff vads/scvhost.exe.11ff67b30.0x0000000000010000-0x000000000001ffff.dmp
+      1924 scvhost.exe          0x0000000000030000 0x0000000000033fff vads/scvhost.exe.11ff67b30.0x0000000000030000-0x0000000000033fff.dmp
+      1924 scvhost.exe          0x0000000000060000 0x00000000000c6fff vads/scvhost.exe.11ff67b30.0x0000000000060000-0x00000000000c6fff.dmp
+      1924 scvhost.exe          0x0000000000050000 0x0000000000050fff vads/scvhost.exe.11ff67b30.0x0000000000050000-0x0000000000050fff.dmp
+      1924 scvhost.exe          0x00000000000e0000 0x00000000000e0fff vads/scvhost.exe.11ff67b30.0x00000000000e0000-0x00000000000e0fff.dmp
+      1924 scvhost.exe          0x00000000000d0000 0x00000000000d0fff vads/scvhost.exe.11ff67b30.0x00000000000d0000-0x00000000000d0fff.dmp
+      1924 scvhost.exe          0x0000000077020000 0x0000000077119fff vads/scvhost.exe.11ff67b30.0x0000000077020000-0x0000000077119fff.dmp
+      1924 scvhost.exe          0x00000000004a0000 0x000000000059ffff vads/scvhost.exe.11ff67b30.0x00000000004a0000-0x000000000059ffff.dmp
+      1924 scvhost.exe          0x0000000000490000 0x000000000049ffff vads/scvhost.exe.11ff67b30.0x0000000000490000-0x000000000049ffff.dmp
+      1924 scvhost.exe          0x0000000000320000 0x000000000041ffff vads/scvhost.exe.11ff67b30.0x0000000000320000-0x000000000041ffff.dmp
+      1924 scvhost.exe          0x0000000001d20000 0x0000000001f1ffff vads/scvhost.exe.11ff67b30.0x0000000001d20000-0x0000000001f1ffff.dmp
+      1924 scvhost.exe          0x0000000000730000 0x00000000008b0fff vads/scvhost.exe.11ff67b30.0x0000000000730000-0x00000000008b0fff.dmp
+      1924 scvhost.exe          0x00000000005a0000 0x0000000000727fff vads/scvhost.exe.11ff67b30.0x00000000005a0000-0x0000000000727fff.dmp
+      1924 scvhost.exe          0x00000000008c0000 0x0000000001cbffff vads/scvhost.exe.11ff67b30.0x00000000008c0000-0x0000000001cbffff.dmp
+      1924 scvhost.exe          0x0000000002470000 0x000000000266ffff vads/scvhost.exe.11ff67b30.0x0000000002470000-0x000000000266ffff.dmp
+      1924 scvhost.exe          0x00000000020b0000 0x00000000022affff vads/scvhost.exe.11ff67b30.0x00000000020b0000-0x00000000022affff.dmp
+      1924 scvhost.exe          0x00000000026b0000 0x00000000028affff vads/scvhost.exe.11ff67b30.0x00000000026b0000-0x00000000028affff.dmp
+      1924 scvhost.exe          0x0000000077240000 0x00000000773e8fff vads/scvhost.exe.11ff67b30.0x0000000077240000-0x00000000773e8fff.dmp
+      1924 scvhost.exe          0x0000000077120000 0x000000007723efff vads/scvhost.exe.11ff67b30.0x0000000077120000-0x000000007723efff.dmp
+      1924 scvhost.exe          0x000000007f0e0000 0x000000007ffdffff vads/scvhost.exe.11ff67b30.0x000000007f0e0000-0x000000007ffdffff.dmp
+      1924 scvhost.exe          0x000000007efe0000 0x000000007f0dffff vads/scvhost.exe.11ff67b30.0x000000007efe0000-0x000000007f0dffff.dmp
+      1924 scvhost.exe          0x000007fefefe0000 0x000007feff0bafff vads/scvhost.exe.11ff67b30.0x000007fefefe0000-0x000007feff0bafff.dmp
+      1924 scvhost.exe          0x000007fefd570000 0x000007fefd58efff vads/scvhost.exe.11ff67b30.0x000007fefd570000-0x000007fefd58efff.dmp
+      1924 scvhost.exe          0x000007fefd020000 0x000007fefd076fff vads/scvhost.exe.11ff67b30.0x000007fefd020000-0x000007fefd076fff.dmp
+      1924 scvhost.exe          0x000000013f130000 0x000000013f22afff vads/scvhost.exe.11ff67b30.0x000000013f130000-0x000000013f22afff.dmp
+      1924 scvhost.exe          0x000007fefd4f0000 0x000007fefd55afff vads/scvhost.exe.11ff67b30.0x000007fefd4f0000-0x000007fefd55afff.dmp
+      1924 scvhost.exe          0x000007fefd0c0000 0x000007fefd0cefff vads/scvhost.exe.11ff67b30.0x000007fefd0c0000-0x000007fefd0cefff.dmp
+      1924 scvhost.exe          0x000007fefd560000 0x000007fefd56dfff vads/scvhost.exe.11ff67b30.0x000007fefd560000-0x000007fefd56dfff.dmp
+      1924 scvhost.exe          0x000007fefe0c0000 0x000007fefe1ecfff vads/scvhost.exe.11ff67b30.0x000007fefe0c0000-0x000007fefe1ecfff.dmp
+      1924 scvhost.exe          0x000007fefd590000 0x000007fefd5f6fff vads/scvhost.exe.11ff67b30.0x000007fefd590000-0x000007fefd5f6fff.dmp
+      1924 scvhost.exe          0x000007fefdfa0000 0x000007fefe068fff vads/scvhost.exe.11ff67b30.0x000007fefdfa0000-0x000007fefe068fff.dmp
+      1924 scvhost.exe          0x000007fefe250000 0x000007fefefd7fff vads/scvhost.exe.11ff67b30.0x000007fefe250000-0x000007fefefd7fff.dmp
+      1924 scvhost.exe          0x000007fffffb0000 0x000007fffffd2fff vads/scvhost.exe.11ff67b30.0x000007fffffb0000-0x000007fffffd2fff.dmp
+      1924 scvhost.exe          0x000007feff430000 0x000007feff4a0fff vads/scvhost.exe.11ff67b30.0x000007feff430000-0x000007feff4a0fff.dmp
+      1924 scvhost.exe          0x000007feff280000 0x000007feff31efff vads/scvhost.exe.11ff67b30.0x000007feff280000-0x000007feff31efff.dmp
+      1924 scvhost.exe          0x000007feff250000 0x000007feff27dfff vads/scvhost.exe.11ff67b30.0x000007feff250000-0x000007feff27dfff.dmp
+      1924 scvhost.exe          0x000007feff320000 0x000007feff428fff vads/scvhost.exe.11ff67b30.0x000007feff320000-0x000007feff428fff.dmp
+      1924 scvhost.exe          0x000007feff560000 0x000007feff560fff vads/scvhost.exe.11ff67b30.0x000007feff560000-0x000007feff560fff.dmp
+      1924 scvhost.exe          0x000007fffffd9000 0x000007fffffdafff vads/scvhost.exe.11ff67b30.0x000007fffffd9000-0x000007fffffdafff.dmp
+      1924 scvhost.exe          0x000007fffffd7000 0x000007fffffd8fff vads/scvhost.exe.11ff67b30.0x000007fffffd7000-0x000007fffffd8fff.dmp
+      1924 scvhost.exe          0x000007fffffd5000 0x000007fffffd6fff vads/scvhost.exe.11ff67b30.0x000007fffffd5000-0x000007fffffd6fff.dmp
+      1924 scvhost.exe          0x000007fffffdd000 0x000007fffffdefff vads/scvhost.exe.11ff67b30.0x000007fffffdd000-0x000007fffffdefff.dmp
+      1924 scvhost.exe          0x000007fffffdb000 0x000007fffffdcfff vads/scvhost.exe.11ff67b30.0x000007fffffdb000-0x000007fffffdcfff.dmp
+      1924 scvhost.exe          0x000007fffffdf000 0x000007fffffdffff vads/scvhost.exe.11ff67b30.0x000007fffffdf000-0x000007fffffdffff.dmp
+```
+
+
+Since we now the flag format -biosCTF{} we can try to encrypt it with the arlogrithm used by AZRAEL keyword earlier and check if that's in the vads/heap data . 
+
+Encryption algorithm: Double pass of (add digit → XOR → add digit → XOR) 
+
+
+<img width="1227" height="810" alt="image" src="https://github.com/user-attachments/assets/a55d7e7b-346d-4739-b060-c82c76c148d0" />
+
+
+```
+[muffin@muffinn bi0sctfchall1]$ python3 solve.py 
+plaintext[0] = 'b' -> '`'
+plaintext[1] = 'i' -> 'q'
+plaintext[2] = '0' -> '2'
+plaintext[3] = 's' -> 's'
+plaintext[4] = 'C' -> 'W'
+plaintext[5] = 'T' -> 'R'
+plaintext[6] = 'F' -> 'N'
+plaintext[7] = '{' -> ''
+
+Result: `q2sWRN`
+```
+
+
+<img width="969" height="293" alt="image" src="https://github.com/user-attachments/assets/eb471ca9-a24d-40b5-b9d7-74502ea3aea1" />
+
+
+And we get the flag :ppp
+
+
+
