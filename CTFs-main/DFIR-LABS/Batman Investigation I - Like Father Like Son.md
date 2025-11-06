@@ -957,3 +957,14 @@ Then the malware tries to hide itself by deleating everything
 <img width="1210" height="503" alt="image" src="https://github.com/user-attachments/assets/e8f7f374-28cf-4126-9278-4b0191b47ae0" />
 
 Also this is how the malware enumerates the list : ) 
+
+
+Azrael was very sus , lets try running envars plugin to see the stuff which the variable uses . 
+
+
+<img width="1207" height="330" alt="image" src="https://github.com/user-attachments/assets/6670f18a-c0cf-4977-8dd1-f6e42fbd895a" />
+
+
+Im guessting that this is the key ? 
+
+Now xoring it with 0x33 the value which we found earlier 
