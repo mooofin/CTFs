@@ -109,8 +109,4 @@ picoCTF{jU5t_a_s1mpl3_gam3_4_u_w1th_pl4y3r5}
 
 ---
 
-## **Conclusion**
-This challenge demonstrated how to analyze a scrambling function and reverse it using systematic programming. By carefully understanding how the Java loops manipulated the input, we were able to reconstruct the correct password and retrieve the flag efficiently.
-
-This method can be applied to similar challenges where transformations need to be undone. 🚀
 
