@@ -84,13 +84,4 @@ print("Decoded Password:", decoded_url)
 Decoded Password: c0nv3rt1ng_fr0m_ba5e_64_0b957c4f
 ```
 
-**Final Flag:**
-```
-picoCTF{c0nv3rt1ng_fr0m_ba5e_64_0b957c4f}
-```
-
----
-
-**Conclusion:**
-This challenge introduced encoding techniques used in web security: Base64 encoding and URL encoding. By understanding how these transformations work, we were able to reverse-engineer the process and extract the original password. This knowledge is useful for decoding obfuscated data in real-world applications.
 
