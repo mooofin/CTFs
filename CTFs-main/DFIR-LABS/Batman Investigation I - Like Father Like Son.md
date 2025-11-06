@@ -952,3 +952,8 @@ Then the malware tries to hide itself by deleating everything
                               "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Temp\\* "
                              );
 ```
+
+
+<img width="1210" height="503" alt="image" src="https://github.com/user-attachments/assets/e8f7f374-28cf-4126-9278-4b0191b47ae0" />
+
+Also this is how the malware enumerates the list : ) 
