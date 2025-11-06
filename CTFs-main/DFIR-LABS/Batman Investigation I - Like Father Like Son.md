@@ -540,6 +540,37 @@ Malware sometimes alters its UPX headers in memory to block unpacking, so using 
 Now that the procdump version is working let's move onto reversing this . 
 
 
+I am using ghidra because idk ida 
 
+<img width="1919" height="1011" alt="image" src="https://github.com/user-attachments/assets/45b12e87-508d-499c-862e-cec01b4b2825" />
+
+
+We see some sus strings 
+
+
+Also i spotted a starnge env called AZRAEL
+
+<img width="1908" height="750" alt="image" src="https://github.com/user-attachments/assets/b91ee514-eea4-4bc0-b70f-bebf05cea8e9" />
+
+Let's try to understand what this malware is doing  .
+
+
+
+This is a lot , ill try to explain the important parts 
+
+
+<img width="1023" height="808" alt="image" src="https://github.com/user-attachments/assets/96554c5a-26da-4162-a677-1d5356a04863" />
+
+
+Checks if running with admin privileges, If not elevated, uses ShellExecuteExA() with "runas" to relaunch "scvhost.exe" with admin rights , Exits if user cancels UAC prompt (error 0x4c7)
+
+
+
+I spotted the malware using  a function  for privilage escalation  . 
+
+<img width="1078" height="835" alt="image" src="https://github.com/user-attachments/assets/dc0a1dfd-cfa8-41bd-914c-da62161d9052" />
+
+
+This function enables SeDebugPrivilege for the current process by opening the process token, looking up the SeDebugPrivilege LUID, and calling AdjustTokenPrivileges to turn it on. Enabling that privilege lets the program open and manipulate other processes, including system-owned ones, which malware commonly uses to inject code, read memory (for credential theft), or tamper with protected processes. The sequence is a classic first step in process injection and privilege escalation.
 
 
