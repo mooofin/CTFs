@@ -77,9 +77,4 @@ class VaultDoor8Solver {
 }
 ```
 
-### **Recovered Password**
-When running this program, we obtain the unscrambled password, which can be used to complete the challenge.
-
-### **Conclusion**
-The challenge demonstrates how bitwise operations can be used to obfuscate data. By reversing the transformations, we successfully recover the original password. This approach is commonly used in reverse engineering and binary exploitation challenges.
 
