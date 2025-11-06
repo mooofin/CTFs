@@ -1071,7 +1071,9 @@ Result: `q2sWRN`
 <img width="969" height="293" alt="image" src="https://github.com/user-attachments/assets/eb471ca9-a24d-40b5-b9d7-74502ea3aea1" />
 
 
-And we get the flag :ppp
 
 
-
+```
+`q2sWRN-ne~5a:v"L}7	uc4tVaT@7Xo#wg2w5w0w!q4LfirLz5{3D1Vaxj2Jc0EaKtF5faD15 
+```
+Now just reversing the ecp is the flag :) 
