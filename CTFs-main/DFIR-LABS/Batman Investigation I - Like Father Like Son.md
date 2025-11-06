@@ -529,6 +529,17 @@ Enough bs lets run it on ghidra .
 The dissasembly seems to be a mess , then on the program trees , it showed that the exe has been packed with UPX , so lets unpack and load it again 
 
 
+<img width="888" height="399" alt="image" src="https://github.com/user-attachments/assets/28fb474e-fa61-4cd7-9c5a-06cb08e9b099" />
+
+I wasted a lot of time trying to dump this , but got a error with UPX .
+
+Malware sometimes alters its UPX headers in memory to block unpacking, so using `procdump` can produce a tampered binary that UPX refuses to decompress. In this case, `dumpfiles` from Volatility pulled the untouched executable from the Windows file cache instead of process memory, allowing UPX to successfully unpack it. When UPX fails with a “possibly modified/hacked” error on a memory dump, always try retrieving the file from cache.
+
+<img width="1079" height="197" alt="image" src="https://github.com/user-attachments/assets/8c686274-048d-47d7-b11f-1df4a89ac77b" />
+
+Now that the procdump version is working let's move onto reversing this . 
+
+
 
 
 
