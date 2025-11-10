@@ -1,1 +1,58 @@
+Lets get the profile first 
 
+
+```
+remnux@remnux:~/Downloads/Investigation$ volatility -f windows.vmem imageinfo
+Volatility Foundation Volatility Framework 2.6.1
+INFO    : volatility.debug    : Determining profile based on KDBG search...
+          Suggested Profile(s) : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_24000, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_24000, Win7SP1x64_23418
+                     AS Layer1 : WindowsAMD64PagedMemory (Kernel AS)
+                     AS Layer2 : FileAddressSpace (/home/remnux/Downloads/Investigation/windows.vmem)
+                      PAE type : No PAE
+                           DTB : 0x187000L
+                          KDBG : 0xf80002c560a0L
+          Number of Processors : 1
+     Image Type (Service Pack) : 1
+                KPCR for CPU 0 : 0xfffff80002c57d00L
+             KUSER_SHARED_DATA : 0xfffff78000000000L
+           Image date and time : 2020-07-22 09:07:57 UTC+0000
+     Image local date and time : 2020-07-22 14:37:57 +0530
+
+```
+
+We have 3 questions to answer 
+Question 1: When was the last time Adam entered an incorrect password to login? {:.info}
+Question 2 :When was the file 1.jpg opened? {:.info}
+Question 3: When did Adam last use the taskbar to launch Chrome? {:.info}
+
+
+The profile is Win7SP1x64.
+
+PART 1 
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/67c86689-a87d-4e67-90aa-bb794bc370e1" />
+
+Since Windows registry hives store valuable information about user activity (such as usernames, last login, and failed login attempts), we need to locate the hive that records failed logins. For this challenge, we want to find when Adam last entered an incorrect password.
+
+The first step is to identify and list the registry hives present in the memory image using Volatility. This helps us locate the SAM, SYSTEM, and SECURITY hives, since failed logon attempts are typically stored in the SAM hive and time data is mapped using the SYSTEM hive.
+
+
+```
+remnux@remnux:~/Downloads/Investigation$ volatility -f windows.vmem --profile=Win7SP1x64 hivelist
+Volatility Foundation Volatility Framework 2.6.1
+Virtual            Physical           Name
+------------------ ------------------ ----
+0xfffff8a00000f010 0x00000000272a4010 [no name]
+0xfffff8a000024010 0x000000002736f010 \REGISTRY\MACHINE\SYSTEM
+0xfffff8a000053010 0x000000002725e010 \REGISTRY\MACHINE\HARDWARE
+0xfffff8a00078a010 0x000000001ed5e010 \Device\HarddiskVolume1\Boot\BCD
+0xfffff8a0013c3010 0x000000001f1ec010 \SystemRoot\System32\Config\SOFTWARE
+0xfffff8a00164a410 0x000000001d2d8410 \SystemRoot\System32\Config\DEFAULT
+0xfffff8a001896010 0x000000001695f010 \SystemRoot\System32\Config\SECURITY
+0xfffff8a0018f0410 0x00000000171e5410 \SystemRoot\System32\Config\SAM
+0xfffff8a001993010 0x00000000143d2010 \??\C:\Windows\ServiceProfiles\NetworkService\NTUSER.DAT
+0xfffff8a001a23010 0x0000000015d26010 \??\C:\Windows\ServiceProfiles\LocalService\NTUSER.DAT
+0xfffff8a00256d010 0x00000000005dd010 \??\C:\Users\Adam\ntuser.dat
+0xfffff8a002571010 0x0000000001002010 \??\C:\Users\Adam\AppData\Local\Microsoft\Windows\UsrClass.dat
+
+```
