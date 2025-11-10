@@ -56,3 +56,22 @@ Virtual            Physical           Name
 0xfffff8a002571010 0x0000000001002010 \??\C:\Users\Adam\AppData\Local\Microsoft\Windows\UsrClass.dat
 
 ```
+
+
+Let's dump this and see 
+
+```
+remnux@remnux:~/Downloads/Investigation$ volatility -f windows.vmem --profile=Win7SP1x64 dumpregistry -o 0xfffff8a0018f0410 -D .
+Volatility Foundation Volatility Framework 2.6.1
+**************************************************
+Writing out registry: registry.0xfffff8a0018f0410.SAM.reg
+
+**************************************************
+```
+<img width="1920" height="1020" alt="Screenshot from 2025-11-10 07-40-28" src="https://github.com/user-attachments/assets/b5fb2a0e-218f-4447-a269-0d22b61161fb" />
+
+
+ he output included the F value binary field %02%00%01%00...E8%0B%824%07\%D6%01..., where the third 8-byte FILETIME sequence corresponds to the LastFailedLogontimestamp. The bytes for this field wereE8 0B 82 34 07 60 D6 01, which when reversed from little endian and converted from FILETIME produced the value 2020-07-22 09:05:11. Reformatting the timestamp is  22-07-2020_09:05:11
+
+ 
+
