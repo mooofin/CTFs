@@ -70,8 +70,33 @@ Writing out registry: registry.0xfffff8a0018f0410.SAM.reg
 ```
 <img width="1920" height="1020" alt="Screenshot from 2025-11-10 07-40-28" src="https://github.com/user-attachments/assets/b5fb2a0e-218f-4447-a269-0d22b61161fb" />
 
+The output included the F value binary field %02%00%01%00...E8%0B%824%07\%D6%01..., where the third 8-byte FILETIME sequence corresponds to the LastFailedLogontimestamp. The bytes for this field wereE8 0B 82 34 07 60 D6 01, which when reversed from little endian and converted from FILETIME produced the value 2020-07-22 09:05:11. Reformatting the timestamp is  22-07-2020_09:05:11
 
- he output included the F value binary field %02%00%01%00...E8%0B%824%07\%D6%01..., where the third 8-byte FILETIME sequence corresponds to the LastFailedLogontimestamp. The bytes for this field wereE8 0B 82 34 07 60 D6 01, which when reversed from little endian and converted from FILETIME produced the value 2020-07-22 09:05:11. Reformatting the timestamp is  22-07-2020_09:05:11
 
- 
+Onto the 2nd qsn when was the file created ?
+
+
+For this i'll look up MFT-table for info (memlabs taught this pov)
+
+After some looking up i realised there's a much easier way , whenever windows creates a file a .lnl (the icon),lnk files are basically the shortcuts (icons) you use for files etc . So i'll grep it out for 1.lnk and it should be it  .
+
+
+```
+remnux@remnux:~/Downloads/Investigation$ volatility -f windows.vmem --profile=Win7SP1x64 mftparser | grep "1.lnk"
+Volatility Foundation Volatility Framework 2.6.1
+2020-07-21 18:22:47 UTC+0000 2020-07-21 18:38:33 UTC+0000   2020-07-21 18:38:33 UTC+0000   2020-07-21 18:38:33 UTC+0000   Users\Adam\AppData\Roaming\Microsoft\Windows\Recent\1.lnk
+```
+
+Alr this means that 
+
+```
+2020-07-21 18:22:47 UTC   <- Created
+2020-07-21 18:38:33 UTC   <- Modified
+2020-07-21 18:38:33 UTC   <- MFT entry modified
+2020-07-21 18:38:33 UTC   <- Accessed
+Users\Adam\AppData\Roaming\Microsoft\Windows\Recent\1.lnk
+```
+Now onto Question 3: When did Adam last use the taskbar to launch Chrome? 
+
+My assumption is to use the reg or to check hive to see if there are any values 
 
