@@ -100,3 +100,18 @@ Now onto Question 3: When did Adam last use the taskbar to launch Chrome?
 
 My assumption is to use the reg or to check hive to see if there are any values 
 
+I found a blog which helped me to see the probelem in a broader view 
+
+
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/c99943cf-9bfa-47b1-8ff5-4561ac8b04b3" />
+
+The Windows operating system depends on this file to load the settings and preferences of a user profile.
+```
+remnux@remnux:~/Downloads/Investigation$ reglookup -p "Software/Microsoft/Windows/CurrentVersion/Explorer/UserAssist" registry.0xfffff8a00256d010.ntuserdat.reg
+```
+
+Using the UserAssist key in the NTUSER.DAT hive, and decoding ROT13 entries to locate Chrome's taskbar shortcut activity, the last Chrome launch from the taskbar occurred on 21-07-2020 at 17:37:18, which formats as 21-07-2020_17:37:18.
+```
+inctf{22-07-2020_09:05:11_21-07-2020_18:38:33_21-07-2020_17:37:18}
+```
+
