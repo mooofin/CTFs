@@ -1,9 +1,94 @@
-#  HAVOC Writeup
+# <p align="center"><b>Keeper of the Rejected Flame Bound to Worlds Unrendered</b></p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ad4956a2-0e28-4872-a154-cfdded39c113" width="90%">
+</p>
+
+<p align="center">
+<b>Category:</b> Forensics / Reverse Engineering  
+<br><br>
+<b>Difficulty:</b> Hard  
+<br><br>
+<b>Points:</b> 500  
+<br><br>
+<b>Author:</b> muffin  
+<br><br>
+<b>Download:</b><br>
+<a href="https://drive.google.com/file/d/1et9zmI8x2CGYnwP1DhD0sfCOJWerGwfV/view?usp=drive_link">
+https://drive.google.com/file/d/1et9zmI8x2CGYnwP1DhD0sfCOJWerGwfV/view?usp=drive_link
+</a>
+</p>
+
+
+
+## **Description**
+
+She is not of Lordran’s timelines, nor any world scholars recall.
+An unbound Firekeeper  caught between files that refuse to load and geometry that rejects her shape,
+as if she were written into existence and erased in the same breath.
+
+Only fragments of her remain, scattered through the wreckage of an unfinished realm:
+
+Those who examined the fragments recall a single whisper threaded through all anomalies:
+
+**“To restore her, trace the fragments.
+All three converge where the last bonfire never burned.”**
+
+
+
+## **Ashen Shard**
+
+A brittle sliver from a world that failed to load.
+A silhouette flickers within it, suspended between one form and the next.
+It remembers where she once stood, though the world does not.
+
+
+## **Cinder of the Rogue Machine**
+
+A smoldering ember taken from a dormant construct.
+It mutters in recursive tones, as if trying to recall a name long lost.
+It burns not with flame, but with computation.
+
+
+
+## **Bone of the Lost Reflection**
+
+A pale remnant from a body that never fully resolved.
+Its surface trembles with faint afterimages of a kneeling figure.
+Some say it holds her final memory.
+
+
+
+## **Objective**
+
+Recover the three fragments hidden across the provided materials.
+Reconstruct the forgotten path of the unbound Firekeeper.
+Assemble the final key where a bonfire should have been, but never was.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#  **Solution**
+
+
+# PART-1
 
 **Challenge:** We are given a Havoc Engine dump file.
 **Objective:** Locate the Firekeeper.
 
----
+
 
 ## Initial Analysis
 
@@ -16,7 +101,7 @@ FromSoftware uses custom, proprietary files for game data. As a result, traditio
 * Tutorials for **Dark Souls Map Studio** generally apply to **Smithbox**, although some UI elements and workflows have changed.
 * Older tutorials use **Yabber**, which is now outdated and may cause problems. Instead, you should use [**WitchyBND**](https://github.com/ividyon/WitchyBND/releases), which works similarly for most users.
 
----
+
 
 ## Modding Considerations
 
@@ -42,7 +127,6 @@ There are primarily two types of mods that can be loaded via mod loaders: **DLL 
   * Directories: `chr`, `parts`, `map`, `event`, `msg`, `menu`, `script`, `param`
 * These mods replace in-game assets or behavior without directly modifying memory.
 
----
 
 ## Approach
 
@@ -60,7 +144,7 @@ There are primarily two types of mods that can be loaded via mod loaders: **DLL 
 
    * Track character spawn data, event scripts, and map files to pinpoint her location.
 
----
+
 
 ## Understanding file structure for file replacement mods 
 
@@ -165,7 +249,7 @@ After combining all textures and XML entries, move your new `.tpf` folder, conta
 
 Finally, edit the `_yabber-bnd3.xml` for the `.objbnd` and **add your new `.tpf` file**, making sure its **ID is set to 100**, as this is required for it to work correctly. Repack the `.objbnd` with Yabber and test it in-game. If done correctly, the object should now load its textures in any map.
 
----
+
 
 
 ## Now onto the main DS-MAP Studio  
@@ -285,7 +369,7 @@ Also GameNotUnpackedWarning is a function that checks that is the custom mod , (
 
 
 
-Here's the patch to remove the Dark Souls 1 PTDE unpacking check:
+
 
 ## Patched Version:
 
@@ -473,6 +557,7 @@ After scrolling and peedking the area we find the model : )
 
 
 
+# PART-2
 
 ##  Identifying  Binary Characteristics
 
@@ -1072,13 +1157,8 @@ print(f"Flag: {flag.decode('utf-8')}")
 
 
 
-# Challenge Overview
+# PART-3
 
-**Files given to player:** `hi.7z`, `hi.pskx`
-**Goal:** Recover the hidden file (`s3cret.jpg`) and extract the flag.
-**Theme / Flavor:** Steganography + Blender file repair + encrypted archive.
-
----
 
 ## Step 1: Inspect the Hint File
 
