@@ -657,9 +657,7 @@ A typical binary has at least two PT_LOAD segments:
 
 The loader reads these instructions and tells the kernel (via the mmap system call) to set up these memory mappings. The kernel creates the necessary structures to manage this new virtual address space. Only then does the loader transfer control to your program's entry point.
 
-Here’s a complete **writeup-style explanation** in paragraph form, incorporating your `readelf` output and analysis of why the binary segfaults:
 
----
 
 When analyzing the binary `rust_vm_poc_mangled`, the first step is to inspect its ELF structure using `readelf -h rust_vm_poc_mangled`. The output reveals the following critical details:
 
