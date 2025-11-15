@@ -1322,8 +1322,8 @@ steghide extract -sf lunee.jpg -p "" && \
 steghide extract -sf s3cret.jpg -p "" && \
 cat flag.txt
 ```
-
-
+```
+```
 part 1 
 ```c275036.89749.549105.207``` 
 
@@ -1332,9 +1332,10 @@ part2
 
 part3
 ```Cl41r3_3xp3d33  4sh3n_B0n3s33```
-
+```
 The flag format is :
 
-ctf{PART3(1)_PART1_PART2_PART3(2)}kernel
+ctf{PART1_PART2_PART3}kernel
+```
 
-ctf{Cl41r3_3xp3d33_c275036.89749.549105.207_3ds94yOX_4sh3n_B0n3s33}kernel
+## **FLAG - ctf{c275036.89749.549105.207_3ds94yOX_Cl41r3_3xp3d334sh3n_B0n3s33}kernel**
