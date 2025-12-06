@@ -143,7 +143,7 @@ HomeGroupUser$:1002:aad3b435b51404eeaad3b435b51404ee:bda4ed0acc67d6d60540d1a20cf
 
 <img width="1342" height="490" alt="image" src="https://github.com/user-attachments/assets/b5cce846-70ed-4ad0-9399-35a0d45601df" />
 
-The password is bat man omg 
+The password is bat man 
 
 and we get another b64 flag 
 
@@ -151,6 +151,15 @@ and we get another b64 flag
 
 which is - m0r3_13337431} 
 
+so we have done till 1,5, 
 
+
+I dumped the notepad data using procdump and saw that there was a seach for , flag4 
+
+which was another base64 string that came out from doing ; strings on it  . 
+YjNuM2YxNzVfeTB1Xw==
+
+
+Now we have flag 2 left , from the pslist , we saw that paint was running , as from memlabs lets try dumping it and switching out rgb for getting the flag ? clues
 
 
