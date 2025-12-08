@@ -144,3 +144,44 @@ Finally, this instruction does nothing and serves as a NOP.
 
 <img width="857" height="606" alt="image" src="https://github.com/user-attachments/assets/866b648f-bf23-4709-95f5-ed04ab2731f7" />
 
+
+
+After finally renaming all the VM instructions in radare2, I ended up with a clear structure of how the virtual machine works internally.
+
+<img width="526" height="585" alt="image" src="https://github.com/user-attachments/assets/bb133f61-4aa6-4a51-9e3d-e57f5318c423" />
+
+I also identified the main VM dispatcher, which is responsible for fetching each instruction, decoding the opcode, and jumping to the correct handler.
+
+<img width="1887" height="930" alt="image" src="https://github.com/user-attachments/assets/065cdeb5-05e2-4f25-845f-8acff8550c11" />
+
+Since the opcode handlers were already renamed and understood, I mapped out the full opcode table.
+
+<img width="685" height="63" alt="image" src="https://github.com/user-attachments/assets/5cd0ae9b-ae6b-4596-8568-63569a457807" />
+
+With this information, the extracted VM bytecode could now be mapped properly, because we know what each register represents and what each instruction does.
+
+<img width="713" height="284" alt="image" src="https://github.com/user-attachments/assets/b82156c0-6f2d-4e91-b237-3df7b5f332f7" />
+
+At this point, the next goal was figuring out how to convert this raw bytecode dump into readable pseudocode.
+
+When the VM starts running, it first loads two constant values. One of them is `0x9e3779b9`, which is a well-known constant used in the TEA encryption algorithm. This immediately hints that some kind of encryption or mixing logic is involved.
+
+<img width="603" height="269" alt="image" src="https://github.com/user-attachments/assets/aae098c2-50c5-43c6-91e6-bc26e0a0d2df" />
+
+Instead of explaining everything line by line, the image below gives a clean high-level view of what the VM is actually doing.
+
+<img width="761" height="476" alt="image" src="https://github.com/user-attachments/assets/4258c9a6-6c76-4355-a6f7-1407bca94bf8" />
+
+In short, the program takes your input key and scrambles it using a small encryption-like routine that runs for 32 rounds. After all rounds are done, the final result is compared against two hardcoded secret values. If the values match, the key is accepted.
+
+
+
+
+
+
+
+
+
+
+
+
