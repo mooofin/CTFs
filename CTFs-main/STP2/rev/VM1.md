@@ -146,12 +146,284 @@ ERROR: Cannot find function at 0x000014cd
 │           0x0000158e      5d             pop rbp
 └           0x0000158f      c3             ret
 ```
-This opcode handler implements the VM’s ADD instruction. It operates on the VM stack by popping two 32-bit values, decrementing the stack pointer accordingly. The two values are added together, and the resulting sum is reduced using a modulo operation with 0x7fffffff to constrain it within a fixed range. The final value is then written back to the stack, and the stack pointer is updated to reflect the pushed result. SO add function . 
+This opcode handler implements the VM’s ADD instruction. It operates on the VM stack by popping two 32-bit values, decrementing the stack pointer accordingly. The two values are added together, and the resulting sum is reduced using a modulo operation with 0x7fffffff to constrain it within a fixed range. 
 
-<img width="652" height="809" alt="image" src="https://github.com/user-attachments/assets/5a78b6ac-82ff-4197-94d4-4503f9e24eb4" />
-
-This opcode implements the VM’s MUL instruction by popping two values from the stack, multiplying them. 
+After identifying the VM structure, the next step is manually identifying each opcode handler (would not reccomend) 
 
 
-From here it's a manual work of identifying each OP codes so . fastforwaring to the next 23 more functions 
+We backtrack to the first opcode registration point:
+
+```asm
+s 0x00001dde
+```
+
+## MUL Opcode
+
+This instruction pops two values from the VM stack, multiplies them, applies modulo `0x7fffffff`, and pushes the result back onto the stack.
+
+![MUL](https://github.com/user-attachments/assets/5a78b6ac-82ff-4197-94d4-4503f9e24eb4)
+
+---
+
+## XOR Opcode
+
+```
+Opcode: 0x48c5ccc6  
+Handler: 0x00001438
+```
+
+The XOR instruction pops two values from the stack, performs a bitwise XOR, and pushes the result back.
+Unlike other arithmetic operations, XOR does **not** apply modulo.
+
+![XOR](https://github.com/user-attachments/assets/908da7f2-c71c-415e-8f35-9cba4a3a6a65)
+
+---
+
+## AND Opcode
+
+```
+Opcode: 0x542010a0  
+Handler: 0x00001590
+```
+
+Performs bitwise AND between two stack values and pushes the result.
+
+![AND](https://github.com/user-attachments/assets/a308a294-587a-4047-8aec-5abd66199b8a)
+
+---
+
+## RET Opcode
+
+```
+Opcode: 0xbdecfe55  
+Handler: 0x000017bb
+```
+
+Returns from a VM function by restoring the program counter from the Link Register (LR).
+
+![RET](https://github.com/user-attachments/assets/7b61d34d-f73e-438b-b567-099e143a4a4a)
+
+---
+
+## ABORT Opcode
+
+```
+Opcode: 0x41f93b4b  
+Handler: 0x000017d4
+```
+
+Immediately terminates execution by calling `exit(1)`.
+Used for invalid execution paths.
+
+![ABORT](https://github.com/user-attachments/assets/d065fb47-827b-4cc7-9c00-255dae69fa21)
+
+---
+
+## PUSH_IMM Opcode
+
+```
+Handler: 0x000017ea
+```
+
+Pushes a 32-bit immediate value (fetched from ROM) onto the VM stack.
+
+![PUSH\_IMM](https://github.com/user-attachments/assets/0ac161da-17f5-4fc1-a85c-1a5675452559)
+
+---
+
+## JZ (Jump if Equal)
+
+```
+Opcode: 0x180bc12d  
+Handler: 0x00001866
+```
+
+Pops two values from the stack.
+If they are equal, the program counter is adjusted using a signed immediate offset.
+
+![JZ](https://github.com/user-attachments/assets/7a0712a2-f6fb-4459-aa35-83f44be8d74f)
+
+---
+
+## JNZ (Jump if Not Equal)
+
+```
+Opcode: 0x5a0f38fc  
+Handler: 0x000018f9
+```
+
+Pops two values from the stack.
+If they are **not** equal, PC is updated by a signed immediate offset.
+
+![JNZ](https://github.com/user-attachments/assets/f7ae199b-444a-4ae7-abc3-9fef92f33e15)
+
+---
+
+## FAIL Opcode
+
+```
+Opcode: 0x27497906  
+Handler: 0x0000198c
+```
+
+Another hard failure instruction that immediately exits the program.
+
+![FAIL](https://github.com/user-attachments/assets/550f0ca8-0053-4f12-8fab-46bbef4b2725)
+
+---
+
+## SET_MEMPTR Opcode
+
+```
+Opcode: 0xba1116a9  
+Handler: 0x000019a2
+```
+
+Updates the VM memory pointer, used for subsequent memory read/write instructions.
+
+![SET\_MEMPTR](https://github.com/user-attachments/assets/2d1bf26d-de93-4d80-a445-8f94800173f6)
+
+---
+
+## CALL Opcode
+
+```
+Opcode: 0xfa83fa5e  
+Handler: 0x000019de
+```
+
+Stores the current PC into the Link Register (LR) and jumps to a new address.
+
+![CALL](https://github.com/user-attachments/assets/71663722-a784-4b29-bcae-ddb9d24c5309)
+
+---
+
+## HALT Opcode
+
+```
+Opcode: 0x818cd6b5  
+Handler: 0x00001a1d
+```
+
+Sets the exit code and terminates VM execution cleanly.
+
+![HALT](https://github.com/user-attachments/assets/d9659e0e-1b82-4620-9dab-e8d34179e6a3)
+
+---
+
+## LOAD_REG Opcode
+
+```
+Opcode: 0x8d67bae1  
+Handler: 0x00001a64
+```
+
+Loads a 32-bit value from ROM into a register.
+
+![LOAD\_REG](https://github.com/user-attachments/assets/da5d0f84-9458-44df-a390-e047d621503b)
+
+---
+
+## PUTCHAR Opcode
+
+```
+Opcode: 0xd1450d67  
+Handler: 0x00001abf
+```
+
+Outputs a character using `putchar()` and sets the VM `PUT_FLAG`.
+
+![PUTCHAR](https://github.com/user-attachments/assets/8d25fd9a-1d96-4e0e-bb36-3bc244f0b94d)
+
+---
+
+## INC / DEC Register Opcodes
+
+### INC
+
+```
+Handler: 0x00001b03
+```
+
+![INC](https://github.com/user-attachments/assets/b5efc681-ad4f-4045-b91f-1ea4bc737550)
+
+### DEC
+
+```
+Handler: 0x00001b46
+```
+
+![DEC](https://github.com/user-attachments/assets/c4b7dfbd-68fc-4920-bb3a-5022570ec6b2)
+
+---
+
+## MOD Opcode
+
+```
+Handler: 0x00001724
+```
+
+Performs modulo operation using a register and pushes the result onto the stack.
+
+![MOD](https://github.com/user-attachments/assets/579d41d8-d2c0-46ec-b249-35fbdd6d3f5a)
+
+---
+
+## POP_REG Opcode
+
+```
+Handler: 0x00001be5
+```
+
+Pops a value from the stack into a register.
+
+![POP\_REG](https://github.com/user-attachments/assets/a7553de8-b589-4f85-b2df-c38d06f59df5)
+
+---
+
+## SET_MEM_PTR Opcode
+
+```
+Handler: 0x00001c41
+```
+
+Adjusts internal VM memory pointers.
+
+![SET\_MEM\_PTR](https://github.com/user-attachments/assets/bd1d0a5c-acbc-48b5-8af2-c6a25670f9aa)
+
+---
+
+## MEMSTORE Opcode
+
+```
+Handler: 0x00001ca4
+```
+
+Stores a register value into VM memory at `VM_MEM_PTR`.
+
+![MEMSTORE](https://github.com/user-attachments/assets/b2640f51-dd28-4533-b55d-3c9fb82ff527)
+
+---
+
+## MEMFETCH Opcode
+
+```
+Handler: 0x00001cf7
+```
+
+Loads a value from VM memory into a register.
+
+![MEMFETCH](https://github.com/user-attachments/assets/6f56d714-437f-4725-9b09-e14cd8820a4b)
+
+
+TO put it simply here's the functioning of the VM 
+
+<img width="709" height="388" alt="image" src="https://github.com/user-attachments/assets/d1081542-ade3-4c9e-8977-92a7e21b7af3" />
+
+
+
+
+
+
+
 
