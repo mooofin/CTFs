@@ -175,6 +175,79 @@ Instead of explaining everything line by line, the image below gives a clean hig
 In short, the program takes your input key and scrambles it using a small encryption-like routine that runs for 32 rounds. After all rounds are done, the final result is compared against two hardcoded secret values. If the values match, the key is accepted.
 
 
+# Keygen
+
+![Keygen](https://github.com/user-attachments/assets/b9a6f324-3bc5-4cfd-93a1-4af31f2bc01c)
+
+```rust
+use rand::Rng;
+
+fn combine(seed: u32, a: u32, b: u32, c: u32) -> u32 {
+    let r9  = a.wrapping_shr(5).wrapping_add(b);
+    let r10 = a.wrapping_add(seed);
+    let r11 = a.wrapping_shl(4).wrapping_add(c);
+    r11 ^ r10 ^ r9
+}
+
+fn validate(mut serial: [u32; 6]) -> bool {
+    let mut r6 = 0xc6ef_3720u32;
+    let r7 = 0x9e37_79b9u32;
+
+    for _ in 0..32 {
+        let r12 = combine(r6, serial[0], serial[5], serial[4]);
+        serial[1] = serial[1].wrapping_sub(r12);
+
+        let r12 = combine(r6, serial[1], serial[3], serial[2]);
+        serial[0] = serial[0].wrapping_sub(r12);
+
+        r6 = r6.wrapping_sub(r7);
+    }
+
+    serial[0] == 0xba01_aafe && serial[1] == 0xbbff_31a3
+}
+
+fn keygen() -> [u32; 6] {
+    let mut serial = [0u32; 6];
+
+    serial[0] = 0xba01_aafe;
+    serial[1] = 0xbbff_31a3;
+
+    let mut rng = rand::thread_rng();
+    serial[2] = rng.r#gen::<u32>();
+    serial[3] = rng.r#gen::<u32>();
+    serial[4] = rng.r#gen::<u32>();
+    serial[5] = rng.r#gen::<u32>();
+
+    let mut r6 = 0x9e37_79b9u32;
+
+    for _ in 0..32 {
+        let r12 = combine(r6, serial[1], serial[3], serial[2]);
+        serial[0] = serial[0].wrapping_add(r12);
+
+        let r12 = combine(r6, serial[0], serial[5], serial[4]);
+        serial[1] = serial[1].wrapping_add(r12);
+
+        r6 = r6.wrapping_add(0x9e37_79b9);
+    }
+
+    serial
+}
+
+fn main() {
+    for _ in 0..100 {
+        let s = keygen();
+        assert!(validate(s));
+        println!(
+            "{:08x},{:08x},{:08x},{:08x},{:08x},{:08x}",
+            s[0], s[1], s[2], s[3], s[4], s[5]
+        );
+    }
+}
+```
+
+
+<img width="694" height="705" alt="image" src="https://github.com/user-attachments/assets/5bd6c78a-95cc-47a4-b65e-58dd4063b668" />
+
 
 
 
