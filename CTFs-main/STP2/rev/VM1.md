@@ -426,4 +426,26 @@ TO put it simply here's the functioning of the VM
 
 
 
+After that i came across this article which was a very embedded emulator type VM which has also very much OP codes ;
+[https://miasm.re/blog/2016/09/03/zeusvm_analysis.html](https://miasm.re/blog/2016/09/03/zeusvm_analysis.html)
+
+
+
+### WHy miasm ??
+
+Miasm helps automate this process. After instructions are converted to IR, Miasm can symbolically execute them, meaning it treats inputs as unknown variables and follows all possible program paths automatically.
+
+In this challenge, the binary does not directly compare user input. Instead, it runs everything inside a custom VM. Traditional tools struggle here because they do not understand the VM’s instruction set.
+
+By implementing this VM as a custom architecture in Miasm, the VM bytecode can be executed symbolically instead of manually emulated. Miasm automatically tracks relationships between registers, stack values, and memory, and generates constraints on user input. These constraints can then be solved using SMT solvers.
+
+
+So after reading some guides u need to make some files for misam , which like in the diagram below
+
+![miasm vm architecture layout](https://github.com/user-attachments/assets/b50939b3-d433-4ca0-b085-46ff8b62b4a8)
+
+
+
+the `regs.py` file is used to define the VM registers, `arch.py` ties the architecture together and describes basic properties like the program counter, and `sem.py` defines the actual semantics of each VM instruction
+
 
