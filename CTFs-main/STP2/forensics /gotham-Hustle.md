@@ -129,7 +129,7 @@ I dumped the process memory, renamed it to `.data`, and opened it in GIMP.
 
 <img width="720" height="763" alt="image" src="https://github.com/user-attachments/assets/3fc6f1e4-7ac4-4b0b-b5e7-463fc906725e" />
 
-
+I referred a writeup for the MS Paint part; the offsets there were not correct so I had to adjust them manually.
 
 I had to use **Unsigned Integer** because I was loading raw process memory, not a real image file. The pixel values in memory are stored as normal positive numbers, especially for RGB 16-bit, which expects values between 0 and 65535. When I tried signed or floating point, the same bytes were misinterpreted and the image completely fell apart into noise. Unsigned was the only option that kept the colors stable and readable. Since MSPaint stores its canvas as raw pixel data in memory without headers, I had to manually line everything up.
 
@@ -150,4 +150,4 @@ bi0sctf{w3lc0m3_t0_df1r_l4b5_h0p3_th15_b3n3f175_y0u_m0r3_13337431}
 ```
 
 
-
+For the 
