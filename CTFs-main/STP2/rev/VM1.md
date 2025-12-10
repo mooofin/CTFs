@@ -653,4 +653,81 @@ dump_cfg(ircfg, f"output/vmv_ircfg_simp_ssa{nl + 1}.dot")
 
 
 ```
+At some point while trying to hook my VM into Miasm, I ran into this error saying that miasm.arch.vmv.jit did not contain something called jitter_vmv. After some digging, I realized this wasn’t actually a VM bug but a Miasm integration issue. When Miasm loads a new architecture through machine.py, it assumes that a JIT (Just-In-Time execution) backend exists and tries to import it automatically. In my case, vmv/jit.py turned out to be completely empty, so there was nothing named jitter_vmv to import. Since my disassembly and analysis pipeline never used the JIT at all, the simplest fix was to remove the JIT-related import lines for vmv inside machine.py. This effectively told Miasm that the vmv architecture does not support JIT execution, which was totally fine for static disassembly and IR lifting.
 
+After fixing the JIT issue, Miasm failed again, this time complaining about a missing LifterModelCallVmv class in vmv/ira.py. This was another case of Miasm expecting a conventionally named class without checking whether it actually existed. I opened vmv/ira.py and found that it instead defined classes named ir_a_vmv_base and ir_a_vmv. Based on the existing Miasm architectures and how the lifter is usually named, it was clear that ir_a_vmv was the correct lifter to use. To fix this, I updated the vmv branch in machine.py to import ir_a_vmv instead of LifterModelCallVmv. Once this change was made, Miasm could successfully lift VM instructions into IR without looking for non-existent classes
+
+With my knowledge , ill try to summarise how jitter the execution layer works :( 
+
+Miasm has a component called **Jitter**, which is used to *execute* instructions after they have been translated into Miasm’s intermediate representation (IR). You can think of Jitter as a simple emulator that understands IR instead of raw machine code. It keeps track of things like registers, memory, and the current instruction pointer, and then steps through instructions one by one.
+
+At the core of this system is a generic `Jitter` class, which provides common execution logic that works the same for every architecture. On top of that, Miasm defines architecture-specific subclasses such as `jitter_x86_64`, `jitter_arm`, or `jitter_mips32`. Each of these subclasses explains how instructions for that particular CPU should behave at runtime. This is why Miasm’s documentation shows a large inheritance diagram: many different architectures all extend the same base Jitter class.
+
+
+<img width="1408" height="711" alt="image" src="https://github.com/user-attachments/assets/fe3b2f8c-c18d-4408-a56b-b102a13b3c56" />
+
+Jitter is also closely tied to **symbolic execution**. Instead of running instructions with real concrete values, Miasm can execute them symbolically, meaning registers and memory can hold expressions rather than actual numbers. As Jitter steps through instructions, it updates these symbolic expressions and builds constraints that describe how program inputs affect the program state. This is useful for exploring multiple execution paths, understanding key checks, or reasoning about conditions without needing a specific input. In short, symbolic execution uses Jitter as its execution engine, but replaces concrete values with symbolic ones.
+
+<img width="447" height="442" alt="image" src="https://github.com/user-attachments/assets/9bd6dff1-8750-4178-ac25-2daeec804f2b" />
+
+Each layer produced an assembly-level CFG (*_asmcfg*.png), which shows the decoded VM instructions and their control flow, and for the final VM layer an IR-level CFG (*_ircfg*.png) was also generated
+<img width="762" height="248" alt="image" src="https://github.com/user-attachments/assets/ca618b69-a0c0-4526-bd03-e317bd27916e" />
+
+Ng
+
+
+
+After setting up the custom disassembler, I began analyzing the generated assembly-level control flow graphs (CFGs) for each VM layer. These graphs show the decoded VM instructions and how control flows within each virtual machine. Since the challenge uses nested virtualization, examining these CFGs layer by layer helps understand how complexity is gradually peeled away until the real logic is exposed.
+
+
+
+
+![VM Layer 1 CFG](https://github.com/user-attachments/assets/bbe373c4-9da6-4fcb-a551-15af7a587d62)
+
+The first VM layer is the largest and most complex. It is dominated by dispatcher logic: instruction fetch loops, register movement, memory initialization, and indirect jumps. At this stage, the VM mainly focuses on setting up the execution environment and preparing the next bytecode buffer. There are no meaningful input-dependent checks here, only infrastructure code required to emulate the VM.
+
+
+
+
+
+![VM Layer 2 CFG](https://github.com/user-attachments/assets/adc916a5-b277-4eaa-9d78-8b91368e2960)
+
+The second VM layer closely resembles the first. While some constants and register roles differ due to re-encoding, the overall structure remains the same: a large dispatcher loop with instruction handlers branching from it. 
+
+
+
+
+![VM Layer 3 CFG](https://github.com/user-attachments/assets/ecf8ffa4-5558-4d23-8cc6-cc2fcd15f2c0)
+
+By the third VM layer, the CFG begins to shrink slightly. While dispatcher logic is still clearly visible, there are fewer blocks and less overall noise. 
+
+
+
+
+![VM Layer 4 CFG](https://github.com/user-attachments/assets/764eba8b-9de7-4ffb-9ae3-cbe5d782bcf8)
+ Although a dispatcher is still present, the CFG is noticeably smaller and more structured. Many repetitive VM bookkeeping blocks disappear tho 
+
+
+
+
+
+![VM Layer 5 CFG](https://github.com/user-attachments/assets/164ed9e3-e381-47e2-a6f8-3229b057aae8)
+
+ The CFG is much smaller and no longer dominated by VM dispatch infrastructure. Instead, it consists of relatively straight-line code with arithmetic operations and branches based on computed values.
+
+
+
+
+![Final SSA IR CFG](https://github.com/user-attachments/assets/f1170f17-6a0f-4b96-85aa-390c5fe1e731)
+
+The VM abstraction is very less honestly and we can see the register data's etc . 
+
+
+
+
+
+From the SSA graph, it becomes clear that the input key is read from the VM ROM buffer in four 32-bit chunks. These correspond to the 16-byte input split as input[0:4], input[4:8], input[8:12], and input[12:16]. Each chunk is processed independently through a sequence of arithmetic checks. The first and third chunks are multiplied by fixed constants and reduced modulo 0x7fffffff, with the result compared against the value 1. This directly translates into modular inverse equations. The second and fourth chunks are validated using two different modulo comparisons each, forming classic Chinese Remainder Theorem (CRT) constraints. 
+
+Only if all constraints succeed does execution reach the final block, which consists of a series of putchar calls that print the flag one character at a time.
+
+<img width="762" height="621" alt="image" src="https://github.com/user-attachments/assets/7f29c980-f747-4ee5-9ab8-0d8bb91b833a" />
