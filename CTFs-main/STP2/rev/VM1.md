@@ -1,13 +1,13 @@
-### Binary Overview
+
 
 Running `file` on the binary shows a standard ELF executable:
 
 ![file info](https://github.com/user-attachments/assets/045f0e79-743e-495b-bf71-e659cf48e529)
 
-Nothing unusual here at first glance.
+Nothing unusual here 
 
 
-### Runtime Behavior
+
 
 When executed, the binary asks for user input. Supplying anything incorrect leads to an immediate failure response, with no visible comparison or transformation in plaintext:
 
@@ -157,7 +157,7 @@ We backtrack to the first opcode registration point:
 s 0x00001dde
 ```
 
-## MUL Opcode
+ MUL Opcode
 
 This instruction pops two values from the VM stack, multiplies them, applies modulo `0x7fffffff`, and pushes the result back onto the stack.
 
@@ -165,7 +165,7 @@ This instruction pops two values from the VM stack, multiplies them, applies mod
 
 ---
 
-## XOR Opcode
+ XOR Opcode
 
 ```
 Opcode: 0x48c5ccc6  
@@ -179,7 +179,7 @@ Unlike other arithmetic operations, XOR does **not** apply modulo.
 
 ---
 
-## AND Opcode
+ AND Opcode
 
 ```
 Opcode: 0x542010a0  
@@ -192,7 +192,7 @@ Performs bitwise AND between two stack values and pushes the result.
 
 ---
 
-## RET Opcode
+ RET Opcode
 
 ```
 Opcode: 0xbdecfe55  
@@ -205,7 +205,7 @@ Returns from a VM function by restoring the program counter from the Link Regist
 
 ---
 
-## ABORT Opcode
+ ABORT Opcode
 
 ```
 Opcode: 0x41f93b4b  
@@ -219,7 +219,7 @@ Used for invalid execution paths.
 
 ---
 
-## PUSH_IMM Opcode
+ PUSH_IMM Opcode
 
 ```
 Handler: 0x000017ea
@@ -231,7 +231,7 @@ Pushes a 32-bit immediate value (fetched from ROM) onto the VM stack.
 
 ---
 
-## JZ (Jump if Equal)
+ JZ (Jump if Equal)
 
 ```
 Opcode: 0x180bc12d  
@@ -245,7 +245,7 @@ If they are equal, the program counter is adjusted using a signed immediate offs
 
 ---
 
-## JNZ (Jump if Not Equal)
+ JNZ (Jump if Not Equal)
 
 ```
 Opcode: 0x5a0f38fc  
@@ -259,7 +259,7 @@ If they are **not** equal, PC is updated by a signed immediate offset.
 
 ---
 
-## FAIL Opcode
+ FAIL Opcode
 
 ```
 Opcode: 0x27497906  
@@ -272,7 +272,7 @@ Another hard failure instruction that immediately exits the program.
 
 ---
 
-## SET_MEMPTR Opcode
+ SET_MEMPTR Opcode
 
 ```
 Opcode: 0xba1116a9  
@@ -285,7 +285,7 @@ Updates the VM memory pointer, used for subsequent memory read/write instruction
 
 ---
 
-## CALL Opcode
+ CALL Opcode
 
 ```
 Opcode: 0xfa83fa5e  
@@ -337,9 +337,9 @@ Outputs a character using `putchar()` and sets the VM `PUT_FLAG`.
 
 ---
 
-## INC / DEC Register Opcodes
+ INC / DEC Register Opcodes
 
-### INC
+ INC
 
 ```
 Handler: 0x00001b03
@@ -347,7 +347,7 @@ Handler: 0x00001b03
 
 ![INC](https://github.com/user-attachments/assets/b5efc681-ad4f-4045-b91f-1ea4bc737550)
 
-### DEC
+ DEC
 
 ```
 Handler: 0x00001b46
@@ -357,7 +357,7 @@ Handler: 0x00001b46
 
 ---
 
-## MOD Opcode
+ MOD Opcode
 
 ```
 Handler: 0x00001724
@@ -369,7 +369,7 @@ Performs modulo operation using a register and pushes the result onto the stack.
 
 ---
 
-## POP_REG Opcode
+ POP_REG Opcode
 
 ```
 Handler: 0x00001be5
@@ -381,7 +381,7 @@ Pops a value from the stack into a register.
 
 ---
 
-## SET_MEM_PTR Opcode
+ SET_MEM_PTR Opcode
 
 ```
 Handler: 0x00001c41
@@ -393,7 +393,7 @@ Adjusts internal VM memory pointers.
 
 ---
 
-## MEMSTORE Opcode
+ MEMSTORE Opcode
 
 ```
 Handler: 0x00001ca4
@@ -405,7 +405,7 @@ Stores a register value into VM memory at `VM_MEM_PTR`.
 
 ---
 
-## MEMFETCH Opcode
+ MEMFETCH Opcode
 
 ```
 Handler: 0x00001cf7
