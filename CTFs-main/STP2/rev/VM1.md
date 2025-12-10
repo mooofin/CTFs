@@ -739,3 +739,32 @@ So i made a smol keygen
 <img width="1915" height="955" alt="image" src="https://github.com/user-attachments/assets/f6ae443b-05b4-4e88-855c-dd707409d225" />
 
 <img width="454" height="88" alt="image" src="https://github.com/user-attachments/assets/a1ce76a8-babe-48e1-848c-6660e64d8e61" />
+
+
+
+
+### References
+
+* Miasm official blog and documentation
+  [https://miasm.re/blog/](https://miasm.re/blog/)
+
+* Miasm v0.1.0 release notes (IRCFG, SSA, symbolic execution improvements)
+  [https://miasm.re/blog/2018/12/20/release_v0_1_0.html](https://miasm.re/blog/2018/12/20/release_v0_1_0.html)
+
+* Tigress-based protection and virtualization examples
+  [https://github.com/JonathanSalwan/Tigress_protection](https://github.com/JonathanSalwan/Tigress_protection)
+
+* Dynamic Symbolic Execution with Miasm (crash course + crackme coverage)
+  [https://miasm.re/blog/2017/10/05/playing_with_dynamic_symbolic_execution.html](https://miasm.re/blog/2017/10/05/playing_with_dynamic_symbolic_execution.html)
+
+* Data flow analysis and dependency graphs in Miasm
+  [https://miasm.re/blog/2017/02/03/data_flow_analysis_depgraph.html](https://miasm.re/blog/2017/02/03/data_flow_analysis_depgraph.html)
+
+* Nanomite-protected binary analysis using Miasm symbolic execution
+  [https://doar-e.github.io/blog/2014/10/11/taiming-a-wild-nanomite-protected-mips-binary-with-symbolic-execution-no-such-crackme/](https://doar-e.github.io/blog/2014/10/11/taiming-a-wild-nanomite-protected-mips-binary-with-symbolic-execution-no-such-crackme/)
+
+* Deobfuscation of OLLVM-protected programs (Quarkslab)
+  [https://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html](https://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html)
+
+
+
