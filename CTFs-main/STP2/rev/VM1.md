@@ -448,4 +448,209 @@ So after reading some guides u need to make some files for misam , which like in
 
 the `regs.py` file is used to define the VM registers, `arch.py` ties the architecture together and describes basic properties like the program counter, and `sem.py` defines the actual semantics of each VM instruction
 
+I first needed the bytecode that the VM actually executes, because the main binary never runs it directly on the CPU. The program decodes some Base64 data at runtime and then passes the decoded result to the VM as its instruction stream. Instead of trying to analyze everything at once, I focused on grabbing this decoded data and saving it as a raw binary file. This became the input for Miasm. For the later VM layers, the VM itself loads another bytecode buffer from a ROM-like area in its memory, so I reused those unpacked buffers as well.  
+
+
+Once I had the custom VM architecture wired up in Miasm, the next step was actually getting a disassembler working for the bytecode. I am not a Miasm wizard, so I did the simple thing: I read through the original writeup and kept Miasm’s own blog open as a reference, especially their “Playing with dynamic symbolic execution” article, just to understand how they build CFGs and IR and then simplify them:
+https://miasm.re/blog/2017/10/05/playing_with_dynamic_symbolic_execution.html#enhancing-coverage-breaking-a-crackme
+Using that as a guide, I wrote a small Python script that feeds the VM bytecode into Miasm’s Machine("vmv"), walks over all the basic blocks, looks for simple patterns like PUSH_REG; PUSH_IMM; JE to recover opcode values, and then saves out the control flow and simplified IR as .dot graphs. It is basically a hacked-together disassembler pass that does just enough for this challenge: discover opcodes for each nesting level, teach Miasm about them, then spit out IR I can actually reason about instead of staring at raw 32 bit words.
+
+
+```python
+
+from collections import defaultdict
+import struct
+import subprocess
+
+from miasm.analysis.machine import Machine
+from miasm.analysis.simplifier import (
+    IRCFGSimplifierCommon,
+    IRCFGSimplifierSSA,
+)
+from miasm.core.locationdb import LocationDB
+from miasm.core.utils import ExprInt
+
+from miasm.arch.vmv.regs import *
+from miasm.arch.vmv.arch import *
+import miasm.arch.vmv.arch as arch_vmv
+
+
+#
+# Dispatcher offsets -> semantic opcode mapping
+# These offsets are stable across VM layers.
+#
+vm_handler_map = {
+    0xcb8: ("EXIT_REG",      reg_idx),
+    0xbcc: ("DEC",           reg_idx),
+    0xd70: ("RET",),
+    0x6e8: ("MEMFETCH",      reg_idx),
+    0xcd8: ("CALL",          imm32),
+    0x358: ("PUTCHAR_REG",   reg_idx),
+    0x444: ("JMP",           imm32),
+    0x980: ("XOR",),
+    0x8fc: ("MUL",),
+    0x770: ("AND",),
+    0xb68: ("INC",           reg_idx),
+    0x4ac: ("JE",            imm32),
+    0x67c: ("MEMSTORE",      reg_idx),
+    0x878: ("ADD",),
+    0x380: ("PUSH_IMM",      imm32),
+    0x3f0: ("ROMFETCH",      reg_idx),
+    0x3b0: ("PUSH_REG",      reg_idx),
+    0x594: ("JNE",           imm32),
+    0xa04: ("PUTCHAR_IMM",   putchar_imm32),
+    0xa44: ("EXIT_IMM",      imm32),
+    0xa54: ("MEMSHIFT_IMM",  imm32),
+    0xaa0: ("MEMSHIFT_REG",  reg_idx),
+    0xafc: ("POP",           reg_idx),
+    0xc30: ("MOD",           reg_idx),
+}
+
+
+def dump_cfg(cfg, path):
+    """Dump CFG/IR to .dot and render it using graphviz."""
+    with open(path, "w") as f:
+        f.write(cfg.dot())
+
+    subprocess.call([
+        "dot", "-Tpng",
+        path,
+        "-o", path.replace(".dot", ".png"),
+    ])
+
+
+#
+# Opcode discovery logic
+#
+def vm_opcode_probe(mdis, block, _):
+    """Inspect VM basic blocks for dispatcher patterns."""
+
+    # Dispatcher entry:
+    #   PUSH_REG
+    #   PUSH_IMM <opcode>
+    #   JE <handler>
+    #
+    lines = block.lines
+    if (
+        len(lines) == 3
+        and lines[0].name == "PUSH_REG"
+        and lines[1].name == "PUSH_IMM"
+        and lines[2].name == "JE"
+    ):
+        imm = lines[1].args[0]
+        dst = lines[2].args[0]
+
+        if isinstance(imm, ExprInt):
+            opcode = int(imm.arg)
+            handler = mdis.loc_db.get_location_offset(dst.loc_key)
+            vm_opcodes[opcode] = handler
+
+    #
+    # VM layer init block (xor constants)
+    #
+    if mdis.loc_db.get_location_offset(block.loc_key) == 0xe8:
+        arch_vmv.putchar_xorlist.append(
+            int(lines[0].args[0]) & 0xff
+        )
+        arch_vmv.reg_xorlist.append(
+            int(lines[2].args[0]) & 0xff
+        )
+
+
+def register_vm_opcodes(opcodes, level):
+    """Register decoded opcode values into Miasm."""
+    print(f"\n[vm{level}] registering opcodes")
+
+    for opcode, handler_off in opcodes.items():
+        name_def = vm_handler_map[handler_off]
+        mnemonic = name_def[0]
+        operands = name_def[1:] if len(name_def) > 1 else []
+
+        print(f"  {hex(opcode)} -> {mnemonic}")
+
+        if operands:
+            addop(mnemonic, [bs32(opcode), operands[0]])
+        else:
+            addop(mnemonic, [bs32(opcode)])
+
+
+#
+# Bytecode loader
+#
+def load_vm_bytecodes():
+    """Load initial and nested VM bytecode blobs."""
+    blobs = []
+
+    with open("vmv_bytecode.bin", "rb") as f:
+        blobs.append(f.read())
+
+    with open("vmv_nested_bytecode.bin", "rb") as f:
+        while True:
+            hdr = f.read(4)
+            if not hdr:
+                break
+
+            count = struct.unpack("<I", hdr)[0]
+            blobs.append(f.read(count * 4))
+
+    return blobs
+
+
+#
+# Main analysis loop
+#
+machine = Machine("vmv")
+bytecodes = load_vm_bytecodes()
+
+print(f"[+] detected {len(bytecodes)} VM layers")
+
+results = []
+entry = 0x0
+
+for level, bc in enumerate(bytecodes, start=1):
+    print(f"[vm{level}] bytecode size: {len(bc) // 4:#x}")
+
+    vm_opcodes = defaultdict(int)
+    loc_db = LocationDB()
+
+    mdis = machine.dis_engine(bc, loc_db=loc_db)
+    mdis.dis_block_callback = vm_opcode_probe
+
+    asmcfg = mdis.dis_multiblock(entry)
+    results.append((loc_db, asmcfg))
+
+    dump_cfg(
+        asmcfg,
+        f"output/vmv_asmcfg{level}.dot"
+    )
+
+    arch_vmv.nest_level += 1
+
+    if len(vm_opcodes) == 24:
+        register_vm_opcodes(vm_opcodes, level)
+
+
+#
+# IR lifting (final VM layer)
+#
+nl = 4
+loc_db, asmcfg = results[nl]
+
+ira = machine.ira(loc_db)
+ircfg = ira.new_ircfg_from_asmcfg(asmcfg)
+
+dump_cfg(ircfg, f"output/vmv_ircfg{nl + 1}.dot")
+
+entry_loc = loc_db.get_offset_location(entry)
+
+simp = IRCFGSimplifierCommon(ira)
+simp.simplify(ircfg, entry_loc)
+dump_cfg(ircfg, f"output/vmv_ircfg_simp_common{nl + 1}.dot")
+
+simp = IRCFGSimplifierSSA(ira)
+simp.simplify(ircfg, entry_loc)
+dump_cfg(ircfg, f"output/vmv_ircfg_simp_ssa{nl + 1}.dot")
+
+
+```
 
