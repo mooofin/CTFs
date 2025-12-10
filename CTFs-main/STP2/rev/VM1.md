@@ -731,3 +731,11 @@ From the SSA graph, it becomes clear that the input key is read from the VM ROM 
 Only if all constraints succeed does execution reach the final block, which consists of a series of putchar calls that print the flag one character at a time.
 
 <img width="762" height="621" alt="image" src="https://github.com/user-attachments/assets/7f29c980-f747-4ee5-9ab8-0d8bb91b833a" />
+
+
+So i made a smol keygen 
+
+
+<img width="1915" height="955" alt="image" src="https://github.com/user-attachments/assets/f6ae443b-05b4-4e88-855c-dd707409d225" />
+
+<img width="454" height="88" alt="image" src="https://github.com/user-attachments/assets/a1ce76a8-babe-48e1-848c-6660e64d8e61" />
