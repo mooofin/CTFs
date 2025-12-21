@@ -1,4 +1,4 @@
-## Modify a Fuzzing Harness – minizip
+## Modify a Fuzzing Harness  minizip
 
 This challenge demonstrates the direct relationship between a fuzzing harness and code coverage. In libFuzzer-based workflows, coverage is determined entirely by what the harness executes. If the harness does not drive execution into the target library, coverage drops to zero regardless of how long fuzzing runs.
 
