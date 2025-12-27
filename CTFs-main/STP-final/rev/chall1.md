@@ -513,9 +513,82 @@ decrypted = ''.join([chr(data[i] ^ data[i + len(data)//2])
 print(f"Decrypted: {repr(decrypted)}")
 # Output: 'Correct\n\x00'
 ```
+func5 
+
+<img width="701" height="524" alt="image" src="https://github.com/user-attachments/assets/65734e0a-e9fb-4cfc-897a-83e8e950ecd2" />
+
+After more going through i found the VM dispatcher by see graphs of all the functions and this function- sub_140001EAC	was the run dispatch 
+
+<img width="1919" height="1015" alt="image" src="https://github.com/user-attachments/assets/9cb8fd62-6be4-4d9e-bf88-acee20abe8d4" />
+
+It's over a few 1000 lines so I dont think this is meant for solving statically :((
+<img width="626" height="603" alt="image" src="https://github.com/user-attachments/assets/ba07b534-a52f-4c9b-90f5-ddb0e5350286" />
+
+After loading up xdbg nothing seems to look around worthy and yeah 
+<img width="1919" height="1019" alt="image" src="https://github.com/user-attachments/assets/59aff28e-a9e2-48c2-ba28-3aecceacb5b6" />
 
 
+After passing the debug check we can actually start running the VM and see how it behaves ;
+
+<img width="1919" height="1020" alt="image" src="https://github.com/user-attachments/assets/be66f260-3daa-4027-8f42-91324e69726e" />
+
+Then i tried focrcing it to take a input and attached it back again and we landed in this region ; 
+
+<img width="1919" height="994" alt="image" src="https://github.com/user-attachments/assets/4909630d-ab3a-49ce-9bdf-4998bbcce246" />
+
+After so many attempts at finding the adress for the VM loop , i found the instrcution which is the VM counter and inspected that in IDA 
+<img width="767" height="438" alt="image" src="https://github.com/user-attachments/assets/32df10cd-218c-4a94-b2f9-81e0114617c6" />
+It starts by calling sub_140001530(&unk_140011030) to initialize the VM state, where unk_140011030 is the VM state structure pointer. The function then enters an infinite while(1) loop that repeatedly reads the current opcode from byte_1400121A8. If the opcode is zero, the loop breaks and execution stops. Otherwise, the code performs several qmemcpy operations through local stack buffers (v1, v2, v3, v4), with sub_140001570 appearing to fetch or process operand data using dword_140019164 as a parameter. Finally, it calls sub_14000F1AC((__int64)&unk_140011030, v3) which is the opcode dispatcher/handler - this function receives the VM state pointer as the first argument and the processed opcode/operand data as the second argument, and is responsible for executing the actual VM instruction
+
+The other function it calls is 
+```c#
+void *__fastcall sub_140001570(void *a1, __int16 a2)
+{
+  int i; // [rsp+24h] [rbp-34h]
+  unsigned __int8 v4[40]; // [rsp+30h] [rbp-28h] BYREF
+
+  for ( i = 0; ; ++i )
+  {
+    if ( i >= dword_140019240 )
+      exit(1);
+    qmemcpy(v4, &byte_1400121B0[7 * i], 7u);
+    if ( sub_140001540(v4) == a2 )
+      break;
+  }
+  qmemcpy(a1, &byte_1400121B0[7 * i], 7u);
+  return a1;
+}
+```
+`sub_140001570` acts as a VM instruction fetch routine that scans the VM’s bytecode array to locate a specific instruction identified by `a2`. It iterates over the bytecode, treating it as a sequence of fixed-size 7-byte instructions, copying each candidate into a temporary buffer and extracting its instruction ID via `sub_140001540`. When a matching ID is found, the corresponding 7-byte instruction is copied into the output buffer `a1`; if no match exists after scanning all instructions, the function terminates execution with `exit(1)`. This design implies a VM architecture where instructions are addressed or referenced by identifier rather than strictly executed linearly, with `sub_140001540` serving as the decoder for the instruction header within the 7-byte format
 
 
+```c#
+__int16 __fastcall sub_140001540(unsigned __int8 *a1)
+{
+  return a1[2] | (*a1 << 8);
+}
+```
+This function extracts a 16-bit instruction identifier from a 7-byte VM instruction by combining two specific bytes: it takes the first byte a1[0] as the high byte and the third byte a1[2] as the low byte, forming the value (*a1 << 8) | a1[2]. This implies the VM instruction format is non-contiguous, with the opcode or instruction ID split across bytes 0 and 2 rather than stored sequentially
 
 
+from this i can make a boilerplate of the VM from the architecture we know ;
+```rust
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+struct VmInstruction {
+    elem1: u8,  // byte_0 - part of instruction ID (high byte)
+    elem2: u8,  // byte_1
+    elem3: u8,  // byte_2 - part of instruction ID (low byte)
+    elem4: u8,  // byte_3
+    elem5: u8,  // byte_4
+    elem6: u8,  // byte_5
+    elem7: u8,  // byte_6
+}
+
+impl VmInstruction {
+    /// Get the 16-bit instruction ID from elem1 and elem3
+    fn get_id(&self) -> u16 {
+        (self.elem1 as u16) << 8 | (self.elem3 as u16)
+    }
+}
+```
