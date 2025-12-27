@@ -302,3 +302,220 @@ Navigating there ;
 
 <img width="1918" height="845" alt="image" src="https://github.com/user-attachments/assets/ce7b20c4-d29c-4740-b1c4-ade54fe615fd" />
 <img width="1907" height="866" alt="image" src="https://github.com/user-attachments/assets/2afa4af2-6637-4f6d-861d-02dbbfcef8f5" />
+
+
+Also i found this while investiagting 
+
+```c#
+// Token: 0x06000006 RID: 6 RVA: 0x00003D18 File Offset: 0x00003118
+	internal unsafe static void func6()
+	{
+		string input = Console.ReadLine();
+		Regex regex = new Regex("^bi0s{([a-zA-Z0-9_]+)}$");
+		Match match = regex.Match(input);
+		if (match.Success)
+		{
+			string value = match.Groups[1].Value;
+			<Module>.func11();
+			IntPtr hglobal = Marshal.StringToHGlobalAnsi(value);
+			<Module>.strcpy_s((sbyte*)(&<Module>.user_input), 128UL, (sbyte*)hglobal.ToPointer());
+			Marshal.FreeHGlobal(hglobal);
+			<Module>.func8((sbyte*)(&<Module>.user_input));
+			<Module>.func1();
+		}
+		else
+		{
+			Environment.Exit(1);
+		}
+```
+
+And there are a bunch of exception checks which i can see from IDA's graph view , so ill have to resolve or patch them during runtime as this challenge seems way too hard to solve statically .
+
+
+Also from the CFG it calls this VM dispatcher or initialiser of sorts 
+
+```c#
+// Token: 0x0600000B RID: 11 RVA: 0x00003C8C File Offset: 0x0000308C
+	internal unsafe static void func1()
+	{
+		if (<Module>.global_flag != 1)
+		{
+			Environment.Exit(1);
+		}
+		<Module>.func27();
+		<Module>.func5((byte*)(&<Module>.embedded_instructions), 7889);
+		<Module>.func23();
+		int num = <Module>.func18();
+		if (*(ref <Module>._err_token + 82 + (long)num) == 0)
+		{
+			<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7> <lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>;
+			initblk(ref <lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>, 0, 1L);
+			_err_tok_2<7,0> err_tok_2<7,0>;
+			<Module>.printf(<Module>._err_tok_2<7,0>.decrypt(<Module>.func1.<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>.()((<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>*)(&<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>), &err_tok_2<7,0>)));
+			<Module>.exit(0);
+		}
+		<lambda_80864a03a1c3fa5fa295ad64a1df9c07> <lambda_80864a03a1c3fa5fa295ad64a1df9c07>;
+		initblk(ref <lambda_80864a03a1c3fa5fa295ad64a1df9c07>, 0, 1L);
+		_err_tok_2<9,0> err_tok_2<9,0>;
+		<Module>.printf(<Module>._err_tok_2<9,0>.decrypt(<Module>.func1.<lambda_80864a03a1c3fa5fa295ad64a1df9c07>.()((<lambda_80864a03a1c3fa5fa295ad64a1df9c07>*)(&<lambda_80864a03a1c3fa5fa295ad64a1df9c07>), &err_tok_2<9,0>)));
+```
+So further more the codes look like a VM going on and a dispatcher is being called?
+
+
+<img width="687" height="117" alt="image" src="https://github.com/user-attachments/assets/439c85e0-9331-467f-a65d-282156cd4329" />
+func11 needs more details as it's not in dns spy 
+
+
+If the regex check passes, functions func11, func8, and func1 are executed ? is my current assumption as the tokens idicate character allotment limits of values 
+
+
+```c#
+internal unsafe static void func8(sbyte* input)
+	{
+		<Module>.msclr.gcroot<System::String\u0020^>.=(&<Module>.?A0x73b52d52.injectedInput, new string((sbyte*)input));
+		<Module>.?A0x73b52d52.injectedIndex = 0;
+	}
+```
+This function takes an unmanaged C-style string passed as an `sbyte*`, converts it into a managed `.NET System.String`, and stores it in a global module-level variable using `msclr::gcroot` so it remains safe from garbage collection. In doing so, it effectively injects external input into the managed runtime for later use. The function also resets a global index variable to zero, indicating that any subsequent logic will begin processing this injected string from the start.
+
+
+```c#
+// Token: 0x0600000B RID: 11 RVA: 0x00003C8C File Offset: 0x0000308C
+	internal unsafe static void func1()
+	{
+		if (<Module>.global_flag != 1)
+		{
+			Environment.Exit(1);
+		}
+		<Module>.func27();
+		<Module>.func5((byte*)(&<Module>.embedded_instructions), 7889);
+		<Module>.func23();
+		int num = <Module>.func18();
+		if (*(ref <Module>._err_token + 82 + (long)num) == 0)
+		{
+			<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7> <lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>;
+			initblk(ref <lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>, 0, 1L);
+			_err_tok_2<7,0> err_tok_2<7,0>;
+			<Module>.printf(<Module>._err_tok_2<7,0>.decrypt(<Module>.func1.<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>.()((<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>*)(&<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>), &err_tok_2<7,0>)));
+			<Module>.exit(0);
+		}
+		<lambda_80864a03a1c3fa5fa295ad64a1df9c07> <lambda_80864a03a1c3fa5fa295ad64a1df9c07>;
+		initblk(ref <lambda_80864a03a1c3fa5fa295ad64a1df9c07>, 0, 1L);
+		_err_tok_2<9,0> err_tok_2<9,0>;
+		<Module>.printf(<Module>._err_tok_2<9,0>.decrypt(<Module>.func1.<lambda_80864a03a1c3fa5fa295ad64a1df9c07>.()((<lambda_80864a03a1c3fa5fa295ad64a1df9c07>*)(&<lambda_80864a03a1c3fa5fa295ad64a1df9c07>), &err_tok_2<9,0>)));
+	}
+```
+This function is a gated execution routine that first enforces a global state check and aborts immediately if `global_flag` is not set, acting as an anti-misuse or validation guard. Once past that, it initializes internal state, loads a block of embedded instructions into memory, and executes a processing pipeline that culminates in `func18`, which returns an index or status code. That value is then used to index into a global error token table. If the computed slot contains zero, the function decrypts and prints a specific embedded message and exits cleanly. Otherwise, it decrypts and prints a different message without exiting immediately. In effect, this function runs a hidden instruction stream, evaluates the result against an internal token table, and conditionally reveals one of two obfuscated outputs, making it a classic validation-and-dispatch endpoint rather than general logic.
+
+
+More down the dissassembly 
+```c#
+// Token: 0x0600000C RID: 12 RVA: 0x00001A20 File Offset: 0x00000E20
+	internal unsafe static _err_tok_2<7,0>* ()(<lambda_7b8f7c1aa6b0ebbbec3baa92a10e10b7>* A_0, _err_tok_2<7,0>* A_1)
+	{
+		_err_tok_2<7,0> err_tok_2<7,0> = 239;
+		*(ref err_tok_2<7,0> + 1) = 234;
+		*(ref err_tok_2<7,0> + 2) = 125;
+		*(ref err_tok_2<7,0> + 3) = 176;
+		*(ref err_tok_2<7,0> + 4) = 147;
+		*(ref err_tok_2<7,0> + 5) = 86;
+		*(ref err_tok_2<7,0> + 6) = 217;
+		*(ref err_tok_2<7,0> + 7) = 184;
+		*(ref err_tok_2<7,0> + 8) = 152;
+		*(ref err_tok_2<7,0> + 9) = 18;
+		*(ref err_tok_2<7,0> + 10) = 222;
+		*(ref err_tok_2<7,0> + 11) = 244;
+		*(ref err_tok_2<7,0> + 12) = 92;
+		*(ref err_tok_2<7,0> + 13) = 217;
+		cpblk(A_1, ref err_tok_2<7,0>, 14);
+		return A_1;
+	}
+
+	// Token: 0x0600000D RID: 13 RVA: 0x00001AC0 File Offset: 0x00000EC0
+	internal unsafe static _err_tok_2<9,0>* ()(<lambda_80864a03a1c3fa5fa295ad64a1df9c07>* A_0, _err_tok_2<9,0>* A_1)
+	{
+		_err_tok_2<9,0> err_tok_2<9,0> = 239;
+		*(ref err_tok_2<9,0> + 1) = 234;
+		*(ref err_tok_2<9,0> + 2) = 125;
+		*(ref err_tok_2<9,0> + 3) = 176;
+		*(ref err_tok_2<9,0> + 4) = 147;
+		*(ref err_tok_2<9,0> + 5) = 86;
+		*(ref err_tok_2<9,0> + 6) = 217;
+		*(ref err_tok_2<9,0> + 7) = 220;
+		*(ref err_tok_2<9,0> + 8) = 55;
+		*(ref err_tok_2<9,0> + 9) = 172;
+		*(ref err_tok_2<9,0> + 10) = 133;
+		*(ref err_tok_2<9,0> + 11) = 15;
+		*(ref err_tok_2<9,0> + 12) = 194;
+		*(ref err_tok_2<9,0> + 13) = 246;
+		*(ref err_tok_2<9,0> + 14) = 53;
+		*(ref err_tok_2<9,0> + 15) = 173;
+		*(ref err_tok_2<9,0> + 16) = 214;
+		*(ref err_tok_2<9,0> + 17) = 55;
+		cpblk(A_1, ref err_tok_2<9,0>, 18);
+		return A_1;
+	}
+```
+
+These functions contain **encrypted strings** that are revealed through a simple XOR operation. Let me explain how this obfuscation works:
+
+
+Both functions create byte arrays with hardcoded values:
+
+**Function 1 (RID 12) - 14 bytes:**
+```python
+data1 = [0xEF, 0xEA, 0x7D, 0xB0, 0x93, 0x56, 0xD9, 
+         0xB8, 0x98, 0x12, 0xDE, 0xF4, 0x5C, 0xD9]
+```
+
+**Function 2 (RID 13) - 18 bytes:**
+```python
+data2 = [0xEF, 0xEA, 0x7D, 0xB0, 0x93, 0x56, 0xD9, 
+         0xDC, 0x37, 0xAC, 0x85, 0x0F, 0xC2, 0xF6, 
+         0x35, 0xAD, 0xD6, 0x37]
+```
+
+The array is split into **two halves**:
+- **First half** = Key
+- **Second half** = Encrypted data
+
+Since XOR is **symmetric** (`A ^ B = C` and `C ^ B = A`), you can decrypt by XORing corresponding positions:
+
+```
+Decrypted[i] = Array[i] ^ Array[i + length/2]
+```
+
+
+
+For an 18-byte array:
+```
+Index:  0   1   2   3   4   5   6   7   8  |  9  10  11  12  13  14  15  16  17
+Data:  EF  EA  7D  B0  93  56  D9  DC  37  | AC  85  0F  C2  F6  35  AD  D6  37
+       └───────────── Key ─────────────────┘ └────────── Encrypted ──────────┘
+       
+XOR:   EF ^ AC = 43 ('C')
+       EA ^ 85 = 6F ('o')
+       7D ^ 0F = 72 ('r')
+       ...and so on
+```
+
+
+```python
+# Function 2 (RID 13) - 18 bytes
+data = [0xEF, 0xEA, 0x7D, 0xB0, 0x93, 0x56, 0xD9, 
+        0xDC, 0x37, 0xAC, 0x85, 0x0F, 0xC2, 0xF6, 
+        0x35, 0xAD, 0xD6, 0x37]
+
+# XOR first half with second half
+decrypted = ''.join([chr(data[i] ^ data[i + len(data)//2]) 
+                     for i in range(len(data)//2)])
+
+print(f"Decrypted: {repr(decrypted)}")
+# Output: 'Correct\n\x00'
+```
+
+
+
+
+
+
