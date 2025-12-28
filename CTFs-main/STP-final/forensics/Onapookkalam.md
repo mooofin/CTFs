@@ -228,5 +228,9 @@ print("\n✓ Decryption complete!\n")
 15052025175944264611: "hehehe"
 ```
 
+After an hour of going through all the files i found this snapshots folder  ( i tried organising the files by images , txt , png etc and came across this title 0 
 
+<img width="825" height="161" alt="image" src="https://github.com/user-attachments/assets/cb607acb-6f7a-42ba-a6be-79caa263524b" />
+
+<img width="887" height="986" alt="image" src="https://github.com/user-attachments/assets/242d30cf-a024-42a5-a9a4-b8188a6d7b5f" />
 
