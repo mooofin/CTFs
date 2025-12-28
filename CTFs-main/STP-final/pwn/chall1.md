@@ -483,7 +483,7 @@ Ill try to write a demo program to understand hoa-2 better and what does it solv
 <img width="1797" height="1011" alt="image" src="https://github.com/user-attachments/assets/923565b5-d8ad-483e-8556-bd40e8f56867" />
 
 
-# glibc Internals
+### glibc Internals
 
 Next we will need a heap controlled area for exploiting. Before that, some glibc internals.
 
@@ -521,16 +521,56 @@ The thing is, if you control _wide_data, glibc will trust pointers inside it. Th
 
 
 
+# glibc vtable exploitation
 
+When glibc performs an I/O operation, it does something like:
 
+```c
+fp->_wide_data->_wide_vtable->overflow(fp, ch);
+```
 
+If _wide_vtable is fake and heap-controlled, glibc jumps to an attacker-controlled address. This is a clean RIP control primitive.
 
+Internally, libc has three global FILE objects: stdin, stdout, stderr. Each of these is a fully-initialized _IO_FILE structure with valid locks, valid mode flags, valid wide I/O state, and most importantly our trusted vtables.
 
+<img width="601" height="490" alt="image" src="https://github.com/user-attachments/assets/f7feb881-2ecb-4a12-975a-87a6b8f182b9" />
 
+## What _mode does
 
+Inside _IO_FILE:
 
+```c
+int _mode;
+```
 
+glibc uses _mode to decide byte I/O vs wide-char I/O.
 
+Rule (from glibc):
+
+```c
+if (fp->_mode > 0)
+    use wide I/O
+else
+    use byte I/O
+```
+
+So when you do:
+
+```c
+stderr_fp->_mode = 1;
+```
+
+That guarantees _wide_data will be accessed, _wide_vtable will be dereferenced, and normal byte vtable is bypassed.
+
+<img width="978" height="215" alt="image" src="https://github.com/user-attachments/assets/31a0c24b-787e-4d42-a7cb-2088ab561b85" />
+
+After compiling with these flags i got an error ; we needed to do bc the FILE vtable itself is wrong, so glibc never reaches _IO_WOVERFLOW
+
+Apple 2 still needs a legitimate FILE vtable to route execution into the wide path
+
+While looking through more on house of apple i found this image , which was on the idea of exploit this chalelnge closely resembleded 
+
+<img width="1777" height="713" alt="image" src="https://github.com/user-attachments/assets/be6ae49a-02aa-4365-a7be-2d11803e456f" />
 
 
 
