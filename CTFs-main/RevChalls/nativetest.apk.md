@@ -51,50 +51,5 @@ And while scrolling throught i found this : )
 <img width="1823" height="556" alt="image" src="https://github.com/user-attachments/assets/05dfaa92-e42d-4761-a407-7141bd5bb7d6" />
 
 
-Now we can reverse this using the info from IDA 
+Now we can reverse this using the info from IDA :)
 
-A step-by-step explanation of how the `packed_string` is decoded into the final flag: `picoCTF{d0ubl3_r3v3rs3_80046660}`.
-
-
-1.  **Chunking**: The input string is split into 5-digit chunks.
-2.  **Reversal**: The list of chunks (as numbers) is reversed. This is the key step to get the data back in the correct logical order.
-3.  **Unpacking**: Each number in the reversed list is unpacked into two separate characters using bitwise operations.
-4.  **Concatenation**: The resulting characters are joined together to form the final string.
-
-
-
-
-| Packed Value (Integer) | Unpacking `char1` (`val >> 10`) | ASCII `char1` | Character `char1` | Unpacking `char2` (`val & 1023`) | ASCII `char2` | Character `char2` | Resulting Pair |
-| :--------------------- | :------------------------------ | :------------ | :---------------- | :------------------------------- | :------------ | :---------------- | :------------- |
-| **52349**              | `52349 >> 10 = 51`              | 51            | `p`               | `52349 & 1023 = 105`             | 105           | `i`               | `pi`           |
-| **49252**              | `49252 >> 10 = 48`              | 48            | `c`               | `49252 & 1023 = 111`             | 111           | `o`               | `co`           |
-| **52323**              | `52323 >> 10 = 51`              | 51            | `C`               | `52323 & 1023 = 83`              | 83            | `T`               | `CT`           |
-| **97380**              | `97380 >> 10 = 95`              | 95            | `F`               | `97380 & 1023 = 100`             | 100           | `{`               | `F{`           |
-| **56368**              | `56368 >> 10 = 55`              | 55            | `d`               | `56368 & 1023 = 48`              | 48            | `0`               | `d0`           |
-| **102495**             | `102495 >> 10 = 100`            | 100           | `u`               | `102495 & 1023 = 95`             | 95            | `b`               | `ub`           |
-| **53362**              | `53362 >> 10 = 52`              | 52            | `l`               | `53362 & 1023 = 114`             | 114           | `3`               | `l3`           |
-| **97384**              | `97384 >> 10 = 95`              | 95            | `_`               | `97384 & 1023 = 104`             | 104           | `r`               | `_r`           |
-| **53301**              | `53301 >> 10 = 52`              | 52            | `3`               | `53301 & 1023 = 53`              | 53            | `v`               | `3v`           |
-| **97399**              | `97399 >> 10 = 95`              | 95            | `3`               | `97399 & 1023 = 119`             | 119           | `r`               | `3r`           |
-| **112694**             | `112694 >> 10 = 110`            | 110           | `s`               | `112694 & 1023 = 54`             | 54            | `3`               | `s3`           |
-| **116785**             | `116785 >> 10 = 114`            | 114           | `_`               | `116785 & 1023 = 49`             | 49            | `8`               | `_8`           |
-| **54327**              | `54327 >> 10 = 53`              | 53            | `0`               | `54327 & 1023 = 55`              | 55            | `0`               | `00`           |
-| **102495**             | `102495 >> 10 = 100`            | 100           | `4`               | `102495 & 1023 = 95`             | 95            | `6`               | `46`           |
-| **102451**             | `102451 >> 10 = 100`            | 100           | `6`               | `102451 & 1023 = 51`             | 51            | `6`               | `66`           |
-| **101424**             | `101424 >> 10 = 99`             | 99            | `0`               | `101424 & 1023 = 48`             | 48            | `}`               | `0}`           |
-| **52334**              | `52334 >> 10 = 51`              | 51            | ` `               | `52334 & 1023 = 94`              | 94            | ` `               | `  `           |
-| **111711**             | `111711 >> 10 = 109`            | 109           | ` `               | `111711 & 1023 = 99`             | 99            | ` `               | `  `           |
-| **156368**             | `156368 >> 10 = 152`            | 152           | ` `               | `156368 & 1023 = 848`            | 848           | ` `               | `  `           |
-| **111986**             | `111986 >> 10 = 109`            | 109           | ` `               | `111986 & 1023 = 370`            | 370           | ` `               | `  `           |
-| **112605**             | `112605 >> 10 = 109`            | 109           | ` `               | `112605 & 1023 = 1021`           | 1021          | ` `               | `  `           |
-| **69943**              | `69943 >> 10 = 68`              | 68            | ` `               | `69943 & 1023 = 311`             | 311           | ` `               | `  `           |
-| **10455**              | `10455 >> 10 = 10`              | 10            | ` `               | `10455 & 1023 = 215`             | 215           | ` `               | `  `           |
-
-*Note: The last several rows produce non-printable or out-of-range ASCII characters because the original flag string had an even number of characters. The packing algorithm likely padded the end, resulting in these "junk" values that are ultimately ignored when forming the final string.*
-
-
-By concatenating the `Resulting Pair` column from top to bottom, we reconstruct the flag:
-
-`pi` + `co` + `CT` + `F{` + `d0` + `ub` + `l3` + `_r` + `3v` + `3r` + `s3` + `_8` + `00` + `46` + `66` + `0}`
-
-**Final Result:** `picoCTF{d0ubl3_r3v3rs3_80046660}`
