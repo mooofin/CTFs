@@ -549,12 +549,12 @@ Combined key: 04e0d32be85f3b427173047a9d6574e5
 Reversed key: 5e4756d9a740371724b3f58eb23d0e40
 
 Encrypted data size: 12582928 bytes
-✓ AES ECB decryption complete
-✓ Base64 decoding complete
+ AES ECB decryption complete
+ Base64 decoding complete
 
-✓ Realm database saved as 'decrypted.realm'
-✓ File size: 9437184 bytes (9 MB)
-✓ File appears to be a valid Realm database
+Realm database saved as 'decrypted.realm'
+ File size: 9437184 bytes (9 MB)
+ File appears to be a valid Realm database
 
 ```
 
