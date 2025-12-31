@@ -4,7 +4,7 @@ Since this is a `.NET` binary, `mainCRTStartup` is the first thing to look at in
 
 <img width="1919" height="1026" alt="image" src="https://github.com/user-attachments/assets/9d4ca242-f0b9-437a-8c3d-1b330e59ba7b" />
 
----
+
 
 ### RVA vs Virtual Address
 
@@ -592,3 +592,46 @@ impl VmInstruction {
     }
 }
 ```
+
+When fun2 is called 
+
+<img width="1919" height="714" alt="image" src="https://github.com/user-attachments/assets/45f4b424-fe6f-4532-b546-1765237264cd" />
+
+
+
+This is a debugger validation going on here ,so that can be evaded hopefully if there are no more 
+
+
+Then there is an except loop at which we will need to look into later 
+
+<img width="697" height="407" alt="image" src="https://github.com/user-attachments/assets/5c647231-25dd-44d4-89f5-b6e5321436cf" />
+
+coming back to .net part 
+
+
+<img width="736" height="104" alt="image" src="https://github.com/user-attachments/assets/78bdc855-8dbf-4055-b38e-40b9a01b88ed" />
+
+
+fun23 is unmanaged so this might be the VM part?? as it cross references 
+
+
+
+Understanding fun32() 
+
+
+<img width="1281" height="439" alt="image" src="https://github.com/user-attachments/assets/16554fcd-a475-4dc4-bf4a-c6fede28dd17" />
+
+
+The routine decrypts 7889 bytes of data stored in <Module>.embedded_instructions.
+To reverse this encryption:
+You'd apply the operations in reverse order: Swap nibbles back , XOR with 66 again (XOR is self-inverse)
+
+
+coming back to the Vm we have 
+
+
+<img width="698" height="436" alt="image" src="https://github.com/user-attachments/assets/6367b3e3-ae6d-4e34-be69-91a14f6e1744" />
+this set's the heap to 0 
+<img width="912" height="30" alt="image" src="https://github.com/user-attachments/assets/36ba9d13-4aea-4927-9675-9e78baf84d8b" />
+
+
