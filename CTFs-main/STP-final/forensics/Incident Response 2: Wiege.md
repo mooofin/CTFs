@@ -125,6 +125,267 @@ Finally, if all checks succeed, the function **writes or executes the received p
 
 
 So it's saved as chrome.exe in startup data 
+### 
+Download and Base64 Decode 
+
+```c
+v114 = -2;
+sub_1400076E0(&v77, &unk_14017C368, 69);
+sub_140008270(Src, &v77);
+```
+
+Downloads base64-encoded payload from GitHub and decodes it. The `69` indicates the length parameter.
+
+
+
+###  XOR Decryption with "ETIN" Key 
+
+```c
+v8 = (char *)*((_QWORD *)&Src[0] + 1);
+v9 = *(_QWORD *)&Src[1];
+v10 = (char *)(*((_QWORD *)&Src[0] + 1) + *(_QWORD *)&Src[1]);
+
+if ( *(_QWORD *)&Src[1] )
+{
+    if ( *(_QWORD *)&Src[1] == 4 )
+    {
+      **((_DWORD **)&Src[0] + 1) ^= 0x4E495445u;  // XOR with "ETIN" (little-endian)
+      goto LABEL_21;
+    }
+    
+    v11 = 0;
+    v12 = Src[1] & 3;
+    if ( (Src[1] & 3) != 0 )
+    {
+      do
+      {
+        v8[v11] ^= aChromeExeetinR[v11 + 10];  // XOR with key starting at offset 10
+        ++v11;
+      }
+      while ( v12 != v11 );
+      v13 = &v8[v11];
+      if ( v9 < 4 )
+        goto LABEL_21;
+    }
+    
+    // Main XOR loop - processes 4 bytes at a time
+    v14 = ((_BYTE)v11 - 1) & 3;
+    v15 = v11 & 3 ^ 2;
+    v16 = ((_BYTE)v11 + 1) & 3;  
+    v17 = aChromeExeetinR[v11 + 10];
+    v18 = aChromeExeetinR[v16 + 10];
+    v19 = aChromeExeetinR[v15 + 10];
+    v20 = aChromeExeetinR[v14 + 10];
+    do
+    {
+      *v13 ^= v17;      // XOR byte 0
+      v13[1] ^= v18;    // XOR byte 1
+      v13[2] ^= v19;    // XOR byte 2
+      v13[3] ^= v20;    // XOR byte 3
+      v13 += 4;
+    }
+    while ( v13 != v10 );
+}
+```
+
+ XORs the decoded payload with the repeating key "ETIN" (0x4E495445). Processes data in 4-byte chunks for efficiency.
+
+
+
+###  Random Folder Name Selection 
+
+```c
+*(_QWORD *)&Src[0] = "WindowsUpdateSystemCacheAppDataCacheDefenderDriverStoreWinSxSDiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[0] + 1) = 13;
+*(_QWORD *)&Src[1] = "SystemCacheAppDataCacheDefenderDriverStoreWinSxSDiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[1] + 1) = 11;
+*(_QWORD *)&Src[2] = "AppDataCacheDefenderDriverStoreWinSxSDiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[2] + 1) = 12;
+*(_QWORD *)&Src[3] = "DefenderDriverStoreWinSxSDiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[3] + 1) = 8;
+*(_QWORD *)&Src[4] = "DriverStoreWinSxSDiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[4] + 1) = 11;
+*(_QWORD *)&Src[5] = "WinSxSDiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[5] + 1) = 6;
+*(_QWORD *)&Src[6] = "DiagnosticsTelemetryWMI";
+*((_QWORD *)&Src[6] + 1) = 11;
+*(_QWORD *)&Src[7] = "TelemetryWMI";
+*((_QWORD *)&Src[7] + 1) = 9;
+*(_QWORD *)&Src[8] = "WMI";
+*((_QWORD *)&Src[8] + 1) = 3;
+
+hObject[0] = (HANDLE)sub_140132EA0();  // Initialize RNG
+v24 = sub_140005D10(hObject, 0, 9);    // Select random index 0-8
+```
+
+ Creates an array of 9 system-like folder names and randomly selects one. This makes the malware blend in with legitimate Windows directories under `%APPDATA%`.
+
+
+
+###  Byte-to-Base4 Conversion (Lines 155-169)
+
+```c
+v45 = v44;
+v46 = *v44;  // Get current byte to encode
+v89 = v91;
+
+// Create buffer for 4 base-4 digits
+*(_QWORD *)&Src[0] = 0;
+*((_QWORD *)&Src[0] + 1) = 1;
+*(_QWORD *)&Src[1] = 0;
+sub_14015DB10(Src, &off_14017C010);
+
+// Extract digit 0 (bits 0-1)
+**((_BYTE **)&Src[0] + 1) = v46 & 3;
+*(_QWORD *)&Src[1] = 1;
+
+// Extract digit 1 (bits 2-3)
+*(_BYTE *)(*((_QWORD *)&Src[0] + 1) + 1LL) = (v46 >> 2) & 3;
+*(_QWORD *)&Src[1] = 2;
+
+// Extract digit 2 (bits 4-5)
+*(_BYTE *)(*((_QWORD *)&Src[0] + 1) + 2LL) = (v46 >> 4) & 3;
+*(_QWORD *)&Src[1] = 3;
+
+// Extract digit 3 (bits 6-7)
+*(_BYTE *)(*((_QWORD *)&Src[0] + 1) + 3LL) = v46 >> 6;
+*(_QWORD *)&Src[1] = 4;
+```
+
+**What it does:** Splits each byte of the decrypted flag into 4 two-bit digits (base-4 representation):
+- d0 = byte & 3 (bits 0-1)
+- d1 = (byte >> 2) & 3 (bits 2-3)
+- d2 = (byte >> 4) & 3 (bits 4-5)
+- d3 = byte >> 6 (bits 6-7)
+
+Example: byte 'n' (0x6E = 110) → [1, 2, 3, 2]
+
+
+
+###  Hash Function 
+
+<img width="1069" height="648" alt="image" src="https://github.com/user-attachments/assets/1900726d-812d-4340-b4b2-b5dc8789f94f" />
+
+
+ Computes a 24-bit hash of random file data using custom mixing function with constants:
+- `-1163005939` = `0xBAADF00D` (seed)
+- `-1640531535` = `0x9E3779B1` 
+- `-2048144777` = `0x85EBCA77` 
+
+
+
+###   File Generation 
+
+```c
+v49 = *v48;  // Get base-4 digit (0-3)
+v51 = v49 << 22;  // Shift pool number into top 2 bits of 24-bit space
+
+while ( 1 )
+{
+    // Generate random file between 1KB-50KB
+    *(_QWORD *)&Src[0] = 1024;
+    *((_QWORD *)&Src[0] + 1) = 51200;
+    LOBYTE(Src[1]) = 0;
+    v52 = sub_140005AA0(&v77, Src);
+    
+    // ... hash calculation ...
+    
+    v60 = v55 & 0xFFFFFF;  // 24-bit hash result
+    
+    // Check if hash falls in desired pool range
+    if ( v60 < v51 )
+        goto LABEL_90;  // Hash too low, regenerate
+        
+    if ( v60 > v51 + 0x3FFFFF )
+        goto LABEL_90;  // Hash too high, regenerate
+    
+    // Hash is in correct pool - accept this file!
+    *((HANDLE *)&v113 + 1) = hObject[1];
+    v104 = hObject[0];
+    break;
+}
+```
+
+ For each base-4 digit (0-3), generates random file data and computes its hash. Keeps regenerating until the hash falls within the target pool:
+
+| Pool | Digit | Range Start (v51) | Range End | Check |
+|------|-------|-------------------|-----------|-------|
+| 0 | 0 | 0x000000 | 0x3FFFFF | `0 ≤ hash ≤ 0x3FFFFF` |
+| 1 | 1 | 0x400000 | 0x7FFFFF | `0x400000 ≤ hash ≤ 0x7FFFFF` |
+| 2 | 2 | 0x800000 | 0xBFFFFF | `0x800000 ≤ hash ≤ 0xBFFFFF` |
+| 3 | 3 | 0xC00000 | 0xFFFFFF | `0xC00000 ≤ hash ≤ 0xFFFFFF` |
+
+The key operation `v51 = v49 << 22` creates the pool boundaries by shifting the 2-bit pool number into the top 2 bits of the 24-bit hash space.
+
+
+
+###  File Writing 
+
+```c
+LODWORD(Src[0]) = 0;
+*((_QWORD *)&Src[0] + 1) = 0;
+LODWORD(Src[1]) = 7;
+*(_WORD *)((char *)&Src[1] + 13) = 0;
+*(_QWORD *)((char *)&Src[1] + 4) = 0x10000000000LL;
+*(_WORD *)((char *)&Src[1] + 11) = 257;
+
+v61 = sub_140138EC0(Src, v113, v84, v53);
+v41 = (__int64)v62;
+
+if ( (v61 & 1) == 0 )
+{
+    hObject[0] = v62;
+    v41 = sub_140005680(hObject, *((_QWORD *)&v113 + 1), v54);
+    CloseHandle(hObject[0]);
+```
+
+Creates a file with the generated random data (1-50KB) whose hash falls in the correct pool. Each byte of the flag becomes a folder with 4 such files.
+
+
+
+###  Download chrome.exe 
+
+```c
+sub_140149DB0(
+    (unsigned int)Src,
+    v113,
+    v69,
+    (unsigned int)"chrome.exeETIN/rustc/ed61e7d7e242494fb7057f2657300d9e77bb4fcb\\library\\core\\src\\iter\\traits\\iterator.rs",
+    10);
+
+v72 = *(_QWORD *)&Src[1];
+v111 = *((_QWORD *)&Src[0] + 1);
+
+// Download binary from GitHub
+v2 = (__int64 *)sub_140001120(*((_QWORD *)&Src[0] + 1), *(_QWORD *)&Src[1]);
+
+if ( !v2 )
+{
+    v73 = (void *)sub_140001000(v111, v72);
+    v74 = (__int64)v73;
+    // Error handling...
+}
+```
+
+
+
+
+
+
+The malware creates:
+```
+%APPDATA%\[RandomSystemName]\
+  ├── 000_xxxxxxxx\          ← Byte 0 of flag
+  │   ├── 0_xxxxxxxxxxxx.bin  (hash in pool d3)
+  │   ├── 1_xxxxxxxxxxxx.bin  (hash in pool d2)
+  │   ├── 2_xxxxxxxxxxxx.bin  (hash in pool d1)
+  │   └── 3_xxxxxxxxxxxx.bin  (hash in pool d0)
+  ├── 001_xxxxxxxx\          ← Byte 1 of flag
+  │   └── ... (4 files)
+  └── ...
+```
+
+Each file contains 1-50KB of random base62 data. 
 
 
 
