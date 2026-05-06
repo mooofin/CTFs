@@ -1,0 +1,16 @@
+# Ignore build artifacts
+target/
+
+# Ignore test licenses
+*.auroralic
+!handout/*.auroralic
+!solution/*.auroralic
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp

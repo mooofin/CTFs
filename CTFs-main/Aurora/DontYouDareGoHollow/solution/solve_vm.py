@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+
+import sys
+
+CHECK = bytes([
+    0xF2, 0x45, 0x64, 0x67, 0xBE, 0x97, 0x78, 0x7E,
+    0x29, 0xA3, 0x0D, 0x34, 0x5C, 0x59, 0x17, 0x38,
+    0xA0, 0x63, 0x15, 0xFC, 0xAC, 0x41, 0x8E, 0xFB,
+    0x13, 0x62, 0x7A, 0x62, 0x8F, 0xDF, 0x07, 0x53,
+    0xE2, 0x53, 0xC2, 0xAF, 0x85, 0x49, 0x58, 0x2B,
+    0x5A, 0x55, 0xA4, 0x77, 0xA6, 0x51, 0xA0, 0xB3,
+    0x52, 0x4D, 0x5C, 0x6F, 0x5E, 0x49, 0x58, 0x2B,
+    0x5A, 0x55, 0xA4, 0x77, 0xA6, 0x51, 0xA0, 0x68,
+])
+
+def ror(v, n):
+    return ((v >> n) | (v << (8 - n))) & 0xff
+
+def solve(check):
+    d = list(check)
+
+    for i in range(64):
+        d[i] ^= 0x5a
+
+    for i in range(64):
+        d[i] = (d[i] + (i & 0x0f)) & 0xff
+
+    # reverse pass 2 backwards due to chain dependency
+    for i in range(62, -1, -1):
+        d[i] ^= d[i + 1]
+
+    for i in range(64):
+        d[i] = ror(d[i], 3)
+
+    for i in range(64):
+        d[i] ^= (i ^ 0x17)
+
+    return bytes(d).rstrip(b'\x00')
+
+def extract_check(path):
+    with open(path, 'rb') as f:
+        data = f.read()
+    for i in range(len(data) - 64):
+        if data[i] == 0xf2 and data[i+1] == 0x45:
+            return data[i:i+64]
+    return None
+
+if __name__ == '__main__':
+    check = CHECK
+    if len(sys.argv) > 1:
+        extracted = extract_check(sys.argv[1])
+        if extracted:
+            check = extracted
+
+    flag = solve(check)
+    print(flag.decode('latin-1'))
